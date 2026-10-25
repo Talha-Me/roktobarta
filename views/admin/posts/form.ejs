@@ -1,0 +1,380 @@
+<!-- ১০০% এসইও সমৃদ্ধ ব্লগ আপলোডার (100% SEO Blog Uploader) -->
+<div class="space-y-6 max-w-5xl mx-auto">
+  <div class="flex items-center justify-between pb-4 border-b border-rb-100">
+    <div>
+      <h2 class="font-head text-2xl font-bold text-gray-900">
+        <%= isEdit ? 'ব্লগ পোস্ট সম্পাদনা (SEO Suite)' : 'নতুন ব্লগ নিবন্ধ লিখুন (100% SEO Ready)' %>
+      </h2>
+      <p class="text-xs text-gray-500">গুগল সার্চ ইঞ্জিনে দ্রুত র‍্যাংক ও পাঠকদের আকৃষ্ট করার জন্য পূর্ণাঙ্গ ফিচার</p>
+    </div>
+    <a href="/admin/posts" class="glass px-4 py-2 rounded-xl text-xs font-semibold text-gray-700 hover:text-rb-600 transition">
+      <i class="fa-solid fa-arrow-left mr-1"></i>ব্লগ তালিকায় ফিরে যান
+    </a>
+  </div>
+
+  <form action="<%= isEdit ? '/admin/posts/' + post._id + '/edit' : '/admin/posts/new' %>" method="POST" enctype="multipart/form-data" class="space-y-8">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+    <div class="grid lg:grid-cols-3 gap-8">
+      <!-- বামের মূল কন্টেন্ট অংশ (২ কলাম) -->
+      <div class="lg:col-span-2 space-y-6">
+        <!-- ১. পোস্ট শিরোনাম -->
+        <div class="glass rounded-3xl p-6 border border-rb-100 space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-800 mb-1">
+              নিবন্ধের মূল শিরোনাম <span class="text-rb-600">*</span>
+            </label>
+            <input type="text" id="postTitle" name="title" required value="<%= post.title || '' %>" placeholder="যেমন: নিয়মিত রক্তদানের বৈজ্ঞানিক উপকারিতা ও নিয়মাবলী" class="w-full text-base font-semibold">
+          </div>
+
+          <!-- কাস্টম স্লাগ -->
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">
+              ইউআরএল স্লাগ (Slug) <span class="text-gray-400 font-normal">(স্বয়ংক্রিয়ভাবে তৈরি হবে বা নিজে লিখুন)</span>
+            </label>
+            <div class="flex items-center rounded-xl bg-white border border-rb-100 overflow-hidden text-xs">
+              <span class="px-3 py-2 bg-rb-50 text-gray-500 font-mono">/blog/</span>
+              <input type="text" id="postSlug" name="slug" value="<%= post.slug || '' %>" placeholder="benefits-of-blood-donation" class="flex-1 border-none focus:ring-0 p-2 font-mono">
+            </div>
+          </div>
+
+          <!-- সংক্ষিপ্ত বিবরণ (Excerpt) -->
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">
+              সংক্ষিপ্ত বিবরণ (Excerpt / Summary) <span class="text-rb-600">*</span>
+            </label>
+            <textarea id="postExcerpt" name="excerpt" rows="2" required placeholder="নিবন্ধের মূল সারসংক্ষেপ ২-৩ লাইনে লিখুন..." class="w-full text-xs"><%= post.excerpt || '' %></textarea>
+          </div>
+        </div>
+
+        <!-- ২. বিস্তারিত রিচ টেক্সট কন্টেন্ট এডিটর -->
+        <div class="glass rounded-3xl p-6 border border-rb-100 space-y-3">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-bold text-gray-800">
+              বিস্তারিত নিবন্ধ কন্টেন্ট (HTML / Rich Text) <span class="text-rb-600">*</span>
+            </label>
+            <span class="text-[11px] text-gray-400">শিরোনাম ফরম্যাট করতে h2 ও h3 ব্যবহার করুন</span>
+          </div>
+
+          <!-- সাধারণ কুইক ফরম্যাটিং টুলবার -->
+          <div class="flex flex-wrap items-center gap-1.5 p-2 bg-rb-50/80 rounded-xl border border-rb-100 text-xs text-gray-700">
+            <button type="button" onclick="formatDoc('h2')" class="px-2.5 py-1 rounded bg-white hover:bg-gray-100 font-bold">H2</button>
+            <button type="button" onclick="formatDoc('h3')" class="px-2.5 py-1 rounded bg-white hover:bg-gray-100 font-bold">H3</button>
+            <button type="button" onclick="formatDoc('bold')" class="px-2.5 py-1 rounded bg-white hover:bg-gray-100 font-bold"><i class="fa-solid fa-bold"></i></button>
+            <button type="button" onclick="formatDoc('italic')" class="px-2.5 py-1 rounded bg-white hover:bg-gray-100 italic"><i class="fa-solid fa-italic"></i></button>
+            <button type="button" onclick="formatDoc('p')" class="px-2.5 py-1 rounded bg-white hover:bg-gray-100"><i class="fa-solid fa-paragraph"></i></button>
+            <button type="button" onclick="formatDoc('ul')" class="px-2.5 py-1 rounded bg-white hover:bg-gray-100"><i class="fa-solid fa-list-ul"></i></button>
+            <button type="button" onclick="formatDoc('ol')" class="px-2.5 py-1 rounded bg-white hover:bg-gray-100"><i class="fa-solid fa-list-ol"></i></button>
+            <button type="button" onclick="formatDoc('blockquote')" class="px-2.5 py-1 rounded bg-white hover:bg-gray-100"><i class="fa-solid fa-quote-left"></i></button>
+          </div>
+
+          <textarea id="postContent" name="content" rows="14" required placeholder="এখানে আপনার পূর্ণাঙ্গ তথ্যবহুল নিবন্ধটি লিখুন..." class="w-full text-sm font-sans leading-relaxed p-4"><%= post.content || '' %></textarea>
+        </div>
+
+        <!-- ৩. ১০০% এসইও অপটিমাইজার ও লাইভ গুগল সার্চ প্রিভিউ -->
+        <div class="glass rounded-3xl p-6 border-2 border-rb-200 bg-white/95 space-y-6">
+          <div class="flex items-center justify-between pb-3 border-b border-rb-100">
+            <div class="flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-green-100 text-green-700 flex items-center justify-center font-bold text-sm">
+                <i class="fa-solid fa-chart-line"></i>
+              </span>
+              <div>
+                <h3 class="font-head text-base font-bold text-gray-900">গুগল এসইও অপটিমাইজার (SEO Suite)</h3>
+                <p class="text-[11px] text-gray-500">গুগল সার্চে প্রথম পাতায় র‍্যাংক করার জন্য মেটা তথ্য ও কিওয়ার্ড সেট করুন</p>
+              </div>
+            </div>
+            <span class="px-3 py-1 rounded-full text-xs font-bold bg-green-50 text-green-700 border border-green-200">
+              100% SEO Ready
+            </span>
+          </div>
+
+          <!-- ফোকাস কিওয়ার্ড -->
+          <div>
+            <label class="block text-xs font-bold text-gray-800 mb-1">
+              মূল ফোকাস কিওয়ার্ড (Focus Keyword) <span class="text-rb-600">*</span>
+            </label>
+            <input type="text" id="focusKeyword" name="focusKeyword" value="<%= post.focusKeyword || '' %>" placeholder="যেমন: রক্তদানের উপকারিতা" class="w-full text-xs">
+            <p class="text-[10px] text-gray-400 mt-1">যে শব্দটি দিয়ে মানুষ গুগলে খুঁজবে সেই প্রধান কিওয়ার্ডটি এখানে লিখুন।</p>
+          </div>
+
+          <!-- এসইও মেটা টাইটেল -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-xs font-bold text-gray-800">
+                গুগল মেটা টাইটেল (SEO Title)
+              </label>
+              <span id="titleCount" class="text-[10px] text-gray-400">০ / ৬০ অক্ষর</span>
+            </div>
+            <input type="text" id="metaTitle" name="metaTitle" value="<%= post.metaTitle || '' %>" placeholder="গুগল সার্চ ফলাফলে প্রদর্শনের শিরোনাম (সর্বোচ্চ ৬০ অক্ষর)" class="w-full text-xs">
+          </div>
+
+          <!-- এসইও মেটা ডেসক্রিপশন -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-xs font-bold text-gray-800">
+                গুগল মেটা ডেসক্রিপশন (Meta Description)
+              </label>
+              <span id="descCount" class="text-[10px] text-gray-400">০ / ১৬০ অক্ষর</span>
+            </div>
+            <textarea id="metaDescription" name="metaDescription" rows="3" placeholder="গুগল সার্চ রেজাল্টে টাইটেলের নিচে প্রদর্শিত সংক্ষিপ্ত বর্ণনা (১২০-১৬০ অক্ষর)" class="w-full text-xs"><%= post.metaDescription || '' %></textarea>
+          </div>
+
+          <!-- গুগল সার্চ রেজাল্ট লাইভ প্রিভিউ বক্স -->
+          <div class="p-4 rounded-2xl bg-white border border-gray-200 shadow-sm space-y-1">
+            <div class="flex items-center gap-1.5 text-xs text-gray-500 mb-1">
+              <i class="fa-brands fa-google text-blue-500"></i>
+              <span class="font-bold text-gray-700">গুগল সার্চে কেমন দেখাবে (Live Preview):</span>
+            </div>
+            <div class="pt-2">
+              <div class="text-[11px] text-[#202124] flex items-center gap-1 font-sans">
+                <span class="text-green-700 font-medium">https://roktobarta.com</span>
+                <span class="text-gray-400">› blog ›</span>
+                <span id="previewSlug" class="text-gray-600">article-slug</span>
+              </div>
+              <h4 id="previewTitle" class="text-blue-800 hover:underline font-medium text-base leading-snug cursor-pointer line-clamp-1 font-sans">
+                আপনার আর্টিকেলের এসইও টাইটেল এখানে প্রদর্শিত হবে
+              </h4>
+              <p id="previewDesc" class="text-xs text-[#4d5156] font-sans leading-relaxed line-clamp-2 mt-1">
+                এখানে আপনার মেটা ডেসক্রিপশনের সারসংক্ষেপ দৃশ্যমান হবে যা দেখে গুগল ব্যবহারকারীরা ক্লিকের সিদ্ধান্ত নেবেন।
+              </p>
+            </div>
+          </div>
+
+          <!-- এসইও চেকলিস্ট -->
+          <div class="p-4 rounded-2xl bg-gray-50 border border-gray-100 text-xs space-y-2">
+            <p class="font-bold text-gray-800 flex items-center gap-1.5">
+              <i class="fa-solid fa-list-check text-rb-600"></i>রিয়েল-টাইম এসইও চেকলিস্ট:
+            </p>
+            <div class="grid sm:grid-cols-2 gap-2 text-[11px]">
+              <div id="checkTitle" class="flex items-center gap-1.5 text-gray-500">
+                <i class="fa-solid fa-circle-dot text-gray-300"></i><span>শিরোনামে কিওয়ার্ড বিদ্যমান</span>
+              </div>
+              <div id="checkDesc" class="flex items-center gap-1.5 text-gray-500">
+                <i class="fa-solid fa-circle-dot text-gray-300"></i><span>মেটা বর্ণনায় কিওয়ার্ড বিদ্যমান</span>
+              </div>
+              <div id="checkContent" class="flex items-center gap-1.5 text-gray-500">
+                <i class="fa-solid fa-circle-dot text-gray-300"></i><span>মূল কন্টেন্টে কিওয়ার্ড বিদ্যমান</span>
+              </div>
+              <div id="checkLength" class="flex items-center gap-1.5 text-gray-500">
+                <i class="fa-solid fa-circle-dot text-gray-300"></i><span>আর্টিকেলের পর্যাপ্ত দৈর্ঘ্য</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ডানের সাইডবার সেটিংস (ক্যাটাগরি, ছবি, পাবলিশ) -->
+      <div class="space-y-6">
+        <!-- পাবলিকেশন বক্স -->
+        <div class="glass rounded-3xl p-6 border border-rb-100 space-y-4">
+          <h3 class="font-head text-base font-bold text-gray-900 pb-2 border-b border-rb-50">
+            প্রকাশনা নিয়ন্ত্রণ
+          </h3>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">স্ট্যাটাস</label>
+            <select name="status" class="w-full text-xs">
+              <option value="published" <%= post.status === 'published' ? 'selected' : '' %>>সরাসরি প্রকাশ (Published)</option>
+              <option value="draft" <%= post.status === 'draft' ? 'selected' : '' %>>ড্রাফট হিসেবে রাখুন (Draft)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">লেখকের নাম</label>
+            <input type="text" name="authorName" value="<%= post.authorName || 'রক্তবার্তা মেডিকেল ডেস্ক' %>" class="w-full text-xs">
+          </div>
+
+          <button type="submit" class="btn w-full py-3 text-sm shadow-lg shadow-rb-600/20 font-bold">
+            <i class="fa-solid fa-cloud-arrow-up mr-1.5"></i><%= isEdit ? 'আপডেট সম্পন্ন করুন' : 'নিবন্ধটি প্রকাশ করুন' %>
+          </button>
+        </div>
+
+        <!-- ক্যাটাগরি ও ট্যাগ -->
+        <div class="glass rounded-3xl p-6 border border-rb-100 space-y-4">
+          <h3 class="font-head text-base font-bold text-gray-900 pb-2 border-b border-rb-50">
+            শ্রেণিবিভাগ ও ট্যাগ
+          </h3>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">ক্যাটাগরি <span class="text-rb-600">*</span></label>
+            <select name="category" required class="w-full text-xs">
+              <% const categories = ['স্বাস্থ্য টিপস', 'সচেতনতা', 'রক্তদান সহায়িকা', 'বিজ্ঞান ও গবেষণা', 'অনুপ্রেরণা']; %>
+              <% categories.forEach(c => { %>
+                <option value="<%= c %>" <%= post.category === c ? 'selected' : '' %>><%= c %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">ট্যাগসমূহ (কমা দিয়ে আলাদা)</label>
+            <input type="text" name="tags" value="<%= post.tags ? post.tags.join(', ') : '' %>" placeholder="রক্তদান, স্বাস্থ্য, পুষ্টি, থ্যালাসেমিয়া" class="w-full text-xs">
+          </div>
+        </div>
+
+        <!-- কভার ফটো সেটিংস (R2 / URL বা ফাইল আপলোড) -->
+        <div class="glass rounded-3xl p-6 border border-rb-100 space-y-4">
+          <div class="flex items-center justify-between pb-2 border-b border-rb-50">
+            <h3 class="font-head text-base font-bold text-gray-900">
+              কভার ফটো (Cover Image)
+            </h3>
+            <span class="text-[10px] font-bold text-rb-700 bg-rb-50 px-2 py-0.5 rounded-full border border-rb-200">
+              R2 / URL সাপোর্টেড
+            </span>
+          </div>
+
+          <% if (post.coverImage) { %>
+            <div class="rounded-2xl overflow-hidden h-36 bg-rb-50 mb-2 border border-rb-100 relative">
+              <img id="currentCoverImg" src="<%= post.coverImage %>" alt="Current Cover" class="w-full h-full object-cover">
+            </div>
+            <p class="text-[10px] text-gray-500">বর্তমান ছবি কার্যকর আছে। পরিবর্তন করতে নিচে নতুন লিঙ্ক দিন বা ফাইল আপলোড করুন।</p>
+          <% } %>
+
+          <!-- ১. Cloudflare R2 বা এক্সটার্নাল ইমেজ লিঙ্ক -->
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">
+              <i class="fa-solid fa-link text-rb-600 mr-1"></i>ইমেজ লিঙ্ক (Cloudflare R2 / CDN URL)
+            </label>
+            <input type="url" name="coverImageUrl" id="coverImageUrl" value="<%= (post.coverImage && (post.coverImage.startsWith('http://') || post.coverImage.startsWith('https://'))) ? post.coverImage : '' %>" placeholder="https://pub-xxxx.r2.dev/blog-cover.webp" class="w-full text-xs">
+            <p class="text-[10px] text-gray-400 mt-1">Cloudflare R2 বা যেকোনো ইমেজ হোস্টিংয়ের লিঙ্ক দিলে সার্ভার ও ডাটাবেজের স্টোরেজ পুরোপুরি সাশ্রয় হবে।</p>
+          </div>
+
+          <div class="relative flex py-1 items-center">
+            <div class="flex-grow border-t border-gray-200"></div>
+            <span class="flex-shrink mx-2 text-[10px] font-bold text-gray-400 uppercase">অথবা ফাইল আপলোড</span>
+            <div class="flex-grow border-t border-gray-200"></div>
+          </div>
+
+          <!-- ২. সরাসরি কম্পিউটার থেকে ফাইল আপলোড -->
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">
+              <i class="fa-solid fa-upload text-rb-600 mr-1"></i>কম্পিউটার থেকে আপলোড
+            </label>
+            <input type="file" name="coverImage" id="coverImageFile" accept="image/*" class="w-full text-xs file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-rb-600 file:text-white cursor-pointer">
+            <p class="text-[10px] text-gray-400 mt-1">সর্বোচ্চ ২ মেগাবাইট (JPG, PNG বা WebP অনুমিত)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+  // 1. Auto-slug generation from Title
+  const titleInput = document.getElementById('postTitle');
+  const slugInput = document.getElementById('postSlug');
+  const excerptInput = document.getElementById('postExcerpt');
+  const metaTitleInput = document.getElementById('metaTitle');
+  const metaDescInput = document.getElementById('metaDescription');
+  const keywordInput = document.getElementById('focusKeyword');
+  const contentInput = document.getElementById('postContent');
+
+  // Preview elements
+  const previewSlug = document.getElementById('previewSlug');
+  const previewTitle = document.getElementById('previewTitle');
+  const previewDesc = document.getElementById('previewDesc');
+  const titleCount = document.getElementById('titleCount');
+  const descCount = document.getElementById('descCount');
+
+  // Checklist elements
+  const checkTitle = document.getElementById('checkTitle');
+  const checkDesc = document.getElementById('checkDesc');
+  const checkContent = document.getElementById('checkContent');
+  const checkLength = document.getElementById('checkLength');
+
+  function updateSEO() {
+    const titleVal = titleInput.value.trim();
+    const slugVal = slugInput.value.trim() || 'article-slug';
+    const metaTitleVal = metaTitleInput.value.trim() || titleVal || 'আপনার আর্টিকেলের এসইও টাইটেল';
+    const metaDescVal = metaDescInput.value.trim() || excerptInput.value.trim() || 'এখানে আপনার মেটা ডেসক্রিপশনের সারসংক্ষেপ দৃশ্যমান হবে...';
+    const keyword = (keywordInput.value.trim() || '').toLowerCase();
+    const content = contentInput.value.trim().toLowerCase();
+
+    // Update Preview
+    previewSlug.textContent = slugVal;
+    previewTitle.textContent = metaTitleVal;
+    previewDesc.textContent = metaDescVal;
+
+    // Update Counters
+    titleCount.textContent = `${metaTitleVal.length} / ৬০ অক্ষর`;
+    titleCount.style.color = metaTitleVal.length > 60 ? '#e11d2e' : '#6b7280';
+
+    descCount.textContent = `${metaDescVal.length} / ১৬০ অক্ষর`;
+    descCount.style.color = metaDescVal.length > 160 ? '#e11d2e' : '#6b7280';
+
+    // Checklist Validation
+    if (keyword) {
+      updateCheckItem(checkTitle, metaTitleVal.toLowerCase().includes(keyword));
+      updateCheckItem(checkDesc, metaDescVal.toLowerCase().includes(keyword));
+      updateCheckItem(checkContent, content.includes(keyword));
+    }
+    updateCheckItem(checkLength, content.length > 200);
+  }
+
+  function updateCheckItem(el, isValid) {
+    if (!el) return;
+    if (isValid) {
+      el.className = 'flex items-center gap-1.5 text-green-700 font-bold';
+      el.innerHTML = '<i class="fa-solid fa-circle-check text-green-600"></i>' + el.querySelector('span').outerHTML;
+    } else {
+      el.className = 'flex items-center gap-1.5 text-gray-500';
+      el.innerHTML = '<i class="fa-solid fa-circle-dot text-gray-300"></i>' + el.querySelector('span').outerHTML;
+    }
+  }
+
+  titleInput.addEventListener('input', () => {
+    if (!slugInput.dataset.manual) {
+      const generated = titleInput.value.trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9\u0980-\u09FF\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-');
+      slugInput.value = generated;
+    }
+    if (!metaTitleInput.value) {
+      metaTitleInput.placeholder = titleInput.value;
+    }
+    updateSEO();
+  });
+
+  slugInput.addEventListener('input', () => {
+    slugInput.dataset.manual = 'true';
+    updateSEO();
+  });
+
+  metaTitleInput.addEventListener('input', updateSEO);
+  metaDescInput.addEventListener('input', updateSEO);
+  keywordInput.addEventListener('input', updateSEO);
+  contentInput.addEventListener('input', updateSEO);
+  excerptInput.addEventListener('input', () => {
+    if (!metaDescInput.value) {
+      metaDescInput.placeholder = excerptInput.value;
+    }
+    updateSEO();
+  });
+
+  // Formatting helper for textarea
+  function formatDoc(tag) {
+    const textarea = document.getElementById('postContent');
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = textarea.value;
+    const selected = text.substring(start, end) || 'এখানে টেক্সট লিখুন';
+
+    let replacement = '';
+    if (tag === 'h2') replacement = `<h2>${selected}</h2>\n`;
+    else if (tag === 'h3') replacement = `<h3>${selected}</h3>\n`;
+    else if (tag === 'bold') replacement = `<strong>${selected}</strong>`;
+    else if (tag === 'italic') replacement = `<em>${selected}</em>`;
+    else if (tag === 'p') replacement = `<p>${selected}</p>\n`;
+    else if (tag === 'blockquote') replacement = `<blockquote>${selected}</blockquote>\n`;
+    else if (tag === 'ul') replacement = `<ul>\n  <li>${selected}</li>\n</ul>\n`;
+    else if (tag === 'ol') replacement = `<ol>\n  <li>${selected}</li>\n</ol>\n`;
+
+    textarea.value = text.substring(0, start) + replacement + text.substring(end);
+    textarea.focus();
+    updateSEO();
+  }
+
+  // Initial trigger
+  updateSEO();
+</script>

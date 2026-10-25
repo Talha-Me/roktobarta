@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof metaTitle !== 'undefined' ? metaTitle : 'রক্তবার্তা – বাংলাদেশ ও কলকাতার রক্তদাতা ও গ্রহীতার সংযোগ' %></title>
+  <meta name="description" content="<%= typeof metaDescription !== 'undefined' ? metaDescription : 'রক্তবার্তা: বাংলাদেশ ও কলকাতায় জরুরি রক্তের অনুরোধ করুন, জেলা ও উপজেলা ভিত্তিক রক্তদাতা খুঁজুন এবং আপনার রক্তদানের গল্প শেয়ার করুন।' %>">
+  <link rel="canonical" href="<%= siteUrl %><%= currentPath %>">
+  <meta name="csrf-token" content="<%= csrfToken %>">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="<%= siteUrl %><%= currentPath %>">
+  <meta property="og:title" content="<%= typeof metaTitle !== 'undefined' ? metaTitle : 'রক্তবার্তা' %>">
+  <meta property="og:description" content="<%= typeof metaDescription !== 'undefined' ? metaDescription : 'বাংলাদেশ ও কলকাতায় জরুরি রক্তের অনুরোধ ও রক্তদাতা খোঁজার উন্মুক্ত প্ল্যাটফর্ম।' %>">
+  <meta property="og:image" content="<%= typeof metaImage !== 'undefined' ? metaImage : (siteUrl + '/images/logo.png') %>">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= typeof metaTitle !== 'undefined' ? metaTitle : 'রক্তবার্তা' %>">
+  <meta name="twitter:description" content="<%= typeof metaDescription !== 'undefined' ? metaDescription : 'বাংলাদেশ ও কলকাতায় জরুরি রক্তের অনুরোধ ও রক্তদাতা খোঁজার উন্মুক্ত প্ল্যাটফর্ম।' %>">
+  <meta name="twitter:image" content="<%= typeof metaImage !== 'undefined' ? metaImage : (siteUrl + '/images/logo.png') %>">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/images/logo.png">
+
+  <!-- Google Fonts: Hind Siliguri (Body) & Noto Serif Bengali (Headings) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6.5.1 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Tailwind CSS Compiled -->
+  <link rel="stylesheet" href="/css/style.css?v=2.3">
+
+  <!-- Google Analytics (GA4) -->
+  <% if (gaId) { %>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=<%= gaId %>"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '<%= gaId %>');
+    </script>
+  <% } %>
+
+  <!-- Google AdSense -->
+  <% if (adsenseClient) { %>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=<%= adsenseClient %>" crossorigin="anonymous"></script>
+  <% } %>
+
+  <!-- Schema.org Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "<%= siteUrl %>/#website",
+        "url": "<%= siteUrl %>",
+        "name": "রক্তবার্তা",
+        "description": "বাংলাদেশ ও কলকাতায় জরুরি রক্তের অনুরোধ ও রক্তদাতা খোঁজার উন্মুক্ত ডিজিটাল প্ল্যাটফর্ম",
+        "inLanguage": "bn-BD",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "<%= siteUrl %>/donors?district={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "MedicalOrganization",
+        "@id": "<%= siteUrl %>/#organization",
+        "name": "রক্তবার্তা (Roktobarta)",
+        "url": "<%= siteUrl %>",
+        "logo": "<%= siteUrl %>/images/logo.png",
+        "sameAs": [
+          "https://www.facebook.com/roktobarta"
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "emergency",
+          "availableLanguage": ["Bengali", "English"]
+        }
+      }
+    ]
+  }
+  </script>
+  <!-- পাসওয়ার্ড প্রদর্শন ও লুকানো স্ক্রিপ্ট (গ্লোবাল সার্বজনীন ডেলিগেশন) -->
+  <script>
+    function togglePasswordVisibility(inputId, btn) {
+      try {
+        var input = typeof inputId === 'string' ? document.getElementById(inputId) : inputId;
+        if (!input && btn) {
+          var wrap = btn.closest('.password-wrap') || btn.parentElement;
+          if (wrap) input = wrap.querySelector('input');
+        }
+        if (!input) return;
+        var isPass = input.type === 'password';
+        input.type = isPass ? 'text' : 'password';
+        var icon = (btn && btn.querySelector('i')) || btn;
+        if (icon && icon.classList) {
+          icon.classList.toggle('fa-eye', !isPass);
+          icon.classList.toggle('fa-eye-slash', isPass);
+        }
+        if (btn && btn.setAttribute) {
+          btn.setAttribute('aria-label', isPass ? 'পাসওয়ার্ড লুকান' : 'পাসওয়ার্ড দেখুন');
+          btn.setAttribute('title', isPass ? 'পাসওয়ার্ড লুকান' : 'পাসওয়ার্ড দেখুন');
+        }
+      } catch (e) {
+        console.error('Password toggle error:', e);
+      }
+    }
+    window.togglePasswordVisibility = togglePasswordVisibility;
+
+    // ক্লিক ডেলিগেশন: যাতে CSP অথবা যে কোনো ব্রাউজারে বাটন চাপার সাথে সাথেই কাজ করে
+    document.addEventListener('click', function(e) {
+      var btn = e.target.closest('.password-toggle-btn');
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      var targetId = btn.getAttribute('data-target');
+      var input = targetId ? document.getElementById(targetId) : null;
+      if (!input) {
+        var wrap = btn.closest('.password-wrap') || btn.parentElement;
+        if (wrap) input = wrap.querySelector('input');
+      }
+      if (!input) return;
+      togglePasswordVisibility(input, btn);
+      input.focus();
+      try {
+        var len = input.value.length;
+        input.setSelectionRange(len, len);
+      } catch (err) {}
+    }, true);
+  </script>
+  <!-- মূল ক্লায়েন্ট সাইড স্ক্রিপ্ট -->
+  <script src="/js/main.js?v=2.5"></script>
+</head>
+<body class="flex flex-col min-h-screen">
+
+  <!-- জরুরি টিকার -->
+  <%- include('../partials/ticker') %>
+
+  <!-- নেভিগেশন বার -->
+  <%- include('../partials/navbar') %>
+
+  <!-- ফ্ল্যাশ নোটিফিকেশন মেসেজ -->
+  <%- include('../partials/flash') %>
+
+  <!-- মূল কন্টেন্ট -->
+  <main class="flex-grow">
+    <%- body %>
+  </main>
+
+  <!-- গল্প জমা দেওয়ার পপআপ মোডাল -->
+  <%- include('../partials/storyModal') %>
+
+  <!-- কুকি ব্যানার -->
+  <%- include('../partials/cookieBanner') %>
+
+  <!-- ফুটার -->
+  <%- include('../partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<section class="max-w-3xl mx-auto px-4 py-24 text-center">
+  <div class="glass rounded-3xl p-8 sm:p-12 relative overflow-hidden">
+    <div class="blob w-52 h-52 bg-rb-500 -top-10 -left-10"></div>
+    <span class="text-7xl sm:text-9xl font-bold font-head text-rb-600 block mb-4">৫০০</span>
+    <h1 class="text-2xl sm:text-3xl font-bold text-rb-900 mb-3">সার্ভার সমস্যা হয়েছে</h1>
+    <p class="text-gray-600 max-w-md mx-auto mb-8 text-base sm:text-lg">
+      আমাদের সার্ভারে একটি অপ্রত্যাশিত সমস্যা দেখা দিয়েছে। আমাদের টিম ইতিমধ্যে এটি সমাধানের কাজ করছে। দয়া করে একটু পর আবার চেষ্টা করুন।
+    </p>
+    <% if (error) { %>
+      <div class="text-left bg-white/80 p-4 rounded-xl text-xs font-mono text-red-700 overflow-x-auto mb-6">
+        <strong>Error:</strong> <%= error.message %><br>
+        <pre><%= error.stack %></pre>
+      </div>
+    <% } %>
+    <div class="flex flex-wrap justify-center gap-4">
+      <a href="/" class="btn px-8 py-3 text-base">
+        <i class="fa-solid fa-house mr-2"></i>হোমে ফিরে যান
+      </a>
+      <a href="/contact" class="btn-ghost px-8 py-3 text-base">
+        <i class="fa-solid fa-envelope mr-2"></i>আমাদের জানান
+      </a>
+    </div>
+  </div>
+</section>

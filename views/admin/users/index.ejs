@@ -1,0 +1,180 @@
+<!-- ব্যবহারকারী ও রক্তদাতা তালিকা (Admin Users) -->
+<div class="space-y-6">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h2 class="font-head text-2xl font-bold text-gray-900">সকল ব্যবহারকারী ও রক্তদাতা</h2>
+      <p class="text-xs text-gray-500">মোট সদস্য সংখ্যা: <%= toBn(total) %> জন</p>
+    </div>
+    <div class="flex gap-2">
+      <a href="/admin/export/donors" class="glass px-4 py-2 rounded-xl text-xs font-bold text-green-700 hover:border-green-600 transition flex items-center gap-1.5">
+        <i class="fa-solid fa-file-csv text-base"></i>রক্তদাতাদের CSV ডাউনলোড
+      </a>
+    </div>
+  </div>
+
+  <!-- ফিল্টার ও সার্চ বক্স -->
+  <form action="/admin/users" method="GET" class="glass rounded-2xl p-4 flex flex-wrap items-center gap-3 border border-rb-50">
+    <div class="flex-1 min-w-[200px]">
+      <input type="text" name="q" value="<%= searchQuery %>" placeholder="নাম, মোবাইল, ইমেইল বা জেলা..." class="w-full text-xs">
+    </div>
+
+    <div>
+      <select name="role" class="text-xs py-2">
+        <option value="all" <%= queryRole === 'all' ? 'selected' : '' %>>সকল রোল</option>
+        <option value="user" <%= queryRole === 'user' ? 'selected' : '' %>>সাধারণ ইউজার</option>
+        <option value="admin" <%= queryRole === 'admin' ? 'selected' : '' %>>অ্যাডমিন</option>
+      </select>
+    </div>
+
+    <div>
+      <select name="donor" class="text-xs py-2">
+        <option value="all" <%= queryDonor === 'all' ? 'selected' : '' %>>সবাই (দাতা/অদাতা)</option>
+        <option value="yes" <%= queryDonor === 'yes' ? 'selected' : '' %>>শুধুমাত্র রক্তদাতা</option>
+        <option value="no" <%= queryDonor === 'no' ? 'selected' : '' %>>রক্তদাতা নন</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn px-4 py-2 text-xs">
+      <i class="fa-solid fa-filter mr-1"></i>ফিল্টার
+    </button>
+
+    <% if (searchQuery || queryRole !== 'all' || queryDonor !== 'all') { %>
+      <a href="/admin/users" class="glass px-3 py-2 rounded-xl text-xs text-gray-600 hover:text-rb-600">রিসেট</a>
+    <% } %>
+  </form>
+
+  <!-- ইউজার টেবিল -->
+  <div class="glass rounded-3xl overflow-hidden border border-rb-100">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs text-gray-700">
+        <thead class="bg-rb-50/70 border-b border-rb-100 text-gray-800 font-bold uppercase tracking-wider text-[11px]">
+          <tr>
+            <th class="p-3.5 pl-5">নাম ও ইমেইল</th>
+            <th class="p-3.5">মোবাইল</th>
+            <th class="p-3.5">গ্রুপ</th>
+            <th class="p-3.5">অবস্থান</th>
+            <th class="p-3.5 text-center">রক্তদাতা?</th>
+            <th class="p-3.5 text-center">রোল</th>
+            <th class="p-3.5 text-center">স্ট্যাটাস</th>
+            <th class="p-3.5 pr-5 text-right">অ্যাকশন</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-rb-50">
+          <% if (users && users.length > 0) { %>
+            <% users.forEach(u => { %>
+              <tr class="hover:bg-white/60 transition">
+                <td class="p-3.5 pl-5">
+                  <div class="flex items-center gap-2.5">
+                    <span class="w-8 h-8 rounded-full bg-rb-100 text-rb-700 font-bold text-xs flex items-center justify-center flex-shrink-0">
+                      <%= u.name.charAt(0) %>
+                    </span>
+                    <div>
+                      <p class="font-bold text-gray-900"><%= u.name %></p>
+                      <p class="text-[11px] text-gray-500"><%= u.email %></p>
+                    </div>
+                  </div>
+                </td>
+                <td class="p-3.5 font-medium"><%= u.phone %></td>
+                <td class="p-3.5">
+                  <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-rb-50 text-rb-600 border border-rb-100">
+                    <%= toBnGroup(u.bloodGroup) %>
+                  </span>
+                </td>
+                <td class="p-3.5">
+                  <p class="font-medium text-gray-800"><%= u.district %></p>
+                  <p class="text-[10px] text-gray-500"><%= u.upazila %></p>
+                </td>
+                <td class="p-3.5 text-center">
+                  <% if (u.isDonor) { %>
+                    <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-50 text-green-700 border border-green-200">
+                      হ্যাঁ (<%= toBn(u.totalDonations || 0) %> বার)
+                    </span>
+                  <% } else { %>
+                    <span class="text-gray-400">না</span>
+                  <% } %>
+                </td>
+                <td class="p-3.5 text-center">
+                  <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold <%= u.role === 'admin' ? 'bg-purple-50 text-purple-700 border border-purple-200' : 'bg-gray-100 text-gray-600' %>">
+                    <%= u.role === 'admin' ? 'অ্যাডমিন' : 'ইউজার' %>
+                  </span>
+                </td>
+                <td class="p-3.5 text-center">
+                  <% if (u.isBanned) { %>
+                    <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-700">
+                      নিষিদ্ধ (Banned)
+                    </span>
+                  <% } else { %>
+                    <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700">
+                      সক্রিয়
+                    </span>
+                  <% } %>
+                </td>
+                <td class="p-3.5 pr-5 text-right">
+                  <div class="flex items-center justify-end gap-1.5">
+                    <!-- ব্যান টগল -->
+                    <form action="/admin/users/<%= u._id %>/ban" method="POST" onsubmit="return confirm('আপনি কি নিশ্চিত?')">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                      <button type="submit" title="<%= u.isBanned ? 'আনব্যান করুন' : 'ব্যান করুন' %>" class="w-7 h-7 rounded-lg glass flex items-center justify-center <%= u.isBanned ? 'text-green-600 hover:bg-green-50' : 'text-orange-600 hover:bg-orange-50' %>">
+                        <i class="fa-solid <%= u.isBanned ? 'fa-user-check' : 'fa-user-slash' %>"></i>
+                      </button>
+                    </form>
+
+                    <!-- রোল পরিবর্তন -->
+                    <form action="/admin/users/<%= u._id %>/role" method="POST" onsubmit="return confirm('রোল পরিবর্তন করবেন?')">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                      <button type="submit" title="রোল পরিবর্তন" class="w-7 h-7 rounded-lg glass flex items-center justify-center text-purple-600 hover:bg-purple-50">
+                        <i class="fa-solid fa-shield-halved"></i>
+                      </button>
+                    </form>
+
+                    <!-- ডিলিট -->
+                    <form action="/admin/users/<%= u._id %>/delete" method="POST" onsubmit="return confirm('ব্যবহারকারী অ্যাকাউন্টটি স্থায়ীভাবে মুছে ফেলতে চান?')">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                      <button type="submit" title="মুছে ফেলুন" class="w-7 h-7 rounded-lg glass flex items-center justify-center text-red-600 hover:bg-red-50">
+                        <i class="fa-solid fa-trash-can"></i>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="8" class="p-8 text-center text-gray-500">
+                কোনো ব্যবহারকারী খুঁজে পাওয়া যায়নি
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- পেজিনেশন -->
+    <% if (totalPages > 1) { %>
+      <div class="p-4 bg-white/40 border-t border-rb-50 flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
+        <% if (currentPage > 1) { %>
+          <a href="/admin/users?page=<%= currentPage - 1 %>&role=<%= queryRole %>&donor=<%= queryDonor %>&q=<%= searchQuery %>" class="px-2.5 py-1.5 rounded-lg text-xs font-bold glass text-gray-700 hover:bg-rb-50">
+            ← পূর্ববর্তী
+          </a>
+        <% } %>
+
+        <% const pageItems = getPagination(currentPage, totalPages); %>
+        <% pageItems.forEach(function(p) { %>
+          <% if (p === '...') { %>
+            <span class="w-8 h-8 flex items-center justify-center text-xs font-bold text-gray-400 select-none">...</span>
+          <% } else { %>
+            <a href="/admin/users?page=<%= p %>&role=<%= queryRole %>&donor=<%= queryDonor %>&q=<%= searchQuery %>" class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold <%= p === currentPage ? 'bg-rb-600 text-white' : 'glass text-gray-700 hover:bg-rb-50' %>">
+              <%= toBn(p) %>
+            </a>
+          <% } %>
+        <% }); %>
+
+        <% if (currentPage < totalPages) { %>
+          <a href="/admin/users?page=<%= currentPage + 1 %>&role=<%= queryRole %>&donor=<%= queryDonor %>&q=<%= searchQuery %>" class="px-2.5 py-1.5 rounded-lg text-xs font-bold glass text-gray-700 hover:bg-rb-50">
+            পরবর্তী →
+          </a>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+</div>

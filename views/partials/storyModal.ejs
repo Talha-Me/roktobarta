@@ -1,0 +1,86 @@
+<div id="storyModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+  <div class="glass bg-white/95 rounded-3xl p-6 sm:p-8 max-w-lg w-full relative max-h-[90vh] overflow-y-auto">
+    <button id="closeStoryModal" type="button" class="absolute right-5 top-5 w-9 h-9 rounded-full bg-rb-50 hover:bg-rb-100 text-rb-700 flex items-center justify-center transition" aria-label="বন্ধ করুন">
+      <i class="fa-solid fa-xmark text-lg"></i>
+    </button>
+
+    <h3 class="font-head text-2xl font-bold text-rb-900 mb-1">আপনার রক্তদানের গল্প লিখুন</h3>
+    <p class="text-sm text-gray-600 mb-4 leading-relaxed">
+      রক্তদান করে বা সঠিক সময়ে রক্ত পেয়ে আপনার অনুভূতি ও বাস্তব অভিজ্ঞতা অন্যদের সাথে শেয়ার করুন।
+    </p>
+
+    <% if (!currentUser) { %>
+      <div class="bg-rb-50 border border-rb-100 rounded-2xl p-4 text-center my-4">
+        <i class="fa-solid fa-lock text-rb-600 text-2xl mb-2"></i>
+        <p class="text-sm text-gray-700 font-medium mb-3">গল্প লিখতে আপনাকে প্রথমে লগইন করতে হবে।</p>
+        <div class="flex justify-center gap-3">
+          <a href="/login" class="btn px-5 py-2 text-sm">লগইন করুন</a>
+          <a href="/register" class="btn-ghost px-5 py-2 text-sm">নতুন অ্যাকাউন্ট</a>
+        </div>
+      </div>
+    <% } else { %>
+      <form id="storyForm" action="/stories" method="POST" enctype="multipart/form-data" class="space-y-3">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">আপনার ভূমিকা</label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="glass px-3 py-2 rounded-xl flex items-center gap-2 cursor-pointer text-sm hover:border-rb-500">
+              <input type="radio" name="role" value="donor" checked class="w-4 h-4 text-rb-600">
+              <span>আমি রক্তদাতা</span>
+            </label>
+            <label class="glass px-3 py-2 rounded-xl flex items-center gap-2 cursor-pointer text-sm hover:border-rb-500">
+              <input type="radio" name="role" value="receiver" class="w-4 h-4 text-rb-600">
+              <span>আমি রক্তগ্রহীতা</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">রক্তের গ্রুপ</label>
+            <select name="bloodGroup" required>
+              <option value="">গ্রুপ বেছে নিন</option>
+              <option value="A+" <%= currentUser.bloodGroup === 'A+' ? 'selected' : '' %>>এ+ (A+)</option>
+              <option value="A-" <%= currentUser.bloodGroup === 'A-' ? 'selected' : '' %>>এ- (A-)</option>
+              <option value="B+" <%= currentUser.bloodGroup === 'B+' ? 'selected' : '' %>>বি+ (B+)</option>
+              <option value="B-" <%= currentUser.bloodGroup === 'B-' ? 'selected' : '' %>>বি- (B-)</option>
+              <option value="O+" <%= currentUser.bloodGroup === 'O+' ? 'selected' : '' %>>ও+ (O+)</option>
+              <option value="O-" <%= currentUser.bloodGroup === 'O-' ? 'selected' : '' %>>ও- (O-)</option>
+              <option value="AB+" <%= currentUser.bloodGroup === 'AB+' ? 'selected' : '' %>>এবি+ (AB+)</option>
+              <option value="AB-" <%= currentUser.bloodGroup === 'AB-' ? 'selected' : '' %>>এবি- (AB-)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">জেলা / অবস্থান</label>
+            <input name="location" value="<%= currentUser.district || '' %>" placeholder="যেমন: ঢাকা" required>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">গল্পের শিরোনাম</label>
+          <input name="title" placeholder="সংক্ষেপে সুন্দর একটি শিরোনাম দিন" required maxlength="100">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">আপনার সম্পূর্ণ অভিজ্ঞতা</label>
+          <textarea name="body" rows="5" placeholder="কেমন ছিল আপনার রক্তদান বা রক্ত পাওয়ার মুহূর্তটি? বিস্তারিত লিখুন..." required minlength="40"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">ছবি যুক্ত করুন (ঐচ্ছিক)</label>
+          <input type="file" name="image" accept="image/png, image/jpeg, image/webp" class="text-xs file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-rb-100 file:text-rb-700 hover:file:bg-rb-200">
+        </div>
+
+        <p class="text-xs text-gray-500 pt-1">
+          <i class="fa-solid fa-shield-halved text-rb-600 mr-1"></i>
+          আপনার জমা দেওয়া গল্পটি অ্যাডমিন টিম পর্যালোচনার পর ওয়েবসাইটে প্রকাশিত হবে।
+        </p>
+
+        <button type="submit" class="btn w-full py-3 mt-2 text-base">
+          <i class="fa-solid fa-paper-plane mr-2"></i>গল্প জমা দিন
+        </button>
+      </form>
+    <% } %>
+  </div>
+</div>

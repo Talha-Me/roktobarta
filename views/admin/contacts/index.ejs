@@ -1,0 +1,97 @@
+<!-- যোগাযোগ বার্তা ইনবক্স (Admin Contacts) -->
+<div class="space-y-6">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h2 class="font-head text-2xl font-bold text-gray-900">যোগাযোগ ইনবক্স</h2>
+      <p class="text-xs text-gray-500">ওয়েবসাইট থেকে আসা বার্তা ও অনুসন্ধানসমূহ</p>
+    </div>
+  </div>
+
+  <!-- ফিল্টার ট্যাব -->
+  <div class="flex flex-wrap gap-2">
+    <a href="/admin/contacts" class="px-4 py-2 rounded-xl text-xs font-bold transition <%= queryStatus === 'all' ? 'bg-rb-600 text-white' : 'glass text-gray-700 hover:bg-rb-50' %>">
+      সকল বার্তা
+    </a>
+    <a href="/admin/contacts?status=new" class="px-4 py-2 rounded-xl text-xs font-bold transition <%= queryStatus === 'new' ? 'bg-rose-600 text-white' : 'glass text-gray-700 hover:bg-rose-50' %>">
+      <i class="fa-solid fa-envelope mr-1"></i>নতুন বার্তা (New)
+    </a>
+    <a href="/admin/contacts?status=read" class="px-4 py-2 rounded-xl text-xs font-bold transition <%= queryStatus === 'read' ? 'bg-blue-600 text-white' : 'glass text-gray-700 hover:bg-blue-50' %>">
+      <i class="fa-solid fa-envelope-open mr-1"></i>পঠিত (Read)
+    </a>
+    <a href="/admin/contacts?status=replied" class="px-4 py-2 rounded-xl text-xs font-bold transition <%= queryStatus === 'replied' ? 'bg-green-600 text-white' : 'glass text-gray-700 hover:bg-green-50' %>">
+      <i class="fa-solid fa-reply mr-1"></i>উত্তর দেওয়া হয়েছে (Replied)
+    </a>
+  </div>
+
+  <!-- বার্তার তালিকা -->
+  <div class="space-y-4">
+    <% if (contacts && contacts.length > 0) { %>
+      <% contacts.forEach(c => { %>
+        <div class="glass rounded-3xl p-6 border border-rb-100 flex flex-col md:flex-row gap-6 justify-between items-start">
+          <div class="flex-1 space-y-2">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold <%= c.status === 'new' ? 'bg-rose-100 text-rose-700' : (c.status === 'read' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700') %>">
+                <%= c.status === 'new' ? 'নতুন' : (c.status === 'read' ? 'পঠিত' : 'উত্তর সম্পন্ন') %>
+              </span>
+              <span class="text-xs text-gray-400">• <%= formatBnDate(c.createdAt) %></span>
+            </div>
+
+            <h3 class="font-head text-base font-bold text-gray-900"><%= c.subject %></h3>
+
+            <p class="text-xs sm:text-sm text-gray-700 leading-relaxed bg-white/60 p-4 rounded-2xl border border-rb-50 whitespace-pre-line">
+              <%= c.message %>
+            </p>
+
+            <div class="flex flex-wrap items-center gap-3 text-xs text-gray-600 pt-1">
+              <span><strong>প্রেরক:</strong> <%= c.name %></span>
+              <span>•</span>
+              <a href="mailto:<%= c.email %>" class="text-rb-600 hover:underline"><strong>ইমেইল:</strong> <%= c.email %></a>
+              <% if (c.phone) { %>
+                <span>•</span>
+                <a href="tel:<%= c.phone %>" class="text-gray-700 hover:underline"><strong>ফোন:</strong> <%= c.phone %></a>
+              <% } %>
+            </div>
+          </div>
+
+          <!-- অ্যাকশন বাটনসমূহ -->
+          <div class="flex flex-row md:flex-col gap-2 w-full md:w-36 flex-shrink-0">
+            <% if (c.status === 'new') { %>
+              <form action="/admin/contacts/<%= c._id %>/status" method="POST" class="w-full">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="hidden" name="status" value="read">
+                <button type="submit" class="w-full py-2 px-3 rounded-xl bg-blue-600 text-white font-bold text-xs hover:bg-blue-700 transition flex items-center justify-center gap-1.5 shadow-sm">
+                  <i class="fa-solid fa-check"></i>পঠিত চিহ্নিত করুন
+                </button>
+              </form>
+            <% } %>
+
+            <% if (c.status !== 'replied') { %>
+              <form action="/admin/contacts/<%= c._id %>/status" method="POST" class="w-full">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="hidden" name="status" value="replied">
+                <button type="submit" class="w-full py-2 px-3 rounded-xl bg-green-600 text-white font-bold text-xs hover:bg-green-700 transition flex items-center justify-center gap-1.5 shadow-sm">
+                  <i class="fa-solid fa-reply"></i>উত্তর সম্পন্ন
+                </button>
+              </form>
+            <% } %>
+
+            <a href="mailto:<%= c.email %>?subject=<%= encodeURIComponent('রক্তবার্তা: ' + c.subject) %>" class="w-full py-2 px-3 rounded-xl glass text-rb-600 font-bold text-xs hover:bg-rb-50 transition flex items-center justify-center gap-1.5 text-center">
+              <i class="fa-solid fa-paper-plane"></i>ইমেইল পাঠান
+            </a>
+
+            <form action="/admin/contacts/<%= c._id %>/delete" method="POST" onsubmit="return confirm('বার্তাটি মুছে ফেলতে চান?')" class="w-full">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <button type="submit" class="w-full py-2 px-3 rounded-xl glass text-red-600 font-bold text-xs hover:bg-red-50 transition flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-trash-can"></i>ডিলিট
+              </button>
+            </form>
+          </div>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <div class="glass rounded-3xl p-12 text-center text-gray-500">
+        কোনো যোগাযোগ বার্তা নেই
+      </div>
+    <% } %>
+  </div>
+</div>

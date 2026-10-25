@@ -1,0 +1,205 @@
+<section class="max-w-4xl mx-auto px-4 py-10">
+  <!-- ব্যাক বাটন -->
+  <div class="mb-6">
+    <a href="/stories" class="inline-flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-rb-600 transition">
+      <i class="fa-solid fa-arrow-left"></i> সকল গল্পে ফিরে যান
+    </a>
+  </div>
+
+  <article class="glass rounded-3xl p-6 sm:p-10 relative overflow-hidden border border-white/80">
+    <div class="blob w-64 h-64 bg-rb-500 -top-16 -right-16"></div>
+
+    <!-- লেখক পরিচিতি ও হেডার -->
+    <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-rb-100 relative z-10">
+      <div class="flex items-center gap-4">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-rb-500 to-rb-700 text-white flex items-center justify-center font-bold text-xl shrink-0 shadow-md">
+          <i class="fa-solid fa-quote-left"></i>
+        </div>
+        <div>
+          <h3 class="font-bold text-base text-rb-900 leading-tight">
+            <%= story.author ? story.author.name : 'বেনামী' %>
+          </h3>
+          <p class="text-xs text-gray-500 mt-1">
+            <i class="fa-solid fa-location-dot text-rb-600 mr-1"></i><%= story.location %>
+            · <%= formatBnDate(story.createdAt) %>
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span class="px-3.5 py-1 rounded-full text-xs font-bold <%= story.role === 'donor' ? 'bg-rb-600 text-white' : 'bg-rb-100 text-rb-700' %> shadow-sm">
+          <%= story.role === 'donor' ? 'রক্তদাতার অভিজ্ঞতা' : 'রক্তগ্রহীতার অভিজ্ঞতা' %>
+        </span>
+        <span class="px-3 py-1 rounded-full text-xs font-bold bg-white text-gray-800 border border-rb-100">
+          গ্রুপ: <%= toBnGroup(story.bloodGroup) %>
+        </span>
+      </div>
+    </div>
+
+    <!-- গল্পের মূল শিরোনাম ও বিবরণ -->
+    <div class="py-8 relative z-10">
+      <h1 class="font-head text-2xl sm:text-4xl font-bold text-rb-900 leading-tight mb-6">
+        <%= story.title %>
+      </h1>
+
+      <% if (story.image) { %>
+        <div class="my-6 rounded-3xl overflow-hidden shadow-lg border border-rb-100 max-h-[420px]">
+          <img src="<%= story.image %>" alt="<%= story.title %>" class="w-full h-full object-cover">
+        </div>
+      <% } %>
+
+      <div class="text-gray-800 text-base sm:text-lg leading-relaxed space-y-4 font-normal whitespace-pre-line">
+        <%= story.body %>
+      </div>
+    </div>
+
+    <!-- লাইক ও সোশ্যাল শেয়ার বার -->
+    <div class="pt-6 border-t border-rb-100 flex flex-wrap items-center justify-between gap-4 relative z-10">
+      <!-- লাইক বোতাম -->
+      <div class="flex items-center gap-3">
+        <% if (currentUser) { %>
+          <button type="button" id="likeBtn" onclick="toggleStoryLike('<%= story._id %>')" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-rb-200 transition hover:scale-105 <%= isLiked ? 'bg-rb-50 text-rb-600 border-rb-500' : 'bg-white text-gray-700' %>">
+            <i class="fa-<%= isLiked ? 'solid' : 'regular' %> fa-heart text-rb-600 text-lg"></i>
+            <span class="font-bold text-sm" id="likeCount"><%= toBn(story.likes ? story.likes.length : 0) %></span>
+            <span class="text-xs">ভালোবাসা</span>
+          </button>
+        <% } else { %>
+          <a href="/login" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-rb-200 bg-white text-gray-700 hover:text-rb-600 text-sm font-semibold transition" title="লাইক দিতে লগইন করুন">
+            <i class="fa-regular fa-heart text-rb-600"></i>
+            <span><%= toBn(story.likes ? story.likes.length : 0) %></span>
+            <span class="text-xs">ভালোবাসা</span>
+          </a>
+        <% } %>
+        <span class="text-xs text-gray-400">· <%= toBn(story.views || 1) %> বার পঠিত</span>
+      </div>
+
+      <!-- সোশ্যাল শেয়ার -->
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-gray-500 mr-1">শেয়ার করুন:</span>
+        <a href="https://www.facebook.com/sharer/sharer.php?u=<%= encodeURIComponent(siteUrl + currentPath) %>" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center hover:opacity-90 transition" title="ফেসবুকে শেয়ার করুন">
+          <i class="fa-brands fa-facebook-f text-sm"></i>
+        </a>
+        <a href="https://api.whatsapp.com/send?text=<%= encodeURIComponent(story.title + ' - রক্তবার্তা: ' + siteUrl + currentPath) %>" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-emerald-500 text-white flex items-center justify-center hover:opacity-90 transition" title="হোয়াটসঅ্যাপে পাঠান">
+          <i class="fa-brands fa-whatsapp text-sm"></i>
+        </a>
+        <button type="button" onclick="copyStoryUrl()" class="w-9 h-9 rounded-full bg-gray-200 text-gray-700 flex items-center justify-center hover:bg-gray-300 transition" title="লিংক কপি করুন">
+          <i class="fa-solid fa-link text-sm"></i>
+        </button>
+      </div>
+    </div>
+  </article>
+
+  <!-- মন্তব্য সেকশন -->
+  <section id="comments" class="glass rounded-3xl p-6 sm:p-8 mt-8 border border-white/80">
+    <h3 class="font-head text-xl font-bold text-rb-900 mb-6 flex items-center gap-2">
+      <i class="fa-solid fa-comments text-rb-600"></i>
+      মন্তব্যসমূহ (<%= toBn(comments ? comments.length : 0) %>)
+    </h3>
+
+    <!-- মন্তব্য করার ফর্ম -->
+    <% if (currentUser) { %>
+      <form action="/stories/<%= story._id %>/comments" method="POST" class="mb-8 space-y-3">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <input type="hidden" name="slug" value="<%= story.slug %>">
+        <div>
+          <textarea name="text" rows="3" placeholder="আপনার অনুভূতি বা শুভকামনা ব্যক্ত করুন..." required class="text-sm"></textarea>
+        </div>
+        <button type="submit" class="btn px-6 py-2.5 text-xs font-semibold">
+          <i class="fa-solid fa-paper-plane mr-1.5"></i>মন্তব্য প্রকাশ করুন
+        </button>
+      </form>
+    <% } else { %>
+      <div class="bg-white/60 p-4 rounded-2xl text-center border border-rb-100 mb-8">
+        <p class="text-xs text-gray-600 mb-2">মন্তব্য করতে বা রক্তদাতার প্রশংসা জানাতে অনুগ্রহ করে লগইন করুন।</p>
+        <a href="/login" class="btn px-5 py-2 text-xs font-bold inline-block">লগইন করুন</a>
+      </div>
+    <% } %>
+
+    <!-- পূর্ববর্তী মন্তব্য তালিকা -->
+    <% if (comments && comments.length > 0) { %>
+      <div class="space-y-4">
+        <% comments.forEach(function(c) { %>
+          <div class="p-4 rounded-2xl bg-white/60 border border-rb-50 flex items-start gap-3">
+            <div class="w-9 h-9 rounded-full bg-rb-50 text-rb-600 border border-rb-200 flex items-center justify-center font-bold text-xs shrink-0">
+              <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between mb-1">
+                <h4 class="font-bold text-xs text-gray-900"><%= c.userName %></h4>
+                <span class="text-[11px] text-gray-400"><%= timeAgoBn(c.createdAt) %></span>
+              </div>
+              <p class="text-xs text-gray-700 leading-relaxed"><%= c.text %></p>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    <% } else { %>
+      <p class="text-xs text-gray-500 text-center py-4">এখনও কোনো মন্তব্য করা হয়নি। আপনিই প্রথম মন্তব্যকারী হোন!</p>
+    <% } %>
+  </section>
+
+  <!-- সম্পর্কিত অন্যান্য গল্প -->
+  <% if (relatedStories && relatedStories.length > 0) { %>
+    <section class="mt-12">
+      <h3 class="font-head text-2xl font-bold text-rb-900 mb-6">অন্যান্য মানবিক গল্প</h3>
+      <div class="grid sm:grid-cols-3 gap-6">
+        <% relatedStories.forEach(function(rel) { %>
+          <article class="glass card-hover rounded-3xl p-5 flex flex-col justify-between border border-white/80">
+            <div>
+              <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full mb-2 inline-block <%= rel.role === 'donor' ? 'bg-rb-600 text-white' : 'bg-rb-100 text-rb-700' %>">
+                <%= rel.role === 'donor' ? 'রক্তদাতা' : 'গ্রহীতা' %>
+              </span>
+              <h4 class="font-bold text-sm text-rb-900 line-clamp-2 mt-1">
+                <a href="/stories/<%= rel.slug %>" class="hover:text-rb-600 transition"><%= rel.title %></a>
+              </h4>
+              <p class="text-xs text-gray-600 mt-2 line-clamp-3"><%= rel.body %></p>
+            </div>
+            <div class="pt-3 mt-4 border-t border-rb-50 flex items-center justify-between text-xs text-gray-500">
+              <span><%= formatBnDate(rel.createdAt) %></span>
+              <a href="/stories/<%= rel.slug %>" class="text-rb-600 font-bold hover:underline">পড়ুন →</a>
+            </div>
+          </article>
+        <% }); %>
+      </div>
+    </section>
+  <% } %>
+</section>
+
+<script>
+async function toggleStoryLike(storyId) {
+  try {
+    const res = await fetch(`/stories/${storyId}/like`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'X-CSRF-Token': '<%= csrfToken %>'
+      }
+    });
+    const data = await res.json();
+    if (data.success) {
+      const btn = document.getElementById('likeBtn');
+      const countEl = document.getElementById('likeCount');
+      const icon = btn.querySelector('i');
+
+      countEl.textContent = data.countBn;
+      if (data.liked) {
+        icon.className = 'fa-solid fa-heart text-rb-600 text-lg';
+        btn.classList.add('bg-rb-50', 'text-rb-600', 'border-rb-500');
+        btn.classList.remove('bg-white', 'text-gray-700');
+      } else {
+        icon.className = 'fa-regular fa-heart text-rb-600 text-lg';
+        btn.classList.remove('bg-rb-50', 'text-rb-600', 'border-rb-500');
+        btn.classList.add('bg-white', 'text-gray-700');
+      }
+    }
+  } catch (err) {
+    console.error('Like toggle error:', err);
+  }
+}
+
+function copyStoryUrl() {
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    alert('গল্পের লিংকটি কপি করা হয়েছে!');
+  });
+}
+</script>

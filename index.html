@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>রক্তবার্তা – বাংলাদেশ ও কলকাতার রক্তদাতা ও গ্রহীতার সংযোগ</title>
+<meta name="description" content="রক্তবার্তা: বাংলাদেশ ও কলকাতায় জরুরি রক্তের অনুরোধ করুন, জেলা ও উপজেলা ভিত্তিক রক্তদাতা খুঁজুন এবং আপনার রক্তদানের গল্প শেয়ার করুন।">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+tailwind.config={theme:{extend:{colors:{rb:{50:'#fff1f2',100:'#ffe0e3',500:'#e11d2e',600:'#c8102e',700:'#a10b24',900:'#5c0614'}},fontFamily:{head:['"Noto Serif Bengali"','serif']}}}}
+</script>
+<style>
+html{scroll-behavior:smooth}
+body{font-family:'Hind Siliguri',sans-serif;background:#fff7f8;color:#2a0a10;overflow-x:hidden}
+.glass{background:rgba(255,255,255,.62);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.8);box-shadow:0 10px 40px -12px rgba(200,16,46,.25)}
+.glass-red{background:linear-gradient(135deg,rgba(200,16,46,.94),rgba(110,6,26,.94));border:1px solid rgba(255,255,255,.25);box-shadow:0 20px 50px -15px rgba(200,16,46,.6)}
+.hero-bg{background:radial-gradient(900px 500px at 85% 10%,rgba(225,29,46,.18),transparent 60%),radial-gradient(700px 500px at 0% 60%,rgba(255,120,130,.22),transparent 60%),linear-gradient(180deg,#fff 0%,#fff1f2 100%)}
+.blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.45;animation:float 9s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.08)}}
+@keyframes pulseRing{0%{box-shadow:0 0 0 0 rgba(225,29,46,.55)}100%{box-shadow:0 0 0 16px rgba(225,29,46,0)}}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.ring{animation:pulseRing 1.6s infinite}
+.bob{animation:bob 4s ease-in-out infinite}
+.marq{animation:marquee 30s linear infinite}
+.reveal{opacity:0;transform:translateY(34px);transition:all .8s cubic-bezier(.2,.7,.2,1)}
+.reveal.show{opacity:1;transform:none}
+.card-hover{transition:transform .35s,box-shadow .35s}
+.card-hover:hover{transform:translateY(-8px);box-shadow:0 25px 50px -15px rgba(200,16,46,.35)}
+.btn{background:linear-gradient(135deg,#e11d2e,#a10b24);color:#fff;border-radius:999px;font-weight:600;transition:all .3s;box-shadow:0 10px 25px -8px rgba(200,16,46,.7);cursor:pointer}
+.btn:hover{transform:translateY(-2px) scale(1.03)}
+.btn-ghost{border:2px solid #c8102e;color:#c8102e;border-radius:999px;font-weight:600;transition:all .3s;background:rgba(255,255,255,.6);cursor:pointer}
+.btn-ghost:hover{background:#c8102e;color:#fff}
+select,input,textarea{background:rgba(255,255,255,.9);border:1px solid #f3c4ca;border-radius:14px;padding:.7rem .9rem;width:100%;outline:none;font-family:inherit}
+select:focus,input:focus,textarea:focus{border-color:#e11d2e;box-shadow:0 0 0 3px rgba(225,29,46,.18)}
+details summary{cursor:pointer;list-style:none}
+details summary::-webkit-details-marker{display:none}
+details[open] .plus{transform:rotate(45deg)}
+.plus{transition:transform .3s}
+/* ছবির প্লেসহোল্ডার: ছবি না থাকলে সুন্দর ব্যাকগ্রাউন্ড দেখাবে */
+.ph{background:linear-gradient(135deg,#ffd9dd,#fff 60%,#ffc2c9);position:relative;overflow:hidden}
+.ph::after{content:attr(data-label);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#c8102e;font-size:.8rem;text-align:center;padding:.5rem;z-index:0}
+.ph img{position:relative;z-index:1;width:100%;height:100%;object-fit:cover;display:block}
+/* হিরো ছবি: বাম দিকে মিশে যাবে */
+.hero-img{-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 28%),linear-gradient(to top,transparent 0%,#000 14%);-webkit-mask-composite:source-in;mask-image:linear-gradient(to right,transparent 0%,#000 28%),linear-gradient(to top,transparent 0%,#000 14%);mask-composite:intersect}
+/* অটোকমপ্লিট */
+.ac-box{position:absolute;left:0;right:0;top:100%;margin-top:6px;z-index:40;background:#fff;border:1px solid #f3c4ca;border-radius:14px;box-shadow:0 16px 40px -10px rgba(200,16,46,.35);max-height:240px;overflow:auto;display:none}
+.ac-item{padding:.6rem .9rem;cursor:pointer;display:flex;justify-content:space-between;gap:.5rem;font-size:.95rem}
+.ac-item:hover,.ac-item.on{background:#fff1f2;color:#c8102e}
+.ac-item small{color:#9a6a70}
+.tab.active{background:linear-gradient(135deg,#e11d2e,#a10b24);color:#fff}
+#modal.open{display:flex}
+</style>
+</head>
+<body>
+
+<!-- জরুরি টিকার -->
+<div class="bg-rb-700 text-white text-sm overflow-hidden whitespace-nowrap py-2">
+  <div class="marq inline-block">
+    <span class="mx-8"><i class="fa-solid fa-droplet mr-1"></i> জরুরি: ঢাকা মেডিকেলে এ+ রক্ত প্রয়োজন</span><span class="mx-8"><i class="fa-solid fa-droplet mr-1"></i> চট্টগ্রামে ও নেগেটিভ রক্ত প্রয়োজন</span><span class="mx-8"><i class="fa-solid fa-droplet mr-1"></i> কলকাতায় বি+ রক্ত প্রয়োজন</span><span class="mx-8"><i class="fa-solid fa-droplet mr-1"></i> সিলেটে এবি+ রক্ত প্রয়োজন</span><span class="mx-8"><i class="fa-solid fa-droplet mr-1"></i> রাজশাহীতে ও+ রক্ত প্রয়োজন</span>
+    <span class="mx-8"><i class="fa-solid fa-droplet mr-1"></i> জরুরি: ঢাকা মেডিকেলে এ+ রক্ত প্রয়োজন</span><span class="mx-8"><i class="fa-solid fa-droplet mr-1"></i> চট্টগ্রামে ও নেগেটিভ রক্ত প্রয়োজন</span><span class="mx-8"><i class="fa-solid fa-droplet mr-1"></i> কলকাতায় বি+ রক্ত প্রয়োজন</span><span class="mx-8"><i class="fa-solid fa-droplet mr-1"></i> সিলেটে এবি+ রক্ত প্রয়োজন</span><span class="mx-8"><i class="fa-solid fa-droplet mr-1"></i> রাজশাহীতে ও+ রক্ত প্রয়োজন</span>
+  </div>
+</div>
+
+<!-- নেভিগেশন -->
+<header class="sticky top-0 z-50 px-3 pt-3">
+  <nav class="glass max-w-7xl mx-auto rounded-2xl px-4 py-3 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+      <span class="ph w-11 h-11 rounded-full overflow-hidden block" data-label=""><img src="/images/logo.png" alt="রক্তবার্তা লোগো" onerror="this.style.display='none'"></span>
+      <span class="font-head text-2xl text-rb-600 leading-none">রক্তবার্তা</span>
+    </a>
+    <ul class="hidden lg:flex items-center gap-6 font-medium">
+      <li><a href="/" class="text-rb-600">হোম</a></li>
+      <li><a href="/request" class="hover:text-rb-600">রক্তের অনুরোধ</a></li>
+      <li><a href="/donors" class="hover:text-rb-600">রক্তদাতা খুঁজুন</a></li>
+      <li><a href="#stories" class="hover:text-rb-600">রক্তের গল্প</a></li>
+      <li><a href="/blog" class="hover:text-rb-600">ব্লগ</a></li>
+      <li><a href="/about" class="hover:text-rb-600">আমাদের সম্পর্কে</a></li>
+      <li><a href="/contact" class="hover:text-rb-600">যোগাযোগ</a></li>
+    </ul>
+    <div class="hidden lg:flex items-center gap-3">
+      <a href="/login" class="btn-ghost px-5 py-2">লগইন</a>
+      <a href="/register" class="btn px-5 py-2">রেজিস্ট্রেশন</a>
+    </div>
+    <button id="menuBtn" class="lg:hidden w-10 h-10 rounded-xl glass flex items-center justify-center text-rb-600" aria-label="মেনু"><i class="fa-solid fa-bars text-lg"></i></button>
+  </nav>
+  <div id="mobileMenu" class="hidden lg:hidden glass max-w-7xl mx-auto rounded-2xl mt-2 p-4 space-y-1 font-medium">
+    <a class="block py-2 px-3 rounded-lg hover:bg-rb-50" href="/">হোম</a>
+    <a class="block py-2 px-3 rounded-lg hover:bg-rb-50" href="/request">রক্তের অনুরোধ</a>
+    <a class="block py-2 px-3 rounded-lg hover:bg-rb-50" href="/donors">রক্তদাতা খুঁজুন</a>
+    <a class="block py-2 px-3 rounded-lg hover:bg-rb-50" href="#stories">রক্তের গল্প</a>
+    <a class="block py-2 px-3 rounded-lg hover:bg-rb-50" href="/blog">ব্লগ</a>
+    <a class="block py-2 px-3 rounded-lg hover:bg-rb-50" href="/about">আমাদের সম্পর্কে</a>
+    <a class="block py-2 px-3 rounded-lg hover:bg-rb-50" href="/contact">যোগাযোগ</a>
+    <div class="flex gap-3 pt-2"><a href="/login" class="btn-ghost flex-1 text-center py-2">লগইন</a><a href="/register" class="btn flex-1 text-center py-2">রেজিস্ট্রেশন</a></div>
+  </div>
+</header>
+
+<main>
+<!-- হিরো -->
+<section class="hero-bg relative overflow-hidden -mt-20 pt-32 pb-24">
+  <div class="blob w-72 h-72 bg-rb-500 -top-10 -left-10"></div>
+  <div class="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-8 items-center relative">
+    <div class="reveal relative z-10">
+      <span class="glass inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm text-rb-700 font-medium"><span class="w-2.5 h-2.5 rounded-full bg-rb-500 ring"></span> বাংলাদেশ ও কলকাতার জন্য বিনামূল্যে সেবা</span>
+      <h1 class="font-head text-4xl sm:text-5xl lg:text-6xl leading-tight mt-5 text-rb-900">একটি বার্তা, <span class="text-rb-600">একটি প্রাণ</span> বাঁচাতে পারে</h1>
+      <p class="mt-5 text-lg text-gray-700 leading-relaxed max-w-xl">অপারেশন, সিজার, থ্যালাসেমিয়া কিংবা দুর্ঘটনা – যেকোনো জরুরি মুহূর্তে আপনার জেলা ও উপজেলার রক্তদাতাদের সাথে সরাসরি যুক্ত হোন। রক্ত খুঁজুন, রক্ত দিন, জীবন বাঁচান।</p>
+      <div class="flex flex-wrap gap-4 mt-8">
+        <a href="/request" class="btn px-8 py-3.5 text-lg"><i class="fa-solid fa-droplet mr-2"></i>রক্তের অনুরোধ করুন</a>
+        <a href="/register" class="btn-ghost px-8 py-3.5 text-lg">রক্তদাতা হোন</a>
+      </div>
+      <div class="flex flex-wrap items-center gap-x-6 gap-y-2 mt-9 text-sm text-gray-600">
+        <span><i class="fa-solid fa-circle-check text-rb-600 mr-1"></i>যাচাইকৃত প্রোফাইল</span>
+        <span><i class="fa-solid fa-bolt text-rb-600 mr-1"></i>দ্রুত যোগাযোগ</span>
+        <span><i class="fa-solid fa-lock text-rb-600 mr-1"></i>নিরাপদ তথ্য</span>
+      </div>
+    </div>
+
+    <!-- ডান দিকের ছবি: ডিজাইনের সাথে মিশে যাবে -->
+    <div class="reveal relative h-[380px] sm:h-[480px] lg:h-[560px]" style="transition-delay:.2s">
+      <div class="absolute right-0 top-1/2 -translate-y-1/2 w-[92%] aspect-square rounded-full bg-gradient-to-br from-rb-500 to-rb-900 opacity-90"></div>
+      <div class="absolute right-0 top-1/2 -translate-y-1/2 w-[100%] aspect-square rounded-full border-2 border-rb-500/30"></div>
+      <div class="ph hero-img absolute inset-y-0 right-0 w-full" style="background:none" data-label="">
+        <img src="/images/hero-donor.png" alt="রক্তদান করছেন একজন রক্তদাতা" style="object-fit:contain;object-position:right bottom" onerror="this.style.display='none'">
+      </div>
+      <div class="glass absolute left-0 bottom-10 rounded-2xl px-5 py-3 bob"><p class="text-xs text-gray-500">আজকের অনুরোধ</p><p class="text-3xl font-bold text-rb-600" data-count="128">০</p></div>
+      <div class="glass absolute right-2 top-6 rounded-2xl px-5 py-3 bob" style="animation-delay:1.5s"><p class="text-xs text-gray-500">সক্রিয় দাতা</p><p class="text-3xl font-bold text-rb-600" data-count="5420">০</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- দ্রুত সার্চ -->
+<section class="max-w-6xl mx-auto px-4 -mt-12 relative z-20">
+  <form id="searchForm" action="/donors" method="GET" autocomplete="off" class="glass reveal rounded-3xl p-5 sm:p-7 grid sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+    <div><label class="text-sm font-medium block mb-1">রক্তের গ্রুপ</label>
+      <select name="group"><option value="">সব গ্রুপ</option><option>এ+</option><option>এ-</option><option>বি+</option><option>বি-</option><option>ও+</option><option>ও-</option><option>এবি+</option><option>এবি-</option></select></div>
+    <div class="relative"><label class="text-sm font-medium block mb-1">জেলা</label>
+      <input id="district" name="district" placeholder="লিখুন বা বেছে নিন, যেমন: ঢাকা"><div class="ac-box"></div></div>
+    <div class="relative"><label class="text-sm font-medium block mb-1">উপজেলা / থানা</label>
+      <input id="upazila" name="upazila" placeholder="লিখুন বা বেছে নিন"><div class="ac-box"></div></div>
+    <button class="btn py-3.5 text-lg"><i class="fa-solid fa-magnifying-glass mr-2"></i>খুঁজুন</button>
+  </form>
+</section>
+
+<!-- পরিসংখ্যান -->
+<section class="max-w-7xl mx-auto px-4 py-20">
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-5">
+    <div class="glass reveal card-hover rounded-3xl p-6 text-center"><i class="fa-solid fa-users text-3xl text-rb-600"></i><p class="text-4xl font-bold text-rb-600 mt-2"><span data-count="12500">০</span>+</p><p class="text-gray-600 mt-1">নিবন্ধিত রক্তদাতা</p></div>
+    <div class="glass reveal card-hover rounded-3xl p-6 text-center" style="transition-delay:.1s"><i class="fa-solid fa-heart-pulse text-3xl text-rb-600"></i><p class="text-4xl font-bold text-rb-600 mt-2"><span data-count="8300">০</span>+</p><p class="text-gray-600 mt-1">সফল রক্তদান</p></div>
+    <div class="glass reveal card-hover rounded-3xl p-6 text-center" style="transition-delay:.2s"><i class="fa-solid fa-location-dot text-3xl text-rb-600"></i><p class="text-4xl font-bold text-rb-600 mt-2"><span data-count="64">০</span></p><p class="text-gray-600 mt-1">জেলায় সেবা</p></div>
+    <div class="glass reveal card-hover rounded-3xl p-6 text-center" style="transition-delay:.3s"><i class="fa-solid fa-hospital text-3xl text-rb-600"></i><p class="text-4xl font-bold text-rb-600 mt-2"><span data-count="490">০</span>+</p><p class="text-gray-600 mt-1">উপজেলা কভারেজ</p></div>
+  </div>
+</section>
+
+<!-- কীভাবে কাজ করে -->
+<section class="bg-white/70 py-20">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center max-w-2xl mx-auto reveal"><p class="text-rb-600 font-semibold">কীভাবে কাজ করে</p><h2 class="font-head text-3xl sm:text-4xl mt-2 text-rb-900">মাত্র ৩টি ধাপে রক্ত পান</h2><p class="text-gray-600 mt-3">সহজ প্রক্রিয়া, কোনো ঝামেলা নেই।</p></div>
+    <div class="grid md:grid-cols-3 gap-6 mt-12">
+      <div class="glass reveal card-hover rounded-3xl p-8 text-center"><div class="w-16 h-16 mx-auto rounded-full btn flex items-center justify-center text-2xl font-bold">১</div><h3 class="text-xl font-bold mt-5">রেজিস্ট্রেশন করুন</h3><p class="text-gray-600 mt-2">নাম, বয়স, রক্তের গ্রুপ ও ঠিকানা দিয়ে বিনামূল্যে অ্যাকাউন্ট খুলুন।</p></div>
+      <div class="glass reveal card-hover rounded-3xl p-8 text-center" style="transition-delay:.15s"><div class="w-16 h-16 mx-auto rounded-full btn flex items-center justify-center text-2xl font-bold">২</div><h3 class="text-xl font-bold mt-5">অনুরোধ পাঠান</h3><p class="text-gray-600 mt-2">কোন গ্রুপ, কেন ও কোথায় রক্ত লাগবে – হাসপাতালসহ বিস্তারিত লিখুন।</p></div>
+      <div class="glass reveal card-hover rounded-3xl p-8 text-center" style="transition-delay:.3s"><div class="w-16 h-16 mx-auto rounded-full btn flex items-center justify-center text-2xl font-bold">৩</div><h3 class="text-xl font-bold mt-5">দাতার সাথে যোগাযোগ</h3><p class="text-gray-600 mt-2">আপনার এলাকার দাতারা সরাসরি আপনার সাথে যোগাযোগ করবেন।</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- জরুরি অনুরোধ -->
+<section class="max-w-7xl mx-auto px-4 py-20">
+  <div class="flex flex-wrap items-end justify-between gap-4 reveal"><div><p class="text-rb-600 font-semibold">সাম্প্রতিক</p><h2 class="font-head text-3xl sm:text-4xl mt-1 text-rb-900">জরুরি রক্তের অনুরোধ</h2></div><a href="/request" class="btn-ghost px-6 py-2.5">সব অনুরোধ দেখুন →</a></div>
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
+    <article class="glass reveal card-hover rounded-3xl p-6"><div class="flex items-center justify-between"><span class="w-16 h-16 rounded-2xl btn flex items-center justify-center text-2xl font-bold">এ+</span><span class="text-xs bg-rb-100 text-rb-700 px-3 py-1 rounded-full font-semibold ring">অতি জরুরি</span></div><h3 class="text-lg font-bold mt-4">অপারেশনের জন্য ২ ব্যাগ রক্ত</h3><p class="text-gray-600 text-sm mt-1"><i class="fa-solid fa-location-dot text-rb-600 w-5"></i>ঢাকা মেডিকেল কলেজ হাসপাতাল, ঢাকা</p><p class="text-gray-600 text-sm"><i class="fa-regular fa-clock text-rb-600 w-5"></i>আজ, রাত ৮টার মধ্যে</p><a href="/request/1" class="btn block text-center py-2.5 mt-5">বিস্তারিত দেখুন</a></article>
+    <article class="glass reveal card-hover rounded-3xl p-6" style="transition-delay:.12s"><div class="flex items-center justify-between"><span class="w-16 h-16 rounded-2xl btn flex items-center justify-center text-2xl font-bold">ও-</span><span class="text-xs bg-rb-100 text-rb-700 px-3 py-1 rounded-full font-semibold ring">অতি জরুরি</span></div><h3 class="text-lg font-bold mt-4">সিজারের রোগীর জন্য ১ ব্যাগ রক্ত</h3><p class="text-gray-600 text-sm mt-1"><i class="fa-solid fa-location-dot text-rb-600 w-5"></i>চট্টগ্রাম মেডিকেল, পাঁচলাইশ</p><p class="text-gray-600 text-sm"><i class="fa-regular fa-clock text-rb-600 w-5"></i>আগামীকাল সকাল ১০টা</p><a href="/request/2" class="btn block text-center py-2.5 mt-5">বিস্তারিত দেখুন</a></article>
+    <article class="glass reveal card-hover rounded-3xl p-6" style="transition-delay:.24s"><div class="flex items-center justify-between"><span class="w-16 h-16 rounded-2xl btn flex items-center justify-center text-2xl font-bold">বি+</span><span class="text-xs bg-rb-100 text-rb-700 px-3 py-1 rounded-full font-semibold">২৪ ঘণ্টার মধ্যে</span></div><h3 class="text-lg font-bold mt-4">থ্যালাসেমিয়া রোগীর রক্ত</h3><p class="text-gray-600 text-sm mt-1"><i class="fa-solid fa-location-dot text-rb-600 w-5"></i>এসএসকেএম হাসপাতাল, কলকাতা</p><p class="text-gray-600 text-sm"><i class="fa-regular fa-clock text-rb-600 w-5"></i>২ দিনের মধ্যে</p><a href="/request/3" class="btn block text-center py-2.5 mt-5">বিস্তারিত দেখুন</a></article>
+  </div>
+</section>
+
+<!-- রক্তের গল্প (নতুন সেকশন) -->
+<section id="stories" class="relative py-20 overflow-hidden bg-gradient-to-b from-white/70 to-rb-50">
+  <div class="blob w-72 h-72 bg-pink-300 top-10 -right-10"></div>
+  <div class="max-w-7xl mx-auto px-4 relative">
+    <div class="text-center max-w-2xl mx-auto reveal">
+      <p class="text-rb-600 font-semibold">আমাদের কমিউনিটি</p>
+      <h2 class="font-head text-3xl sm:text-4xl mt-2 text-rb-900">রক্তের গল্প, মানুষের কথা</h2>
+      <p class="text-gray-600 mt-3">রক্তদানের অভিজ্ঞতা কিংবা রক্ত পাওয়ার অনুভূতি – আপনার লেখা অন্যকে রক্ত দিতে অনুপ্রাণিত করতে পারে।</p>
+    </div>
+    <div class="flex flex-wrap items-center justify-between gap-4 mt-10 reveal">
+      <div class="glass rounded-full p-1.5 inline-flex gap-1" id="tabs">
+        <button class="tab active px-5 py-2 rounded-full font-medium" data-f="all">সব গল্প</button>
+        <button class="tab px-5 py-2 rounded-full font-medium" data-f="donor">রক্তদাতার গল্প</button>
+        <button class="tab px-5 py-2 rounded-full font-medium" data-f="receiver">গ্রহীতার গল্প</button>
+      </div>
+      <button id="openModal" class="btn px-6 py-3"><i class="fa-solid fa-pen-to-square mr-2"></i>আপনার গল্প লিখুন</button>
+    </div>
+    <div id="storyGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8"></div>
+    <div class="text-center mt-10 reveal"><a href="/stories" class="btn-ghost px-8 py-3 inline-block">আরও গল্প পড়ুন →</a></div>
+  </div>
+</section>
+
+<!-- রক্তের গ্রুপ গাইড -->
+<section class="bg-gradient-to-br from-rb-600 to-rb-900 text-white py-20 relative overflow-hidden">
+  <div class="blob w-72 h-72 bg-pink-400 top-0 right-0"></div>
+  <div class="max-w-7xl mx-auto px-4 relative">
+    <div class="text-center reveal"><h2 class="font-head text-3xl sm:text-4xl">কে কাকে রক্ত দিতে পারে?</h2><p class="text-white/80 mt-3">রক্তের গ্রুপ অনুযায়ী দান ও গ্রহণের সহজ গাইড</p></div>
+    <div id="groupGuide" class="grid grid-cols-2 md:grid-cols-4 gap-5 mt-12"></div>
+  </div>
+</section>
+
+<!-- কেন রক্তবার্তা -->
+<section class="max-w-7xl mx-auto px-4 py-20">
+  <div class="text-center reveal"><p class="text-rb-600 font-semibold">কেন আমরা</p><h2 class="font-head text-3xl sm:text-4xl mt-1 text-rb-900">কেন রক্তবার্তা বেছে নেবেন?</h2></div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+    <div class="glass reveal card-hover rounded-3xl p-7"><i class="fa-solid fa-map-location-dot text-3xl text-rb-600"></i><h3 class="font-bold text-lg mt-3">জেলা ও উপজেলা ভিত্তিক খোঁজ</h3><p class="text-gray-600 mt-2 text-sm">আপনার এলাকার সবচেয়ে কাছের রক্তদাতা সহজেই খুঁজে পান।</p></div>
+    <div class="glass reveal card-hover rounded-3xl p-7" style="transition-delay:.1s"><i class="fa-solid fa-bolt text-3xl text-rb-600"></i><h3 class="font-bold text-lg mt-3">জরুরি অনুরোধ</h3><p class="text-gray-600 text-sm mt-2">অতি জরুরি অনুরোধ আগে দেখানো হয় ও দাতাদের কাছে পৌঁছে যায়।</p></div>
+    <div class="glass reveal card-hover rounded-3xl p-7" style="transition-delay:.2s"><i class="fa-solid fa-user-shield text-3xl text-rb-600"></i><h3 class="font-bold text-lg mt-3">তথ্যের নিরাপত্তা</h3><p class="text-gray-600 text-sm mt-2">আপনার ব্যক্তিগত তথ্য সুরক্ষিত থাকে এবং আপনার অনুমতিতেই দেখানো হয়।</p></div>
+    <div class="glass reveal card-hover rounded-3xl p-7"><i class="fa-solid fa-earth-asia text-3xl text-rb-600"></i><h3 class="font-bold text-lg mt-3">বাংলাদেশ ও কলকাতা</h3><p class="text-gray-600 text-sm mt-2">দুই বাংলার মানুষের জন্য একটি প্ল্যাটফর্ম, সম্পূর্ণ বাংলা ভাষায়।</p></div>
+    <div class="glass reveal card-hover rounded-3xl p-7" style="transition-delay:.1s"><i class="fa-solid fa-hand-holding-heart text-3xl text-rb-600"></i><h3 class="font-bold text-lg mt-3">সম্পূর্ণ বিনামূল্যে</h3><p class="text-gray-600 text-sm mt-2">রক্ত চাওয়া বা দেওয়ার জন্য কোনো ফি বা কমিশন নেই।</p></div>
+    <div class="glass reveal card-hover rounded-3xl p-7" style="transition-delay:.2s"><i class="fa-solid fa-mobile-screen text-3xl text-rb-600"></i><h3 class="font-bold text-lg mt-3">মোবাইল ফ্রেন্ডলি</h3><p class="text-gray-600 text-sm mt-2">ফোন থেকেই সহজে অনুরোধ ও খোঁজ করুন, যেকোনো সময়।</p></div>
+  </div>
+</section>
+
+<!-- রক্তদানের যোগ্যতা -->
+<section class="bg-white/70 py-20">
+  <div class="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-10 items-center">
+    <div class="reveal">
+      <p class="text-rb-600 font-semibold">রক্তদাতা হোন</p>
+      <h2 class="font-head text-3xl sm:text-4xl mt-1 text-rb-900">আপনি কি রক্তদানের যোগ্য?</h2>
+      <ul class="mt-6 space-y-3 text-gray-700">
+        <li class="flex gap-3"><i class="fa-solid fa-circle-check text-rb-600 mt-1"></i><span>বয়স ১৮ থেকে ৬০ বছরের মধ্যে</span></li>
+        <li class="flex gap-3"><i class="fa-solid fa-circle-check text-rb-600 mt-1"></i><span>ওজন কমপক্ষে ৫০ কেজি</span></li>
+        <li class="flex gap-3"><i class="fa-solid fa-circle-check text-rb-600 mt-1"></i><span>সুস্থ থাকলে এবং শেষ রক্তদানের পর অন্তত ৩-৪ মাস পার হলে</span></li>
+        <li class="flex gap-3"><i class="fa-solid fa-circle-check text-rb-600 mt-1"></i><span>হিমোগ্লোবিন স্বাভাবিক মাত্রায় থাকলে</span></li>
+      </ul>
+      <p class="text-sm text-gray-500 mt-4">* দানের আগে চিকিৎসকের পরামর্শ নেওয়া ভালো।</p>
+      <a href="/register" class="btn inline-block px-8 py-3.5 mt-7">এখনই রক্তদাতা হিসেবে যুক্ত হোন</a>
+    </div>
+    <div class="reveal" style="transition-delay:.2s">
+      <div class="ph rounded-[2rem] aspect-[4/3] shadow-2xl" data-label="এখানে রক্তদানের ছবি বসবে (/images/donate.jpg)"><img src="/images/donate.jpg" alt="রক্তদান কর্মসূচি" onerror="this.style.display='none'"></div>
+    </div>
+  </div>
+</section>
+
+<!-- মতামত -->
+<section class="max-w-7xl mx-auto px-4 py-20">
+  <div class="text-center reveal"><h2 class="font-head text-3xl sm:text-4xl text-rb-900">তাঁরা কী বলছেন</h2></div>
+  <div class="grid md:grid-cols-3 gap-6 mt-12">
+    <div class="glass reveal card-hover rounded-3xl p-7"><p class="text-yellow-500"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></p><p class="mt-3 text-gray-700">“রাত ২টায় রক্তের দরকার হয়েছিল, রক্তবার্তার মাধ্যমে ১ ঘণ্টায় দাতা পেয়েছি।”</p><p class="mt-4 font-semibold">— রাকিব হাসান, ঢাকা</p></div>
+    <div class="glass reveal card-hover rounded-3xl p-7" style="transition-delay:.1s"><p class="text-yellow-500"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></p><p class="mt-3 text-gray-700">“নিজের উপজেলার দাতাদের খুঁজে পাওয়া খুব সহজ। অসাধারণ উদ্যোগ।”</p><p class="mt-4 font-semibold">— সুমাইয়া আক্তার, বগুড়া</p></div>
+    <div class="glass reveal card-hover rounded-3xl p-7" style="transition-delay:.2s"><p class="text-yellow-500"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></p><p class="mt-3 text-gray-700">“কলকাতায় থেকেও বাংলা ভাষায় সব করতে পারছি, এটাই সবচেয়ে ভালো লাগলো।”</p><p class="mt-4 font-semibold">— অর্পিতা দাস, কলকাতা</p></div>
+  </div>
+</section>
+
+<!-- ব্লগ -->
+<section class="bg-white/70 py-20">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="flex flex-wrap items-end justify-between gap-4 reveal"><h2 class="font-head text-3xl sm:text-4xl text-rb-900">রক্তদান বিষয়ক লেখা</h2><a href="/blog" class="btn-ghost px-6 py-2.5">সব লেখা →</a></div>
+    <div class="grid md:grid-cols-3 gap-6 mt-10">
+      <a href="/blog/1" class="glass reveal card-hover rounded-3xl overflow-hidden block"><div class="ph h-44" data-label="/images/blog1.jpg"><img src="/images/blog1.jpg" alt="" onerror="this.style.display='none'"></div><div class="p-6"><h3 class="font-bold text-lg">রক্তদানের ৭টি স্বাস্থ্য উপকারিতা</h3><p class="text-sm text-gray-600 mt-2">নিয়মিত রক্তদানে শরীরে কী কী ইতিবাচক পরিবর্তন আসে জেনে নিন।</p></div></a>
+      <a href="/blog/2" class="glass reveal card-hover rounded-3xl overflow-hidden block" style="transition-delay:.1s"><div class="ph h-44" data-label="/images/blog2.jpg"><img src="/images/blog2.jpg" alt="" onerror="this.style.display='none'"></div><div class="p-6"><h3 class="font-bold text-lg">রক্তদানের আগে ও পরে কী খাবেন?</h3><p class="text-sm text-gray-600 mt-2">সুস্থ থাকতে দানের আগে-পরের খাদ্যতালিকা ও সতর্কতা।</p></div></a>
+      <a href="/blog/3" class="glass reveal card-hover rounded-3xl overflow-hidden block" style="transition-delay:.2s"><div class="ph h-44" data-label="/images/blog3.jpg"><img src="/images/blog3.jpg" alt="" onerror="this.style.display='none'"></div><div class="p-6"><h3 class="font-bold text-lg">থ্যালাসেমিয়া ও রক্তের প্রয়োজনীয়তা</h3><p class="text-sm text-gray-600 mt-2">থ্যালাসেমিয়া রোগীদের জন্য নিয়মিত রক্ত কেন জরুরি।</p></div></a>
+    </div>
+  </div>
+</section>
+
+<!-- প্রশ্নোত্তর -->
+<section class="max-w-3xl mx-auto px-4 py-20">
+  <h2 class="font-head text-3xl sm:text-4xl text-center text-rb-900 reveal">সাধারণ জিজ্ঞাসা</h2>
+  <div class="mt-10 space-y-4">
+    <details class="glass reveal rounded-2xl p-5"><summary class="flex justify-between items-center font-semibold">রক্তের অনুরোধ করতে কি লগইন করতে হবে?<span class="plus text-2xl text-rb-600">+</span></summary><p class="text-gray-600 mt-3 text-sm">হ্যাঁ, নিরাপত্তা ও সঠিক তথ্য নিশ্চিত করতে অনুরোধ পাঠানোর আগে লগইন বা রেজিস্ট্রেশন করতে হবে।</p></details>
+    <details class="glass reveal rounded-2xl p-5"><summary class="flex justify-between items-center font-semibold">এই সেবা কি বিনামূল্যে?<span class="plus text-2xl text-rb-600">+</span></summary><p class="text-gray-600 mt-3 text-sm">অবশ্যই। রক্তবার্তায় অনুরোধ করা বা রক্তদাতা হিসেবে যুক্ত হওয়া সম্পূর্ণ বিনামূল্যে।</p></details>
+    <details class="glass reveal rounded-2xl p-5"><summary class="flex justify-between items-center font-semibold">আমি কীভাবে আমার রক্তদানের গল্প শেয়ার করব?<span class="plus text-2xl text-rb-600">+</span></summary><p class="text-gray-600 mt-3 text-sm">লগইন করে “আপনার গল্প লিখুন” বাটনে ক্লিক করুন। লেখা যাচাইয়ের পর সবার জন্য প্রকাশিত হবে।</p></details>
+    <details class="glass reveal rounded-2xl p-5"><summary class="flex justify-between items-center font-semibold">কলকাতা থেকেও কি রেজিস্ট্রেশন করা যাবে?<span class="plus text-2xl text-rb-600">+</span></summary><p class="text-gray-600 mt-3 text-sm">হ্যাঁ, বাংলাদেশের পাশাপাশি কলকাতা ও আশপাশের এলাকার জন্যও সেবা চালু আছে।</p></details>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="px-4 pb-20">
+  <div class="glass-red reveal max-w-6xl mx-auto rounded-[2.5rem] p-10 sm:p-16 text-center text-white relative overflow-hidden">
+    <div class="blob w-64 h-64 bg-pink-300 -top-16 -right-10"></div>
+    <h2 class="font-head text-3xl sm:text-5xl relative">আজই একজন জীবনরক্ষক হয়ে উঠুন</h2>
+    <p class="mt-4 text-white/85 max-w-xl mx-auto relative">আপনার এক ব্যাগ রক্ত তিনটি প্রাণ বাঁচাতে পারে। এখনই যুক্ত হোন রক্তবার্তা পরিবারে।</p>
+    <div class="flex flex-wrap justify-center gap-4 mt-8 relative">
+      <a href="/register" class="bg-white text-rb-600 font-bold rounded-full px-8 py-3.5 hover:scale-105 transition">রেজিস্ট্রেশন করুন</a>
+      <a href="/request" class="border-2 border-white rounded-full px-8 py-3.5 font-semibold hover:bg-white hover:text-rb-600 transition">রক্তের অনুরোধ</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- গল্প লেখার মডাল -->
+<div id="modal" class="hidden fixed inset-0 z-[100] items-center justify-center p-4" style="background:rgba(60,5,15,.55);backdrop-filter:blur(6px)">
+  <form id="storyForm" class="glass rounded-3xl p-6 sm:p-8 w-full max-w-xl max-h-[92vh] overflow-auto" style="background:rgba(255,255,255,.95)">
+    <div class="flex justify-between items-center mb-4"><h3 class="font-head text-2xl text-rb-900">আপনার গল্প লিখুন</h3><button type="button" id="closeModal" class="w-9 h-9 rounded-full hover:bg-rb-50 text-rb-600"><i class="fa-solid fa-xmark text-lg"></i></button></div>
+    <div class="grid grid-cols-2 gap-3">
+      <label class="cursor-pointer"><input type="radio" name="role" value="donor" checked class="peer hidden"><span class="block text-center py-3 rounded-2xl border border-rb-100 peer-checked:bg-rb-600 peer-checked:text-white peer-checked:border-rb-600 font-medium">আমি রক্তদাতা</span></label>
+      <label class="cursor-pointer"><input type="radio" name="role" value="receiver" class="peer hidden"><span class="block text-center py-3 rounded-2xl border border-rb-100 peer-checked:bg-rb-600 peer-checked:text-white peer-checked:border-rb-600 font-medium">আমি রক্তগ্রহীতা</span></label>
+    </div>
+    <div class="grid sm:grid-cols-2 gap-3 mt-3"><input name="name" placeholder="আপনার নাম" required><input name="loc" placeholder="জেলা / এলাকা" required></div>
+    <input name="title" class="mt-3" placeholder="গল্পের শিরোনাম" required maxlength="80">
+    <textarea name="body" rows="6" class="mt-3" placeholder="আপনার অভিজ্ঞতা লিখুন… (কেমন লেগেছিল, কীভাবে সাহায্য পেলেন বা করলেন)" required minlength="40"></textarea>
+    <label class="block mt-3 text-sm text-gray-600">ছবি যুক্ত করুন (ঐচ্ছিক)<input type="file" accept="image/*" class="mt-1"></label>
+    <p class="text-xs text-gray-500 mt-3">লেখা প্রকাশের আগে আমাদের টিম যাচাই করবে। অন্যের ব্যক্তিগত তথ্য দেবেন না।</p>
+    <button class="btn w-full py-3.5 mt-4 text-lg">গল্প জমা দিন</button>
+  </form>
+</div>
+
+<!-- ফুটার -->
+<footer class="bg-rb-900 text-white pt-16 pb-6">
+  <div class="max-w-7xl mx-auto px-4 grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
+    <div>
+      <div class="flex items-center gap-2"><span class="ph w-11 h-11 rounded-full overflow-hidden block" data-label=""><img src="/images/logo.png" alt="" onerror="this.style.display='none'"></span><span class="font-head text-2xl">রক্তবার্তা</span></div>
+      <p class="text-white/70 text-sm mt-4 leading-relaxed">বাংলাদেশ ও কলকাতার রক্তদাতা এবং রক্তগ্রহীতাদের মধ্যে একটি নির্ভরযোগ্য সেতুবন্ধন। রক্ত দিন, জীবন বাঁচান।</p>
+      <div class="flex gap-3 mt-5"><a href="#" class="w-10 h-10 rounded-full bg-white/10 hover:bg-rb-500 flex items-center justify-center transition" aria-label="ফেসবুক"><i class="fa-brands fa-facebook-f"></i></a><a href="#" class="w-10 h-10 rounded-full bg-white/10 hover:bg-rb-500 flex items-center justify-center transition" aria-label="ইউটিউব"><i class="fa-brands fa-youtube"></i></a><a href="#" class="w-10 h-10 rounded-full bg-white/10 hover:bg-rb-500 flex items-center justify-center transition" aria-label="ইমেইল"><i class="fa-solid fa-envelope"></i></a></div>
+    </div>
+    <div><h4 class="font-bold text-lg mb-4">দ্রুত লিংক</h4><ul class="space-y-2 text-white/70 text-sm"><li><a class="hover:text-white" href="/">হোম</a></li><li><a class="hover:text-white" href="/request">রক্তের অনুরোধ</a></li><li><a class="hover:text-white" href="/donors">রক্তদাতা খুঁজুন</a></li><li><a class="hover:text-white" href="/stories">রক্তের গল্প</a></li><li><a class="hover:text-white" href="/blog">ব্লগ</a></li></ul></div>
+    <div><h4 class="font-bold text-lg mb-4">তথ্য</h4><ul class="space-y-2 text-white/70 text-sm"><li><a class="hover:text-white" href="/about">আমাদের সম্পর্কে</a></li><li><a class="hover:text-white" href="/contact">যোগাযোগ</a></li><li><a class="hover:text-white" href="/privacy-policy">গোপনীয়তা নীতি</a></li><li><a class="hover:text-white" href="/terms">শর্তাবলী</a></li><li><a class="hover:text-white" href="/disclaimer">দাবিত্যাগ</a></li></ul></div>
+    <div><h4 class="font-bold text-lg mb-4">যোগাযোগ</h4><ul class="space-y-2 text-white/70 text-sm"><li><i class="fa-solid fa-location-dot w-5"></i>ঢাকা, বাংলাদেশ</li><li><i class="fa-solid fa-envelope w-5"></i>info@roktobarta.com</li><li><i class="fa-solid fa-globe w-5"></i>roktobarta.com</li></ul></div>
+  </div>
+  <div class="max-w-7xl mx-auto px-4 mt-12 pt-6 border-t border-white/15 text-center text-white/60 text-sm">
+    <p>© <span id="yr">২০২৬</span> রক্তবার্তা। সর্বস্বত্ব সংরক্ষিত।</p>
+    <p class="mt-1 text-xs">এই প্ল্যাটফর্ম শুধু যোগাযোগের মাধ্যম। চিকিৎসা সংক্রান্ত সিদ্ধান্তের জন্য অবশ্যই চিকিৎসকের পরামর্শ নিন।</p>
+  </div>
+</footer>
+
+<script>
+const $=s=>document.querySelector(s), bn=n=>String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
+$('#menuBtn').onclick=()=>$('#mobileMenu').classList.toggle('hidden');
+$('#yr').textContent=bn(new Date().getFullYear());
+
+/* স্ক্রল অ্যানিমেশন */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('show');io.unobserve(e.target)}}),{threshold:.1});
+const watch=r=>(r||document).querySelectorAll('.reveal:not(.show)').forEach(el=>io.observe(el));
+watch();
+const co=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;co.unobserve(e.target);const t=+e.target.dataset.count;let s=null;
+  const step=ts=>{s=s||ts;const p=Math.min((ts-s)/1800,1);e.target.textContent=bn(Math.floor(t*(1-Math.pow(1-p,3))));if(p<1)requestAnimationFrame(step)};requestAnimationFrame(step)}),{threshold:.4});
+document.querySelectorAll('[data-count]').forEach(el=>co.observe(el));
+
+/* জেলা ও উপজেলা ডাটা (পরে ডাটাবেস/JSON থেকে লোড করবেন) */
+const D={'ঢাকা':['ঢাকা','গাজীপুর','নারায়ণগঞ্জ','মানিকগঞ্জ','মুন্সীগঞ্জ','নরসিংদী','কিশোরগঞ্জ','টাঙ্গাইল','ফরিদপুর','গোপালগঞ্জ','মাদারীপুর','রাজবাড়ী','শরীয়তপুর'],
+'চট্টগ্রাম':['চট্টগ্রাম','কক্সবাজার','কুমিল্লা','ফেনী','নোয়াখালী','লক্ষ্মীপুর','চাঁদপুর','ব্রাহ্মণবাড়িয়া','রাঙ্গামাটি','বান্দরবান','খাগড়াছড়ি'],
+'রাজশাহী':['রাজশাহী','বগুড়া','পাবনা','সিরাজগঞ্জ','নাটোর','নওগাঁ','জয়পুরহাট','চাঁপাইনবাবগঞ্জ'],
+'খুলনা':['খুলনা','যশোর','সাতক্ষীরা','বাগেরহাট','কুষ্টিয়া','ঝিনাইদহ','মাগুরা','নড়াইল','চুয়াডাঙ্গা','মেহেরপুর'],
+'বরিশাল':['বরিশাল','ভোলা','পটুয়াখালী','পিরোজপুর','বরগুনা','ঝালকাঠি'],
+'সিলেট':['সিলেট','মৌলভীবাজার','হবিগঞ্জ','সুনামগঞ্জ'],
+'রংপুর':['রংপুর','দিনাজপুর','গাইবান্ধা','কুড়িগ্রাম','লালমনিরহাট','নীলফামারী','পঞ্চগড়','ঠাকুরগাঁও'],
+'ময়মনসিংহ':['ময়মনসিংহ','জামালপুর','নেত্রকোণা','শেরপুর'],
+'কলকাতা (ভারত)':['কলকাতা','হাওড়া','উত্তর ২৪ পরগনা','দক্ষিণ ২৪ পরগনা','হুগলি']};
+const U={'ঢাকা':['সাভার','ধামরাই','দোহার','কেরানীগঞ্জ','নবাবগঞ্জ','মিরপুর','ধানমন্ডি','উত্তরা','মোহাম্মদপুর','গুলশান','মতিঝিল'],
+'চট্টগ্রাম':['হাটহাজারী','সীতাকুণ্ড','রাউজান','ফটিকছড়ি','পটিয়া','বোয়ালখালী','আনোয়ারা','সন্দ্বীপ','মীরসরাই','লোহাগাড়া','পাঁচলাইশ'],
+'বগুড়া':['বগুড়া সদর','শিবগঞ্জ','শেরপুর','ধুনট','গাবতলী','সারিয়াকান্দি','কাহালু','নন্দীগ্রাম','শাজাহানপুর','সোনাতলা','আদমদীঘি','দুপচাঁচিয়া'],
+'সিলেট':['সিলেট সদর','বিয়ানীবাজার','বিশ্বনাথ','গোলাপগঞ্জ','জকিগঞ্জ','ফেঞ্চুগঞ্জ','কানাইঘাট','বালাগঞ্জ','কোম্পানীগঞ্জ','গোয়াইনঘাট','জৈন্তাপুর'],
+'রাজশাহী':['পবা','বাঘা','চারঘাট','মোহনপুর','তানোর','গোদাগাড়ী','দুর্গাপুর','বাগমারা','পুঠিয়া'],
+'কুমিল্লা':['কুমিল্লা সদর','দেবীদ্বার','লাকসাম','চান্দিনা','বুড়িচং','ব্রাহ্মণপাড়া','মুরাদনগর'],
+'কলকাতা':['বেহালা','টালিগঞ্জ','সল্টলেক','বেলগাছিয়া','যাদবপুর','ডানলপ']};
+const DL=[];Object.entries(D).forEach(([d,a])=>a.forEach(n=>DL.push({n,s:d})));
+const UL_ALL=[];Object.entries(U).forEach(([d,a])=>a.forEach(n=>UL_ALL.push({n,s:d})));
+
+/* অটোকমপ্লিট: লিখলে বা ক্লিক করলে সাজেশন, কিবোর্ড তীর/Enter সাপোর্ট */
+function auto(input,getList,onPick){
+  const box=input.parentNode.querySelector('.ac-box');let idx=-1,cur=[];
+  const draw=()=>{const q=input.value.trim();cur=getList().filter(x=>!q||x.n.includes(q)).slice(0,8);box.innerHTML='';idx=-1;
+    if(!cur.length){box.style.display='none';return}
+    cur.forEach((x,i)=>{const d=document.createElement('div');d.className='ac-item';const a=document.createElement('span');a.textContent=x.n;const b=document.createElement('small');b.textContent=x.s||'';d.append(a,b);
+      d.onmousedown=e=>{e.preventDefault();pick(x)};box.appendChild(d)});box.style.display='block'};
+  const pick=x=>{input.value=x.n;box.style.display='none';onPick&&onPick(x)};
+  const mark=()=>[...box.children].forEach((c,i)=>c.classList.toggle('on',i===idx));
+  input.addEventListener('input',draw);input.addEventListener('focus',draw);
+  input.addEventListener('blur',()=>setTimeout(()=>box.style.display='none',120));
+  input.addEventListener('keydown',e=>{if(box.style.display!=='block')return;
+    if(e.key==='ArrowDown'){e.preventDefault();idx=Math.min(idx+1,cur.length-1);mark()}
+    else if(e.key==='ArrowUp'){e.preventDefault();idx=Math.max(idx-1,0);mark()}
+    else if(e.key==='Enter'&&idx>=0){e.preventDefault();pick(cur[idx])}});
+}
+const dI=$('#district'),uI=$('#upazila');
+auto(dI,()=>DL,()=>{uI.value='';uI.focus()});
+auto(uI,()=>{const k=dI.value.trim();return U[k]?U[k].map(n=>({n,s:k})):UL_ALL});
+
+/* রক্তের গ্রুপ গাইড */
+const G=[['এ+','দিতে পারে: এ+, এবি+','নিতে পারে: এ+, এ-, ও+, ও-'],['এ-','দিতে পারে: এ+, এ-, এবি+, এবি-','নিতে পারে: এ-, ও-'],['বি+','দিতে পারে: বি+, এবি+','নিতে পারে: বি+, বি-, ও+, ও-'],['বি-','দিতে পারে: বি+, বি-, এবি+, এবি-','নিতে পারে: বি-, ও-'],['ও+','দিতে পারে: ও+, এ+, বি+, এবি+','নিতে পারে: ও+, ও-'],['ও-','সবাইকে দিতে পারে (সার্বজনীন দাতা)','নিতে পারে: শুধু ও-'],['এবি+','দিতে পারে: এবি+','সবার রক্ত নিতে পারে'],['এবি-','দিতে পারে: এবি+, এবি-','নিতে পারে: সব নেগেটিভ গ্রুপ']];
+$('#groupGuide').innerHTML=G.map((g,i)=>`<div class="reveal rounded-3xl p-5 text-center card-hover" style="transition-delay:${(i%4)*.08}s;background:rgba(255,255,255,.14);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.3)"><p class="text-4xl font-bold">${g[0]}</p><p class="text-sm mt-2 text-white/85">${g[1]}<br>${g[2]}</p></div>`).join('');
+
+/* রক্তের গল্প */
+const S=[
+ {id:1,role:'donor',name:'তানভীর আহমেদ',bg:'ও+',loc:'ঢাকা',title:'প্রথমবার রক্ত দিয়ে যা শিখলাম',body:'ভয় পেয়েছিলাম অনেক, কিন্তু যখন জানলাম আমার এক ব্যাগ রক্তে একটা শিশুর অপারেশন হবে, সব ভয় চলে গেল। এখন প্রতি চার মাসে নিয়মিত দিই।',date:'১৮ অক্টোবর ২০২৬',likes:48},
+ {id:2,role:'receiver',name:'ফারজানা ইসলাম',bg:'বি-',loc:'বগুড়া',title:'নেগেটিভ গ্রুপ, তবু দাতা পেলাম',body:'সিজারের আগের রাতে বি নেগেটিভ রক্ত খুঁজে পাচ্ছিলাম না। রক্তবার্তায় অনুরোধ দেওয়ার দুই ঘণ্টার মধ্যে অচেনা এক ভাই এসে রক্ত দিলেন। আজ আমার মেয়ে সুস্থ আছে।',date:'১২ অক্টোবর ২০২৬',likes:112},
+ {id:3,role:'donor',name:'অর্পিতা দাস',bg:'এ+',loc:'কলকাতা',title:'৫০তম বার রক্তদানের অনুভূতি',body:'কলেজে থাকতে শুরু করেছিলাম। প্রতিবার যখন কেউ ধন্যবাদ জানায়, মনে হয় জীবনের সবচেয়ে ভালো কাজটাই করছি। আপনারাও শুরু করুন।',date:'৫ অক্টোবর ২০২৬',likes:76}];
+const ROLE={donor:'রক্তদাতা',receiver:'রক্তগ্রহীতা'};let filter='all';
+function card(s,i){const el=document.createElement('article');el.className='glass reveal card-hover rounded-3xl p-6 flex flex-col';el.style.transitionDelay=(i%3)*.1+'s';
+  const top=document.createElement('div');top.className='flex items-center gap-3';
+  const av=document.createElement('div');av.className='ph w-12 h-12 rounded-full shrink-0';av.dataset.label='';
+  const im=document.createElement('img');im.src='/images/user'+((s.id%5)+1)+'.jpg';im.alt=s.name;im.onerror=()=>im.style.display='none';av.appendChild(im);
+  const nm=document.createElement('div');nm.className='min-w-0';nm.innerHTML='<p class="font-semibold leading-tight"></p><p class="text-xs text-gray-500"></p>';
+  nm.children[0].textContent=s.name;nm.children[1].textContent=s.loc+' · '+s.date;
+  const tag=document.createElement('span');tag.className='ml-auto text-xs px-3 py-1 rounded-full font-semibold '+(s.role==='donor'?'bg-rb-600 text-white':'bg-rb-100 text-rb-700');tag.textContent=ROLE[s.role]+' · '+s.bg;
+  top.append(av,nm,tag);
+  const h=document.createElement('h3');h.className='font-bold text-lg mt-4';h.textContent=s.title;
+  const p=document.createElement('p');p.className='text-gray-600 text-sm mt-2 leading-relaxed line-clamp-4 flex-1';p.textContent=s.body;
+  const f=document.createElement('div');f.className='flex items-center justify-between mt-5 pt-4 border-t border-rb-100';
+  const lk=document.createElement('button');lk.className='text-rb-600 font-medium hover:scale-105 transition';lk.innerHTML='<i class="fa-regular fa-heart mr-1"></i><span></span>';lk.lastChild.textContent=bn(s.likes);
+  let liked=false;lk.onclick=()=>{liked=!liked;s.likes+=liked?1:-1;lk.firstChild.className=(liked?'fa-solid':'fa-regular')+' fa-heart mr-1';lk.lastChild.textContent=bn(s.likes)};
+  const rd=document.createElement('a');rd.href='/stories/'+s.id;rd.className='text-sm font-semibold text-rb-600 hover:underline';rd.textContent='পুরোটা পড়ুন →';
+  f.append(lk,rd);el.append(top,h,p,f);return el}
+function render(){const g=$('#storyGrid');g.innerHTML='';S.filter(s=>filter==='all'||s.role===filter).forEach((s,i)=>g.appendChild(card(s,i)));watch(g)}
+render();
+$('#tabs').onclick=e=>{const b=e.target.closest('.tab');if(!b)return;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));b.classList.add('active');filter=b.dataset.f;render()};
+const M=$('#modal');$('#openModal').onclick=()=>M.classList.add('open');$('#closeModal').onclick=()=>M.classList.remove('open');M.onclick=e=>{if(e.target===M)M.classList.remove('open')};
+$('#storyForm').onsubmit=e=>{e.preventDefault();const f=new FormData(e.target);
+  // বাস্তবে: fetch('/api/stories',{method:'POST',body:f}) — অ্যাডমিন অনুমোদনের পর প্রকাশ হবে
+  S.unshift({id:Date.now(),role:f.get('role'),name:f.get('name'),bg:'',loc:f.get('loc'),title:f.get('title'),body:f.get('body'),date:'এইমাত্র',likes:0});
+  e.target.reset();M.classList.remove('open');render();$('#stories').scrollIntoView({behavior:'smooth'})};
+</script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!-- ব্লগ পোস্ট ম্যানেজমেন্ট (Admin Blog Posts) -->
+<div class="space-y-6">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h2 class="font-head text-2xl font-bold text-gray-900">ব্লগ নিবন্ধ ও এসইও ম্যানেজমেন্ট</h2>
+      <p class="text-xs text-gray-500">এসইও উপযোগী স্বাস্থ্য নিবন্ধ তৈরি ও পরিচালনা করুন</p>
+    </div>
+    <a href="/admin/posts/new" class="btn px-4 py-2.5 text-xs flex items-center gap-1.5 shadow-md shadow-rb-600/20">
+      <i class="fa-solid fa-plus"></i>নতুন ব্লগ পোস্ট লিখুন (100% SEO Ready)
+    </a>
+  </div>
+
+  <div class="glass rounded-3xl overflow-hidden border border-rb-100">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs text-gray-700">
+        <thead class="bg-rb-50/70 border-b border-rb-100 text-gray-800 font-bold uppercase tracking-wider text-[11px]">
+          <tr>
+            <th class="p-3.5 pl-5">কভার</th>
+            <th class="p-3.5">শিরোনাম ও স্লাগ</th>
+            <th class="p-3.5">ক্যাটাগরি</th>
+            <th class="p-3.5">লেখক</th>
+            <th class="p-3.5 text-center">ভিউ</th>
+            <th class="p-3.5 text-center">স্ট্যাটাস</th>
+            <th class="p-3.5 pr-5 text-right">অ্যাকশন</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-rb-50">
+          <% if (posts && posts.length > 0) { %>
+            <% posts.forEach(p => { %>
+              <tr class="hover:bg-white/60 transition">
+                <td class="p-3.5 pl-5">
+                  <div class="w-12 h-12 rounded-xl overflow-hidden bg-rb-50 flex items-center justify-center">
+                    <% if (p.coverImage) { %>
+                      <img src="<%= p.coverImage %>" alt="<%= p.title %>" class="w-full h-full object-cover">
+                    <% } else { %>
+                      <i class="fa-solid fa-newspaper text-rb-300"></i>
+                    <% } %>
+                  </div>
+                </td>
+                <td class="p-3.5">
+                  <a href="/admin/posts/<%= p._id %>/edit" class="font-bold text-gray-900 hover:text-rb-600 transition line-clamp-1">
+                    <%= p.title %>
+                  </a>
+                  <p class="text-[11px] text-gray-400 mt-0.5">/blog/<%= p.slug %></p>
+                </td>
+                <td class="p-3.5">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rb-50 text-rb-600">
+                    <%= p.category %>
+                  </span>
+                </td>
+                <td class="p-3.5 font-medium"><%= p.authorName || 'রক্তবার্তা টিম' %></td>
+                <td class="p-3.5 text-center font-bold text-gray-800"><%= toBn(p.views || 0) %></td>
+                <td class="p-3.5 text-center">
+                  <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold <%= p.status === 'published' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-gray-100 text-gray-600' %>">
+                    <%= p.status === 'published' ? 'প্রকাশিত' : 'ড্রাফট' %>
+                  </span>
+                </td>
+                <td class="p-3.5 pr-5 text-right">
+                  <div class="flex items-center justify-end gap-1.5">
+                    <a href="/blog/<%= p.slug %>" target="_blank" title="ভিউ পোস্ট" class="w-7 h-7 rounded-lg glass flex items-center justify-center text-blue-600 hover:bg-blue-50">
+                      <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                    <a href="/admin/posts/<%= p._id %>/edit" title="সম্পাদনা করুন" class="w-7 h-7 rounded-lg glass flex items-center justify-center text-amber-600 hover:bg-amber-50">
+                      <i class="fa-solid fa-pen"></i>
+                    </a>
+                    <form action="/admin/posts/<%= p._id %>/delete" method="POST" onsubmit="return confirm('নিবন্ধটি মুছে ফেলতে চান?')">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                      <button type="submit" title="মুছে ফেলুন" class="w-7 h-7 rounded-lg glass flex items-center justify-center text-red-600 hover:bg-red-50">
+                        <i class="fa-solid fa-trash-can"></i>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="7" class="p-8 text-center text-gray-500">কোনো ব্লগ নিবন্ধ নেই। নতুন পোস্ট তৈরি করুন।</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

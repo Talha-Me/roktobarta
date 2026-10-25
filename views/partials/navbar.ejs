@@ -1,0 +1,93 @@
+<header class="sticky top-0 z-50 px-3 pt-3">
+  <nav class="glass max-w-7xl mx-auto rounded-2xl px-4 py-3 flex items-center justify-between">
+    <!-- লোগো -->
+    <a href="/" class="flex items-center">
+      <img src="/images/logo.png" alt="রক্তবার্তা" class="h-10 md:h-12 w-auto max-h-12 object-contain">
+    </a>
+
+    <!-- ডেস্কটপ মেনু -->
+    <ul class="hidden lg:flex items-center gap-6 font-medium text-sm">
+      <li><a href="/" class="<%= currentPath === '/' ? 'text-rb-600 font-bold' : 'hover:text-rb-600' %>">হোম</a></li>
+      <li><a href="/requests" class="<%= currentPath.startsWith('/requests') ? 'text-rb-600 font-bold' : 'hover:text-rb-600' %>">রক্তের অনুরোধ</a></li>
+      <li><a href="/donors" class="<%= currentPath.startsWith('/donors') ? 'text-rb-600 font-bold' : 'hover:text-rb-600' %>">রক্তদাতা খুঁজুন</a></li>
+      <li><a href="/stories" class="<%= currentPath.startsWith('/stories') ? 'text-rb-600 font-bold' : 'hover:text-rb-600' %>">রক্তের গল্প</a></li>
+      <li><a href="/blog" class="<%= currentPath.startsWith('/blog') ? 'text-rb-600 font-bold' : 'hover:text-rb-600' %>">ব্লগ</a></li>
+      <li><a href="/about" class="<%= currentPath === '/about' ? 'text-rb-600 font-bold' : 'hover:text-rb-600' %>">আমাদের সম্পর্কে</a></li>
+      <li><a href="/contact" class="<%= currentPath === '/contact' ? 'text-rb-600 font-bold' : 'hover:text-rb-600' %>">যোগাযোগ</a></li>
+    </ul>
+
+    <!-- ব্যবহারকারী অ্যাকশন (লগইন / প্রোফাইল) -->
+    <div class="hidden lg:flex items-center gap-3">
+      <% if (currentUser) { %>
+        <a href="/requests/new" class="btn px-4 py-2 text-sm">
+          <i class="fa-solid fa-plus mr-1"></i>অনুরোধ করুন
+        </a>
+        <div class="relative group">
+          <button class="flex items-center gap-2 glass px-3 py-1.5 rounded-full hover:border-rb-500 transition">
+            <span class="w-7 h-7 rounded-full bg-rb-50 text-rb-600 border border-rb-200 flex items-center justify-center text-xs">
+              <i class="fa-solid fa-user"></i>
+            </span>
+            <span class="text-sm font-semibold max-w-[120px] truncate"><%= currentUser.name %></span>
+            <i class="fa-solid fa-chevron-down text-xs text-gray-500"></i>
+          </button>
+          <div class="absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-md rounded-2xl p-2 shadow-xl border border-rb-100 hidden group-hover:block transition-all z-50">
+            <a href="/dashboard" class="block px-3 py-2 text-sm rounded-xl hover:bg-rb-50 font-medium">
+              <i class="fa-solid fa-gauge text-rb-600 mr-2"></i>ড্যাশবোর্ড
+            </a>
+            <% if (currentUser.role === 'admin') { %>
+              <a href="/admin" class="block px-3 py-2 text-sm rounded-xl hover:bg-rb-50 font-medium text-rb-700">
+                <i class="fa-solid fa-shield-halved mr-2"></i>অ্যাডমিন প্যানেল
+              </a>
+            <% } %>
+            <a href="/logout" class="block px-3 py-2 text-sm rounded-xl hover:bg-red-50 text-red-600 font-medium">
+              <i class="fa-solid fa-right-from-bracket mr-2"></i>লগআউট
+            </a>
+          </div>
+        </div>
+      <% } else { %>
+        <a href="/login" class="btn-ghost px-5 py-2 text-sm">লগইন</a>
+        <a href="/register" class="btn px-5 py-2 text-sm">রেজিস্ট্রেশন</a>
+      <% } %>
+    </div>
+
+    <!-- মোবাইল মেনু টগল বাটন -->
+    <button id="menuBtn" class="lg:hidden w-10 h-10 rounded-xl glass flex items-center justify-center text-rb-600" aria-label="মেনু খুলুন">
+      <i class="fa-solid fa-bars text-lg"></i>
+    </button>
+  </nav>
+
+  <!-- মোবাইল মেনু ড্রয়ার -->
+  <div id="mobileMenu" class="hidden lg:hidden glass max-w-7xl mx-auto rounded-2xl mt-2 p-4 space-y-1 font-medium text-sm">
+    <a class="block py-2 px-3 rounded-lg hover:bg-rb-50 <%= currentPath === '/' ? 'text-rb-600 font-bold' : '' %>" href="/">হোম</a>
+    <a class="block py-2 px-3 rounded-lg hover:bg-rb-50 <%= currentPath.startsWith('/requests') ? 'text-rb-600 font-bold' : '' %>" href="/requests">রক্তের অনুরোধ</a>
+    <a class="block py-2 px-3 rounded-lg hover:bg-rb-50 <%= currentPath.startsWith('/donors') ? 'text-rb-600 font-bold' : '' %>" href="/donors">রক্তদাতা খুঁজুন</a>
+    <a class="block py-2 px-3 rounded-lg hover:bg-rb-50 <%= currentPath.startsWith('/stories') ? 'text-rb-600 font-bold' : '' %>" href="/stories">রক্তের গল্প</a>
+    <a class="block py-2 px-3 rounded-lg hover:bg-rb-50 <%= currentPath.startsWith('/blog') ? 'text-rb-600 font-bold' : '' %>" href="/blog">ব্লগ</a>
+    <a class="block py-2 px-3 rounded-lg hover:bg-rb-50 <%= currentPath === '/about' ? 'text-rb-600 font-bold' : '' %>" href="/about">আমাদের সম্পর্কে</a>
+    <a class="block py-2 px-3 rounded-lg hover:bg-rb-50 <%= currentPath === '/contact' ? 'text-rb-600 font-bold' : '' %>" href="/contact">যোগাযোগ</a>
+
+    <% if (currentUser) { %>
+      <div class="pt-3 border-t border-rb-100 flex flex-col gap-2">
+        <a href="/dashboard" class="btn-ghost text-center py-2">
+          <i class="fa-solid fa-gauge mr-1"></i>ড্যাশবোর্ড (<%= currentUser.name %>)
+        </a>
+        <a href="/requests/new" class="btn text-center py-2">
+          <i class="fa-solid fa-plus mr-1"></i>নতুন রক্তের অনুরোধ
+        </a>
+        <% if (currentUser.role === 'admin') { %>
+          <a href="/admin" class="block py-2 px-3 rounded-lg bg-rb-50 text-rb-700 font-semibold text-center">
+            অ্যাডমিন প্যানেল
+          </a>
+        <% } %>
+        <a href="/logout" class="block py-2 px-3 rounded-lg text-red-600 hover:bg-red-50 text-center font-semibold">
+          লগআউট
+        </a>
+      </div>
+    <% } else { %>
+      <div class="flex gap-3 pt-3 border-t border-rb-100">
+        <a href="/login" class="btn-ghost flex-1 text-center py-2">লগইন</a>
+        <a href="/register" class="btn flex-1 text-center py-2">রেজিস্ট্রেশন</a>
+      </div>
+    <% } %>
+  </div>
+</header>

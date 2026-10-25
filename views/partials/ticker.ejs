@@ -1,0 +1,30 @@
+<div class="bg-rb-700 text-white text-sm overflow-hidden whitespace-nowrap py-2 select-none shadow-sm">
+  <div class="marq inline-block">
+    <% if (typeof urgentTicker !== 'undefined' && urgentTicker && urgentTicker.length > 0) { %>
+      <% urgentTicker.forEach(function(item) { %>
+        <a href="/requests/<%= item._id %>" class="mx-8 hover:underline inline-flex items-center">
+          <i class="fa-solid fa-droplet text-red-300 mr-2"></i>
+          <span>জরুরি: <%= item.district %>-এ <%= toBnGroup(item.bloodGroup) %> রক্ত প্রয়োজন (<%= item.hospitalName %>)</span>
+        </a>
+      <% }); %>
+      <!-- Duplicate for seamless infinite marquee scroll -->
+      <% urgentTicker.forEach(function(item) { %>
+        <a href="/requests/<%= item._id %>" class="mx-8 hover:underline inline-flex items-center">
+          <i class="fa-solid fa-droplet text-red-300 mr-2"></i>
+          <span>জরুরি: <%= item.district %>-এ <%= toBnGroup(item.bloodGroup) %> রক্ত প্রয়োজন (<%= item.hospitalName %>)</span>
+        </a>
+      <% }); %>
+    <% } else { %>
+      <span class="mx-8"><i class="fa-solid fa-droplet text-red-300 mr-1.5"></i> জরুরি: ঢাকা মেডিকেলে এ+ রক্ত প্রয়োজন</span>
+      <span class="mx-8"><i class="fa-solid fa-droplet text-red-300 mr-1.5"></i> চট্টগ্রামে ও নেগেটিভ রক্ত প্রয়োজন</span>
+      <span class="mx-8"><i class="fa-solid fa-droplet text-red-300 mr-1.5"></i> কলকাতায় বি+ রক্ত প্রয়োজন</span>
+      <span class="mx-8"><i class="fa-solid fa-droplet text-red-300 mr-1.5"></i> সিলেটে এবি+ রক্ত প্রয়োজন</span>
+      <span class="mx-8"><i class="fa-solid fa-droplet text-red-300 mr-1.5"></i> রাজশাহীতে ও+ রক্ত প্রয়োজন</span>
+      <span class="mx-8"><i class="fa-solid fa-droplet text-red-300 mr-1.5"></i> জরুরি: ঢাকা মেডিকেলে এ+ রক্ত প্রয়োজন</span>
+      <span class="mx-8"><i class="fa-solid fa-droplet text-red-300 mr-1.5"></i> চট্টগ্রামে ও নেগেটিভ রক্ত প্রয়োজন</span>
+      <span class="mx-8"><i class="fa-solid fa-droplet text-red-300 mr-1.5"></i> কলকাতায় বি+ রক্ত প্রয়োজন</span>
+      <span class="mx-8"><i class="fa-solid fa-droplet text-red-300 mr-1.5"></i> সিলেটে এবি+ রক্ত প্রয়োজন</span>
+      <span class="mx-8"><i class="fa-solid fa-droplet text-red-300 mr-1.5"></i> রাজশাহীতে ও+ রক্ত প্রয়োজন</span>
+    <% } %>
+  </div>
+</div>

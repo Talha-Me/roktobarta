@@ -1,0 +1,189 @@
+<section class="max-w-3xl mx-auto px-4 py-12">
+  <div class="glass rounded-3xl p-6 sm:p-10 relative overflow-hidden">
+    <div class="blob w-64 h-64 bg-rb-500 -top-16 -left-16"></div>
+
+    <div class="text-center max-w-xl mx-auto mb-8 relative z-10">
+      <span class="glass inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs text-rb-700 font-semibold mb-3">
+        <span class="w-2 h-2 rounded-full bg-rb-500 ring-pulse"></span> জীবন বাঁচান
+      </span>
+      <h1 class="font-head text-3xl sm:text-4xl font-bold text-rb-900">
+        জরুরি <span class="text-rb-600">রক্তের অনুরোধ</span> করুন
+      </h1>
+      <p class="text-sm text-gray-600 mt-2">
+        রোগীর সঠিক তথ্য প্রদান করুন যাতে স্থানীয় রক্তদাতারা দ্রুত আপনার সাথে যোগাযোগ করতে পারেন।
+      </p>
+    </div>
+
+    <form action="/requests/new" method="POST" autocomplete="off" class="space-y-6 relative z-10">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <!-- রোগীর তথ্য -->
+      <div>
+        <h3 class="text-sm font-bold text-rb-700 uppercase tracking-wider mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-bed-pulse text-rb-600"></i>রোগীর প্রাথমিক তথ্য
+        </h3>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">রোগীর পূর্ণ নাম <span class="text-red-600">*</span></label>
+            <input type="text" name="patientName" value="<%= formData.patientName || '' %>" placeholder="যেমন: আব্দুল করিম" required maxlength="80">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">রক্তের গ্রুপ <span class="text-red-600">*</span></label>
+            <select name="bloodGroup" required>
+              <option value="">গ্রুপ বেছে নিন</option>
+              <option value="A+" <%= formData.bloodGroup === 'A+' ? 'selected' : '' %>>এ+ (A Positive)</option>
+              <option value="A-" <%= formData.bloodGroup === 'A-' ? 'selected' : '' %>>এ- (A Negative)</option>
+              <option value="B+" <%= formData.bloodGroup === 'B+' ? 'selected' : '' %>>বি+ (B Positive)</option>
+              <option value="B-" <%= formData.bloodGroup === 'B-' ? 'selected' : '' %>>বি- (B Negative)</option>
+              <option value="O+" <%= formData.bloodGroup === 'O+' ? 'selected' : '' %>>ও+ (O Positive)</option>
+              <option value="O-" <%= formData.bloodGroup === 'O-' ? 'selected' : '' %>>ও- (O Negative)</option>
+              <option value="AB+" <%= formData.bloodGroup === 'AB+' ? 'selected' : '' %>>এবি+ (AB Positive)</option>
+              <option value="AB-" <%= formData.bloodGroup === 'AB-' ? 'selected' : '' %>>এবি- (AB Negative)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">প্রয়োজনীয় রক্তের পরিমাণ (ব্যাগ) <span class="text-red-600">*</span></label>
+            <input type="number" name="bagsNeeded" min="1" max="20" value="<%= formData.bagsNeeded || '1' %>" required>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">রক্তের কারণ / রোগীর সমস্যা <span class="text-red-600">*</span></label>
+            <select name="reason" required>
+              <option value="">কারণ নির্বাচন করুন</option>
+              <option value="অপারেশন">অপারেশন (Surgery)</option>
+              <option value="সিজার">সিজারিয়ান ডেলিভারি (Caesarean)</option>
+              <option value="থ্যালাসেমিয়া">থ্যালাসেমিয়া (Thalassemia)</option>
+              <option value="দুর্ঘটনা">জরুরি দুর্ঘটনা (Accident / Trauma)</option>
+              <option value="ডেঙ্গু">ডেঙ্গু / প্লাটিলেট (Dengue)</option>
+              <option value="ক্যান্সার">ক্যান্সার চিকিৎসা (Cancer)</option>
+              <option value="কিডনি ডায়ালাইসিস">কিডনি ডায়ালাইসিস (Dialysis)</option>
+              <option value="হৃদরোগ">হৃদরোগ চিকিৎসা (Cardiac)</option>
+              <option value="অন্যান্য">অন্যান্য জরুরি প্রয়োজন</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- সময় ও জরুরিতা -->
+      <div class="pt-2 border-t border-rb-100">
+        <h3 class="text-sm font-bold text-rb-700 uppercase tracking-wider mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-clock-rotate-left text-rb-600"></i>সময় ও জরুরিতা
+        </h3>
+        <div class="grid sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">জরুরিতার মাত্রা <span class="text-red-600">*</span></label>
+            <select name="urgency" required>
+              <option value="অতি জরুরি">অতি জরুরি (১-৬ ঘণ্টার মধ্যে)</option>
+              <option value="২৪ ঘণ্টা" selected>২৪ ঘণ্টার মধ্যে</option>
+              <option value="সাধারণ">সাধারণ (শিডিউল করা)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">রক্তদানের তারিখ <span class="text-red-600">*</span></label>
+            <input type="date" name="neededDate" required value="<%= formData.neededDate || new Date().toISOString().split('T')[0] %>">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">নির্দিষ্ট সময় (ঐচ্ছিক)</label>
+            <input type="text" name="neededTime" value="<%= formData.neededTime || '' %>" placeholder="যেমন: সকাল ১০টা বা রাত ৮টা">
+          </div>
+        </div>
+      </div>
+
+      <!-- হাসপাতাল ও অবস্থান -->
+      <div class="pt-2 border-t border-rb-100">
+        <h3 class="text-sm font-bold text-rb-700 uppercase tracking-wider mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-hospital text-rb-600"></i>হাসপাতাল ও অবস্থান
+        </h3>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">হাসপাতাল বা ক্লিনিকের নাম <span class="text-red-600">*</span></label>
+            <input type="text" name="hospitalName" value="<%= formData.hospitalName || '' %>" placeholder="যেমন: ঢাকা মেডিকেল কলেজ হাসপাতাল" required>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div class="relative">
+              <label class="block text-xs font-semibold text-gray-700 mb-1">জেলা <span class="text-red-600">*</span></label>
+              <input type="text" id="reqDistrict" name="district" value="<%= formData.district || currentUser.district || '' %>" placeholder="বাংলা বা ইংরেজিতে লিখুন, যেমন: ঢাকা / Dhaka" autocomplete="off" required>
+              <div class="ac-box"></div>
+            </div>
+            <div class="relative">
+              <label class="block text-xs font-semibold text-gray-700 mb-1">উপজেলা / থানা <span class="text-red-600">*</span></label>
+              <input type="text" id="reqUpazila" name="upazila" value="<%= formData.upazila || currentUser.upazila || '' %>" placeholder="বাংলা বা ইংরেজিতে লিখুন, যেমন: মিরপুর / Mirpur" autocomplete="off" required>
+              <div class="ac-box"></div>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">হাসপাতালের বিস্তারিত ঠিকানা / ওয়ার্ড / কেবিন নম্বর <span class="text-red-600">*</span></label>
+            <input type="text" name="address" value="<%= formData.address || '' %>" placeholder="যেমন: নতুন ভবন, সার্জারি ওয়ার্ড ৩, বেড ১২" required>
+          </div>
+        </div>
+      </div>
+
+      <!-- যোগাযোগের তথ্য -->
+      <div class="pt-2 border-t border-rb-100">
+        <h3 class="text-sm font-bold text-rb-700 uppercase tracking-wider mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-phone text-rb-600"></i>যোগাযোগের তথ্য
+        </h3>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">যোগাযোগকারীর নাম <span class="text-red-600">*</span></label>
+            <input type="text" name="contactName" value="<%= formData.contactName || currentUser.name %>" required>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">সরাসরি যোগাযোগের মোবাইল নম্বর <span class="text-red-600">*</span></label>
+            <input type="tel" name="contactPhone" value="<%= formData.contactPhone || currentUser.phone %>" placeholder="০১XXXXXXXXX" required>
+            <small class="text-xs text-gray-500">এই নম্বরে রক্তদাতারা সরাসরি কল বা মেসেজ দেবেন</small>
+          </div>
+        </div>
+        <div class="mt-4">
+          <label class="block text-xs font-semibold text-gray-700 mb-1">বিশেষ বার্তা বা নির্দেশনা (ঐচ্ছিক)</label>
+          <textarea name="note" rows="3" placeholder="রোগীর কোনো বিশেষ রক্তের প্রয়োজন বা নির্দেশ থাকলে লিখুন (সর্বোচ্চ ৫০০ অক্ষর)"><%= formData.note || '' %></textarea>
+        </div>
+      </div>
+
+      <!-- নিরাপত্তা ও সতর্কতা -->
+      <div class="bg-rb-50 border border-rb-100 p-4 rounded-2xl text-xs text-gray-600 space-y-1">
+        <p class="font-bold text-rb-900 flex items-center gap-1.5">
+          <i class="fa-solid fa-circle-exclamation text-rb-600"></i>জরুরি নির্দেশনা:
+        </p>
+        <p>• রক্তদান সম্পূর্ণ মানবিক ও বিনামূল্যে। রক্তের বিনিময়ে আর্থিক লেনদেন সম্পূর্ণ নিষিদ্ধ।</p>
+        <p>• রক্তদাতা নিশ্চিত হওয়ার সাথে সাথে ড্যাশবোর্ড থেকে অনুরোধটি সম্পন্ন করুন যাতে অন্যান্য রক্তদাতারা বিভ্রান্ত না হন।</p>
+      </div>
+
+      <div class="pt-2">
+        <button type="submit" class="btn w-full py-4 text-lg">
+          <i class="fa-solid fa-paper-plane mr-2"></i>রক্তের অনুরোধ পোস্ট করুন
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- অটোকমপ্লিট স্ক্রিপ্ট -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const dInput = document.getElementById('reqDistrict');
+  const uInput = document.getElementById('reqUpazila');
+
+  if (dInput && window.initAutocomplete) {
+    window.initAutocomplete(dInput, async (q) => {
+      const res = await fetch(`/api/locations/districts?query=${encodeURIComponent(q)}`);
+      const json = await res.json();
+      return json.data || [];
+    }, () => {
+      if (uInput) {
+        uInput.value = '';
+        uInput.focus();
+      }
+    });
+  }
+
+  if (uInput && window.initAutocomplete) {
+    window.initAutocomplete(uInput, async (q) => {
+      const dist = dInput ? dInput.value.trim() : '';
+      const url = `/api/locations/upazilas?district=${encodeURIComponent(dist)}&query=${encodeURIComponent(q)}`;
+      const res = await fetch(url);
+      const json = await res.json();
+      return json.data || [];
+    });
+  }
+});
+</script>

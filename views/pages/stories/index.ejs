@@ -1,0 +1,115 @@
+<section class="max-w-7xl mx-auto px-4 py-10">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+    <div>
+      <span class="glass inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs text-rb-700 font-semibold mb-2">
+        <span class="w-2 h-2 rounded-full bg-rb-500 ring-pulse"></span> বাস্তব অনুভূতি
+      </span>
+      <h1 class="font-head text-3xl sm:text-4xl font-bold text-rb-900">
+        রক্তের <span class="text-rb-600">গল্পসমূহ</span>
+      </h1>
+      <p class="text-sm text-gray-600 mt-1">
+        রক্তদান করে বা জরুরি মুহূর্তে রক্ত পেয়ে মানুষের জীবনে ঘটে যাওয়া মানবিক অভিজ্ঞতার সংকলন।
+      </p>
+    </div>
+    <div class="flex items-center gap-3">
+      <button type="button" id="openStoryModalBtn" class="btn px-6 py-3 text-sm font-semibold shadow-md">
+        <i class="fa-solid fa-pen-nib mr-2"></i>আপনার গল্প লিখুন
+      </button>
+    </div>
+  </div>
+
+  <!-- রোল ফিল্টার ট্যাব -->
+  <div class="glass rounded-2xl p-2 inline-flex gap-2 mb-8">
+    <a href="/stories" class="px-5 py-2 rounded-xl text-xs font-bold transition <%= currentRole === 'all' ? 'bg-rb-600 text-white shadow-sm' : 'text-gray-700 hover:bg-rb-50' %>">
+      সব গল্প
+    </a>
+    <a href="/stories?role=donor" class="px-5 py-2 rounded-xl text-xs font-bold transition <%= currentRole === 'donor' ? 'bg-rb-600 text-white shadow-sm' : 'text-gray-700 hover:bg-rb-50' %>">
+      রক্তদাতাদের গল্প
+    </a>
+    <a href="/stories?role=receiver" class="px-5 py-2 rounded-xl text-xs font-bold transition <%= currentRole === 'receiver' ? 'bg-rb-600 text-white shadow-sm' : 'text-gray-700 hover:bg-rb-50' %>">
+      রক্তগ্রহীতাদের গল্প
+    </a>
+  </div>
+
+  <!-- গল্পের গ্রিড -->
+  <% if (stories && stories.length > 0) { %>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% stories.forEach(function(s, idx) { %>
+        <article class="glass card-hover rounded-3xl p-6 flex flex-col justify-between border border-white/80">
+          <div>
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-11 h-11 rounded-2xl bg-rb-50 text-rb-600 flex items-center justify-center font-bold text-sm shrink-0 border border-rb-200">
+                <i class="fa-solid fa-quote-left"></i>
+              </div>
+              <div class="min-w-0 flex-1">
+                <p class="font-bold text-sm leading-tight text-gray-900 truncate">
+                  <%= s.author ? s.author.name : 'বেনামী' %>
+                </p>
+                <p class="text-xs text-gray-500 mt-0.5"><%= s.location %> · <%= formatBnDate(s.createdAt) %></p>
+              </div>
+              <span class="text-xs px-3 py-1 rounded-full font-semibold <%= s.role === 'donor' ? 'bg-rb-600 text-white' : 'bg-rb-100 text-rb-700' %>">
+                <%= s.role === 'donor' ? 'রক্তদাতা' : 'গ্রহীতা' %> · <%= toBnGroup(s.bloodGroup) %>
+              </span>
+            </div>
+
+            <h3 class="font-bold text-lg text-rb-900 line-clamp-2 leading-snug">
+              <a href="/stories/<%= s.slug %>" class="hover:text-rb-600 transition"><%= s.title %></a>
+            </h3>
+            <p class="text-gray-600 text-sm mt-2 leading-relaxed line-clamp-3"><%= s.body %></p>
+          </div>
+
+          <div class="flex items-center justify-between mt-5 pt-4 border-t border-rb-100">
+            <span class="text-rb-600 text-sm font-semibold flex items-center gap-1.5">
+              <i class="fa-solid fa-heart"></i>
+              <span><%= toBn(s.likes ? s.likes.length : 0) %></span>
+            </span>
+            <a href="/stories/<%= s.slug %>" class="text-sm font-semibold text-rb-600 hover:underline">
+              পুরোটা পড়ুন →
+            </a>
+          </div>
+        </article>
+      <% }); %>
+    </div>
+
+    <!-- পেজিনেশন -->
+    <!-- পেজিনেশন -->
+    <% if (totalPages > 1) { %>
+      <div class="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-12">
+        <% if (currentPage > 1) { %>
+          <a href="/stories?page=<%= currentPage - 1 %>&role=<%= currentRole %>" class="glass px-3 sm:px-4 py-2 rounded-xl text-xs font-bold text-gray-700 hover:bg-rb-50 transition">
+            ← পূর্ববর্তী
+          </a>
+        <% } %>
+
+        <% const pageItems = getPagination(currentPage, totalPages); %>
+        <% pageItems.forEach(function(item) { %>
+          <% if (item === '...') { %>
+            <span class="px-2 py-2 text-xs font-bold text-gray-400 select-none">...</span>
+          <% } else { %>
+            <a href="/stories?page=<%= item %>&role=<%= currentRole %>" class="px-3 sm:px-3.5 py-2 rounded-xl text-xs font-bold transition <%= item === currentPage ? 'bg-rb-600 text-white shadow-md' : 'glass text-gray-700 hover:bg-rb-50' %>">
+              <%= toBn(item) %>
+            </a>
+          <% } %>
+        <% }); %>
+
+        <% if (currentPage < totalPages) { %>
+          <a href="/stories?page=<%= currentPage + 1 %>&role=<%= currentRole %>" class="glass px-3 sm:px-4 py-2 rounded-xl text-xs font-bold text-gray-700 hover:bg-rb-50 transition">
+            পরবর্তী →
+          </a>
+        <% } %>
+      </div>
+    <% } %>
+
+  <% } else { %>
+    <div class="glass rounded-3xl p-12 text-center max-w-xl mx-auto my-12">
+      <div class="w-20 h-20 rounded-full bg-rb-50 flex items-center justify-center text-rb-400 text-4xl mx-auto mb-4">
+        <i class="fa-solid fa-feather-pointed"></i>
+      </div>
+      <h3 class="font-head text-2xl font-bold text-rb-900 mb-2">কোনো গল্প পাওয়া যায়নি</h3>
+      <p class="text-sm text-gray-600 mb-6">এই ক্যাটাগরিতে এখনও কোনো গল্প প্রকাশিত হয়নি। আপনিই প্রথম গল্পটি শেয়ার করুন!</p>
+      <button type="button" id="openStoryModalBtnEmpty" onclick="document.getElementById('openStoryModalBtn').click()" class="btn px-6 py-2.5 text-sm">
+        আপনার অভিজ্ঞতা লিখুন
+      </button>
+    </div>
+  <% } %>
+</section>

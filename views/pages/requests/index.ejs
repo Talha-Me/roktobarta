@@ -1,0 +1,217 @@
+<section class="max-w-7xl mx-auto px-4 py-10">
+  <!-- হেডলাইন ও নতুন অনুরোধ বাটন -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+    <div>
+      <span class="glass inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs text-rb-700 font-semibold mb-2">
+        <span class="w-2 h-2 rounded-full bg-rb-500 ring-pulse"></span> সরাসরি সাহায্য
+      </span>
+      <h1 class="font-head text-3xl sm:text-4xl font-bold text-rb-900">
+        জরুরি <span class="text-rb-600">রক্তের অনুরোধসমূহ</span>
+      </h1>
+      <p class="text-sm text-gray-600 mt-1">
+        বাংলাদেশ ও কলকাতার বিভিন্ন হাসপাতালে মুমূর্ষু রোগীদের জন্য রক্তের সন্ধান। মোট <strong class="text-rb-600"><%= toBn(totalCount) %></strong>টি অনুরোধ পাওয়া গেছে।
+      </p>
+    </div>
+    <div>
+      <a href="/requests/new" class="btn px-6 py-3 text-base shadow-lg">
+        <i class="fa-solid fa-plus mr-2"></i>রক্তের অনুরোধ করুন
+      </a>
+    </div>
+  </div>
+
+  <!-- ফিল্টার ও সার্চ বার -->
+  <div class="glass rounded-3xl p-5 sm:p-6 mb-10">
+    <form action="/requests" method="GET" autocomplete="off" class="grid sm:grid-cols-2 lg:grid-cols-5 gap-3.5 items-end">
+      <!-- রক্তের গ্রুপ -->
+      <div>
+        <label class="block text-xs font-semibold text-gray-700 mb-1">রক্তের গ্রুপ</label>
+        <select name="group">
+          <option value="">সব গ্রুপ</option>
+          <option value="A+" <%= filters.group === 'A+' ? 'selected' : '' %>>এ+ (A+)</option>
+          <option value="A-" <%= filters.group === 'A-' ? 'selected' : '' %>>এ- (A-)</option>
+          <option value="B+" <%= filters.group === 'B+' ? 'selected' : '' %>>বি+ (B+)</option>
+          <option value="B-" <%= filters.group === 'B-' ? 'selected' : '' %>>বি- (B-)</option>
+          <option value="O+" <%= filters.group === 'O+' ? 'selected' : '' %>>ও+ (O+)</option>
+          <option value="O-" <%= filters.group === 'O-' ? 'selected' : '' %>>ও- (O-)</option>
+          <option value="AB+" <%= filters.group === 'AB+' ? 'selected' : '' %>>এবি+ (AB+)</option>
+          <option value="AB-" <%= filters.group === 'AB-' ? 'selected' : '' %>>এবি- (AB-)</option>
+        </select>
+      </div>
+
+      <!-- জেলা -->
+      <div class="relative">
+        <label class="block text-xs font-semibold text-gray-700 mb-1">জেলা</label>
+        <input type="text" id="reqFilterDistrict" name="district" value="<%= filters.district %>" placeholder="বাংলা বা ইংরেজিতে লিখুন, যেমন: ঢাকা / Dhaka" autocomplete="off">
+        <div class="ac-box"></div>
+      </div>
+
+      <!-- উপজেলা -->
+      <div class="relative">
+        <label class="block text-xs font-semibold text-gray-700 mb-1">উপজেলা / থানা</label>
+        <input type="text" id="reqFilterUpazila" name="upazila" value="<%= filters.upazila %>" placeholder="বাংলা বা ইংরেজিতে লিখুন, যেমন: মিরপুর / Mirpur" autocomplete="off">
+        <div class="ac-box"></div>
+      </div>
+
+      <!-- জরুরিতা -->
+      <div>
+        <label class="block text-xs font-semibold text-gray-700 mb-1">জরুরিতা</label>
+        <select name="urgency">
+          <option value="">সব মাত্রা</option>
+          <option value="অতি জরুরি" <%= filters.urgency === 'অতি জরুরি' ? 'selected' : '' %>>অতি জরুরি</option>
+          <option value="২৪ ঘণ্টা" <%= filters.urgency === '২৪ ঘণ্টা' ? 'selected' : '' %>>২৪ ঘণ্টার মধ্যে</option>
+          <option value="সাধারণ" <%= filters.urgency === 'সাধারণ' ? 'selected' : '' %>>সাধারণ</option>
+        </select>
+      </div>
+
+      <!-- সার্চ ও রিসেট বোতাম -->
+      <div class="flex gap-2">
+        <button type="submit" class="btn flex-1 py-3 text-sm">
+          <i class="fa-solid fa-magnifying-glass mr-1.5"></i>ফিল্টার
+        </button>
+        <a href="/requests" class="btn-ghost px-4 py-3 text-sm" title="রিসেট">
+          <i class="fa-solid fa-rotate-right"></i>
+        </a>
+      </div>
+    </form>
+  </div>
+
+  <!-- অনুরোধের কার্ড গ্রিড -->
+  <% if (requests && requests.length > 0) { %>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% requests.forEach(function(item) { %>
+        <article class="glass card-hover rounded-3xl p-6 flex flex-col justify-between border border-white/80 relative overflow-hidden">
+          <% if (item.urgency === 'অতি জরুরি') { %>
+            <div class="absolute top-0 right-0 bg-red-600 text-white text-[11px] font-bold px-4 py-1 rounded-bl-2xl shadow-sm flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-white ring-pulse"></span>
+              অতি জরুরি
+            </div>
+          <% } %>
+
+          <div>
+            <!-- টপ ইনফো ও ব্যাজ -->
+            <div class="flex items-center gap-3 mb-4">
+              <span class="w-14 h-14 rounded-2xl bg-gradient-to-br from-rb-500 to-rb-700 text-white flex flex-col items-center justify-center font-bold shadow-md shrink-0">
+                <span class="text-xl leading-none"><%= toBnGroup(item.bloodGroup) %></span>
+                <span class="text-[10px] opacity-80 mt-0.5"><%= toBn(item.bagsNeeded) %> ব্যাগ</span>
+              </span>
+              <div>
+                <h3 class="font-bold text-lg text-rb-900 leading-snug line-clamp-1"><%= item.patientName %></h3>
+                <span class="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
+                  <i class="fa-solid fa-notes-medical text-rb-600"></i>
+                  <%= item.reason %> · <%= timeAgoBn(item.createdAt) %>
+                </span>
+              </div>
+            </div>
+
+            <!-- হাসপাতাল ও অবস্থান -->
+            <div class="space-y-2 text-sm text-gray-700 my-4 bg-white/50 p-3.5 rounded-2xl border border-rb-50">
+              <p class="flex items-start gap-2 text-xs">
+                <i class="fa-solid fa-hospital text-rb-600 mt-0.5 shrink-0"></i>
+                <span class="font-semibold text-gray-800 line-clamp-1"><%= item.hospitalName %></span>
+              </p>
+              <p class="flex items-center gap-2 text-xs text-gray-600">
+                <i class="fa-solid fa-location-dot text-rb-600 shrink-0"></i>
+                <span><%= item.upazila %>, <%= item.district %></span>
+              </p>
+              <p class="flex items-center gap-2 text-xs text-gray-600">
+                <i class="fa-regular fa-clock text-rb-600 shrink-0"></i>
+                <span>রক্তদানের তারিখ: <strong><%= formatBnDate(item.neededDate) %></strong></span>
+              </p>
+            </div>
+
+            <% if (item.note) { %>
+              <p class="text-xs text-gray-600 line-clamp-2 italic mb-4">
+                "<%= item.note %>"
+              </p>
+            <% } %>
+          </div>
+
+          <!-- কার্ড ফুটার বোতাম -->
+          <div class="pt-4 border-t border-rb-100 flex items-center justify-between mt-auto">
+            <span class="text-xs text-gray-500">
+              সাড়া দিয়েছেন: <strong><%= toBn(item.responses ? item.responses.length : 0) %></strong> জন
+            </span>
+            <a href="/requests/<%= item._id %>" class="btn px-5 py-2 text-xs font-semibold">
+              বিস্তারিত দেখুন <i class="fa-solid fa-arrow-right ml-1"></i>
+            </a>
+          </div>
+        </article>
+      <% }); %>
+    </div>
+
+    <!-- পেজিনেশন -->
+    <% if (totalPages > 1) { %>
+      <div class="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-12">
+        <% if (currentPage > 1) { %>
+          <a href="/requests?page=<%= currentPage - 1 %>&group=<%= filters.group %>&district=<%= filters.district %>&upazila=<%= filters.upazila %>&urgency=<%= filters.urgency %>&status=<%= filters.status %>" class="glass px-3 sm:px-4 py-2 rounded-xl text-xs font-bold text-gray-700 hover:bg-rb-50 transition">
+            ← পূর্ববর্তী
+          </a>
+        <% } %>
+
+        <% const pageItems = getPagination(currentPage, totalPages); %>
+        <% pageItems.forEach(function(item) { %>
+          <% if (item === '...') { %>
+            <span class="px-2 py-2 text-xs font-bold text-gray-400 select-none">...</span>
+          <% } else { %>
+            <a href="/requests?page=<%= item %>&group=<%= filters.group %>&district=<%= filters.district %>&upazila=<%= filters.upazila %>&urgency=<%= filters.urgency %>&status=<%= filters.status %>" class="px-3 sm:px-3.5 py-2 rounded-xl text-xs font-bold transition <%= item === currentPage ? 'bg-rb-600 text-white shadow-md' : 'glass text-gray-700 hover:bg-rb-50' %>">
+              <%= toBn(item) %>
+            </a>
+          <% } %>
+        <% }); %>
+
+        <% if (currentPage < totalPages) { %>
+          <a href="/requests?page=<%= currentPage + 1 %>&group=<%= filters.group %>&district=<%= filters.district %>&upazila=<%= filters.upazila %>&urgency=<%= filters.urgency %>&status=<%= filters.status %>" class="glass px-3 sm:px-4 py-2 rounded-xl text-xs font-bold text-gray-700 hover:bg-rb-50 transition">
+            পরবর্তী →
+          </a>
+        <% } %>
+      </div>
+    <% } %>
+
+  <% } else { %>
+    <!-- এম্পটি স্টেট -->
+    <div class="glass rounded-3xl p-12 text-center max-w-xl mx-auto my-12">
+      <div class="w-20 h-20 rounded-full bg-rb-50 flex items-center justify-center text-rb-400 text-4xl mx-auto mb-4">
+        <i class="fa-solid fa-droplet-slash"></i>
+      </div>
+      <h3 class="font-head text-2xl font-bold text-rb-900 mb-2">কোনো রক্তের অনুরোধ পাওয়া যায়নি</h3>
+      <p class="text-sm text-gray-600 mb-6">
+        আপনার নির্বাচিত ফিল্টারে বর্তমানে কোনো রক্তের অনুরোধ সক্রিয় নেই। ফিল্টার পরিবর্তন করে আবার চেষ্টা করতে পারেন।
+      </p>
+      <div class="flex justify-center gap-3">
+        <a href="/requests" class="btn-ghost px-6 py-2.5 text-sm">সকল অনুরোধ দেখুন</a>
+        <a href="/requests/new" class="btn px-6 py-2.5 text-sm">নতুন রক্তের অনুরোধ করুন</a>
+      </div>
+    </div>
+  <% } %>
+</section>
+
+<!-- অটোকমপ্লিট স্ক্রিপ্ট -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const dInput = document.getElementById('reqFilterDistrict');
+  const uInput = document.getElementById('reqFilterUpazila');
+
+  if (dInput && window.initAutocomplete) {
+    window.initAutocomplete(dInput, async (q) => {
+      const res = await fetch(`/api/locations/districts?query=${encodeURIComponent(q)}`);
+      const json = await res.json();
+      return json.data || [];
+    }, () => {
+      if (uInput) {
+        uInput.value = '';
+        uInput.focus();
+      }
+    });
+  }
+
+  if (uInput && window.initAutocomplete) {
+    window.initAutocomplete(uInput, async (q) => {
+      const dist = dInput ? dInput.value.trim() : '';
+      const url = `/api/locations/upazilas?district=${encodeURIComponent(dist)}&query=${encodeURIComponent(q)}`;
+      const res = await fetch(url);
+      const json = await res.json();
+      return json.data || [];
+    });
+  }
+});
+</script>

@@ -1,0 +1,155 @@
+<!-- রক্তের অনুরোধ ম্যানেজমেন্ট (Admin Blood Requests) -->
+<div class="space-y-6">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h2 class="font-head text-2xl font-bold text-gray-900">রক্তের অনুরোধ ম্যানেজমেন্ট</h2>
+      <p class="text-xs text-gray-500">মোট রক্তের অনুরোধ: <%= toBn(total) %> টি</p>
+    </div>
+    <div class="flex gap-2">
+      <a href="/admin/export/requests" class="glass px-4 py-2 rounded-xl text-xs font-bold text-green-700 hover:border-green-600 transition flex items-center gap-1.5">
+        <i class="fa-solid fa-file-csv text-base"></i>অনুরোধের CSV ডাউনলোড
+      </a>
+    </div>
+  </div>
+
+  <!-- ফিল্টার ও সার্চ বক্স -->
+  <form action="/admin/requests" method="GET" class="glass rounded-2xl p-4 flex flex-wrap items-center gap-3 border border-rb-50">
+    <div class="flex-1 min-w-[200px]">
+      <input type="text" name="q" value="<%= searchQuery %>" placeholder="রোগী, হাসপাতাল, জেলা বা ফোন নম্বর..." class="w-full text-xs">
+    </div>
+
+    <div>
+      <select name="status" class="text-xs py-2">
+        <option value="all" <%= queryStatus === 'all' ? 'selected' : '' %>>সকল স্ট্যাটাস</option>
+        <option value="open" <%= queryStatus === 'open' ? 'selected' : '' %>>উন্মুক্ত (Open)</option>
+        <option value="fulfilled" <%= queryStatus === 'fulfilled' ? 'selected' : '' %>>সংগৃহীত (Fulfilled)</option>
+        <option value="closed" <%= queryStatus === 'closed' ? 'selected' : '' %>>বন্ধ (Closed)</option>
+        <option value="expired" <%= queryStatus === 'expired' ? 'selected' : '' %>>মেয়াদোত্তীর্ণ (Expired)</option>
+      </select>
+    </div>
+
+    <div>
+      <select name="group" class="text-xs py-2">
+        <option value="all" <%= queryGroup === 'all' ? 'selected' : '' %>>সকল গ্রুপ</option>
+        <option value="A+" <%= queryGroup === 'A+' ? 'selected' : '' %>>এ+</option>
+        <option value="A-" <%= queryGroup === 'A-' ? 'selected' : '' %>>এ-</option>
+        <option value="B+" <%= queryGroup === 'B+' ? 'selected' : '' %>>বি+</option>
+        <option value="B-" <%= queryGroup === 'B-' ? 'selected' : '' %>>বি-</option>
+        <option value="O+" <%= queryGroup === 'O+' ? 'selected' : '' %>>ও+</option>
+        <option value="O-" <%= queryGroup === 'O-' ? 'selected' : '' %>>ও-</option>
+        <option value="AB+" <%= queryGroup === 'AB+' ? 'selected' : '' %>>এবি+</option>
+        <option value="AB-" <%= queryGroup === 'AB-' ? 'selected' : '' %>>এবি-</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn px-4 py-2 text-xs">
+      <i class="fa-solid fa-filter mr-1"></i>ফিল্টার
+    </button>
+  </form>
+
+  <!-- অনুরোধের টেবিল -->
+  <div class="glass rounded-3xl overflow-hidden border border-rb-100">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs text-gray-700">
+        <thead class="bg-rb-50/70 border-b border-rb-100 text-gray-800 font-bold uppercase tracking-wider text-[11px]">
+          <tr>
+            <th class="p-3.5 pl-5">রোগী ও কারণ</th>
+            <th class="p-3.5">গ্রুপ ও ব্যাগ</th>
+            <th class="p-3.5">জরুরিতা</th>
+            <th class="p-3.5">হাসপাতাল ও অবস্থান</th>
+            <th class="p-3.5">যোগাযোগ</th>
+            <th class="p-3.5 text-center">স্ট্যাটাস</th>
+            <th class="p-3.5 pr-5 text-right">অ্যাকশন</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-rb-50">
+          <% if (requests && requests.length > 0) { %>
+            <% requests.forEach(r => { %>
+              <tr class="hover:bg-white/60 transition">
+                <td class="p-3.5 pl-5">
+                  <p class="font-bold text-gray-900"><%= r.patientName %></p>
+                  <p class="text-[11px] text-gray-500"><%= r.reason %></p>
+                </td>
+                <td class="p-3.5">
+                  <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-rb-50 text-rb-600 border border-rb-100">
+                    <%= toBnGroup(r.bloodGroup) %>
+                  </span>
+                  <span class="text-[11px] text-gray-500 ml-1">(<%= toBn(r.bagsNeeded) %> ব্যাগ)</span>
+                </td>
+                <td class="p-3.5">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold <%= r.urgency === 'অতি জরুরি' ? 'bg-red-100 text-red-700 border border-red-200' : 'bg-amber-50 text-amber-700' %>">
+                    <%= r.urgency %>
+                  </span>
+                </td>
+                <td class="p-3.5">
+                  <p class="font-medium text-gray-800"><%= r.hospitalName %></p>
+                  <p class="text-[10px] text-gray-500"><%= r.district %>, <%= r.upazila %></p>
+                </td>
+                <td class="p-3.5">
+                  <p class="font-medium text-gray-800"><%= r.contactName %></p>
+                  <p class="text-[11px] text-gray-600"><%= r.contactPhone %></p>
+                </td>
+                <td class="p-3.5 text-center">
+                  <form action="/admin/requests/<%= r._id %>/status" method="POST" class="inline-block">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <select name="status" onchange="this.form.submit()" class="text-[11px] py-1 px-2 rounded-lg font-semibold <%= r.status === 'open' ? 'bg-green-50 text-green-700 border-green-200' : (r.status === 'fulfilled' ? 'bg-blue-50 text-blue-700' : 'bg-gray-100 text-gray-600') %>">
+                      <option value="open" <%= r.status === 'open' ? 'selected' : '' %>>Open</option>
+                      <option value="fulfilled" <%= r.status === 'fulfilled' ? 'selected' : '' %>>Fulfilled</option>
+                      <option value="closed" <%= r.status === 'closed' ? 'selected' : '' %>>Closed</option>
+                      <option value="expired" <%= r.status === 'expired' ? 'selected' : '' %>>Expired</option>
+                    </select>
+                  </form>
+                </td>
+                <td class="p-3.5 pr-5 text-right">
+                  <div class="flex items-center justify-end gap-1.5">
+                    <a href="/requests/<%= r._id %>" target="_blank" title="ভিউ করুন" class="w-7 h-7 rounded-lg glass flex items-center justify-center text-blue-600 hover:bg-blue-50">
+                      <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                    <form action="/admin/requests/<%= r._id %>/delete" method="POST" onsubmit="return confirm('অনুরোধটি মুছে ফেলতে চান?')">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                      <button type="submit" title="মুছে ফেলুন" class="w-7 h-7 rounded-lg glass flex items-center justify-center text-red-600 hover:bg-red-50">
+                        <i class="fa-solid fa-trash-can"></i>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="7" class="p-8 text-center text-gray-500">কোনো রক্তের অনুরোধ পাওয়া যায়নি</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- পেজিনেশন -->
+    <% if (totalPages > 1) { %>
+      <div class="p-4 bg-white/40 border-t border-rb-50 flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
+        <% if (currentPage > 1) { %>
+          <a href="/admin/requests?page=<%= currentPage - 1 %>&status=<%= queryStatus %>&group=<%= queryGroup %>&q=<%= searchQuery %>" class="px-2.5 py-1.5 rounded-lg text-xs font-bold glass text-gray-700 hover:bg-rb-50">
+            ← পূর্ববর্তী
+          </a>
+        <% } %>
+
+        <% const pageItems = getPagination(currentPage, totalPages); %>
+        <% pageItems.forEach(function(p) { %>
+          <% if (p === '...') { %>
+            <span class="w-8 h-8 flex items-center justify-center text-xs font-bold text-gray-400 select-none">...</span>
+          <% } else { %>
+            <a href="/admin/requests?page=<%= p %>&status=<%= queryStatus %>&group=<%= queryGroup %>&q=<%= searchQuery %>" class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold <%= p === currentPage ? 'bg-rb-600 text-white' : 'glass text-gray-700 hover:bg-rb-50' %>">
+              <%= toBn(p) %>
+            </a>
+          <% } %>
+        <% }); %>
+
+        <% if (currentPage < totalPages) { %>
+          <a href="/admin/requests?page=<%= currentPage + 1 %>&status=<%= queryStatus %>&group=<%= queryGroup %>&q=<%= searchQuery %>" class="px-2.5 py-1.5 rounded-lg text-xs font-bold glass text-gray-700 hover:bg-rb-50">
+            পরবর্তী →
+          </a>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+</div>

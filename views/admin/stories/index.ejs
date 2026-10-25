@@ -1,0 +1,94 @@
+<!-- রক্তের গল্প মডারেশন (Admin Stories) -->
+<div class="space-y-6">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h2 class="font-head text-2xl font-bold text-gray-900">রক্তের গল্প অনুমোদন ও মডারেশন</h2>
+      <p class="text-xs text-gray-500">ব্যবহারকারীদের পাঠানো গল্প যাচাই করে ওয়েবসাইটে প্রকাশ করুন</p>
+    </div>
+  </div>
+
+  <!-- ফিল্টার ট্যাব -->
+  <div class="flex flex-wrap gap-2">
+    <a href="/admin/stories" class="px-4 py-2 rounded-xl text-xs font-bold transition <%= queryStatus === 'all' ? 'bg-rb-600 text-white' : 'glass text-gray-700 hover:bg-rb-50' %>">
+      সকল গল্প
+    </a>
+    <a href="/admin/stories?status=pending" class="px-4 py-2 rounded-xl text-xs font-bold transition <%= queryStatus === 'pending' ? 'bg-orange-600 text-white' : 'glass text-gray-700 hover:bg-orange-50' %>">
+      <i class="fa-solid fa-clock mr-1"></i>অপেক্ষমাণ (Pending)
+    </a>
+    <a href="/admin/stories?status=approved" class="px-4 py-2 rounded-xl text-xs font-bold transition <%= queryStatus === 'approved' ? 'bg-green-600 text-white' : 'glass text-gray-700 hover:bg-green-50' %>">
+      <i class="fa-solid fa-check mr-1"></i>অনুমোদিত (Approved)
+    </a>
+    <a href="/admin/stories?status=rejected" class="px-4 py-2 rounded-xl text-xs font-bold transition <%= queryStatus === 'rejected' ? 'bg-red-600 text-white' : 'glass text-gray-700 hover:bg-red-50' %>">
+      <i class="fa-solid fa-xmark mr-1"></i>বাতিল (Rejected)
+    </a>
+  </div>
+
+  <!-- গল্প তালিকা -->
+  <div class="space-y-4">
+    <% if (stories && stories.length > 0) { %>
+      <% stories.forEach(s => { %>
+        <div class="glass rounded-3xl p-6 border border-rb-100 flex flex-col md:flex-row gap-6 justify-between items-start">
+          <div class="flex-1 space-y-2">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold <%= s.status === 'approved' ? 'bg-green-100 text-green-700' : (s.status === 'pending' ? 'bg-orange-100 text-orange-700' : 'bg-red-100 text-red-700') %>">
+                <%= s.status === 'approved' ? 'অনুমোদিত' : (s.status === 'pending' ? 'অপেক্ষমাণ' : 'বাতিল') %>
+              </span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rb-50 text-rb-600">
+                <%= s.role === 'donor' ? 'রক্তদাতার অনুভূতি' : 'রক্তগ্রহীতার অভিজ্ঞতা' %>
+              </span>
+              <span class="text-xs text-gray-400">• <%= formatBnDate(s.createdAt) %></span>
+            </div>
+
+            <h3 class="font-head text-lg font-bold text-gray-900"><%= s.title %></h3>
+
+            <p class="text-xs sm:text-sm text-gray-700 leading-relaxed bg-white/60 p-3.5 rounded-2xl border border-rb-50">
+              <%= s.body %>
+            </p>
+
+            <div class="flex items-center gap-3 text-xs text-gray-500 pt-2">
+              <span><strong>লেখক:</strong> <%= s.author ? s.author.name : 'অজ্ঞাত' %> (<%= s.author ? s.author.phone : '' %>)</span>
+              <span>•</span>
+              <span><strong>স্থান:</strong> <%= s.location %></span>
+              <span>•</span>
+              <span><strong>গ্রুপ:</strong> <%= toBnGroup(s.bloodGroup) %></span>
+            </div>
+          </div>
+
+          <!-- অ্যাকশন বাটনসমূহ -->
+          <div class="flex flex-row md:flex-col gap-2 w-full md:w-36 flex-shrink-0">
+            <% if (s.status !== 'approved') { %>
+              <form action="/admin/stories/<%= s._id %>/status" method="POST" class="w-full">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="hidden" name="status" value="approved">
+                <button type="submit" class="w-full py-2 px-3 rounded-xl bg-green-600 text-white font-bold text-xs hover:bg-green-700 transition flex items-center justify-center gap-1.5 shadow-sm">
+                  <i class="fa-solid fa-check"></i>অনুমোদন করুন
+                </button>
+              </form>
+            <% } %>
+
+            <% if (s.status !== 'rejected') { %>
+              <form action="/admin/stories/<%= s._id %>/status" method="POST" class="w-full">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="hidden" name="status" value="rejected">
+                <button type="submit" class="w-full py-2 px-3 rounded-xl bg-orange-600 text-white font-bold text-xs hover:bg-orange-700 transition flex items-center justify-center gap-1.5 shadow-sm">
+                  <i class="fa-solid fa-xmark"></i>বাতিল করুন
+                </button>
+              </form>
+            <% } %>
+
+            <form action="/admin/stories/<%= s._id %>/delete" method="POST" onsubmit="return confirm('স্থায়ীভাবে মুছে ফেলতে চান?')" class="w-full">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <button type="submit" class="w-full py-2 px-3 rounded-xl glass text-red-600 font-bold text-xs hover:bg-red-50 transition flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-trash-can"></i>ডিলিট
+              </button>
+            </form>
+          </div>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <div class="glass rounded-3xl p-12 text-center text-gray-500">
+        কোনো গল্প অপেক্ষমাণ নেই
+      </div>
+    <% } %>
+  </div>
+</div>

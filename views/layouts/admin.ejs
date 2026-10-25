@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="bn" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof metaTitle !== 'undefined' ? metaTitle : 'অ্যাডমিন ড্যাশবোর্ড – রক্তবার্তা' %></title>
+  <link rel="icon" type="image/png" href="/images/logo.png">
+
+  <!-- Google Fonts: Hind Siliguri (Body) & Noto Serif Bengali (Headings) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Serif+Bengali:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Tailwind CSS Compiled Stylesheet -->
+  <link rel="stylesheet" href="/css/style.css">
+
+  <style>
+    body { font-family: 'Hind Siliguri', sans-serif; }
+    .font-head { font-family: 'Noto Serif Bengali', serif; }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-[#fff7f8] via-[#fff1f2]/30 to-[#ffe0e3]/40 min-h-screen text-gray-800 flex flex-col antialiased">
+  <div class="flex-1 flex min-h-screen">
+    <!-- ডেস্কটপ সাইডবার -->
+    <aside class="hidden lg:flex flex-col w-72 glass border-r border-rb-100 p-5 sticky top-0 h-screen overflow-y-auto">
+      <!-- লোগো -->
+      <div class="pb-6 border-b border-rb-100 mb-6">
+        <a href="/admin" class="flex items-center">
+          <img src="/images/logo.png" alt="রক্তবার্তা" class="h-10 w-auto object-contain">
+        </a>
+        <span class="inline-block mt-2 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rb-50 text-rb-700 border border-rb-200">
+          <i class="fa-solid fa-shield-halved mr-1"></i>অ্যাডমিন কন্ট্রোল প্যানেল
+        </span>
+      </div>
+
+      <!-- নেভিগেশন লিংকসমূহ -->
+      <nav class="flex-1 space-y-1.5 text-sm font-medium">
+        <a href="/admin" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition <%= currentPath === '/admin' ? 'bg-rb-600 text-white font-bold shadow-md shadow-rb-600/20' : 'hover:bg-rb-50 text-gray-700 hover:text-rb-600' %>">
+          <i class="fa-solid fa-gauge-high w-5 text-center"></i>
+          <span>ড্যাশবোর্ড</span>
+        </a>
+
+        <a href="/admin/requests" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition <%= currentPath.startsWith('/admin/requests') ? 'bg-rb-600 text-white font-bold shadow-md shadow-rb-600/20' : 'hover:bg-rb-50 text-gray-700 hover:text-rb-600' %>">
+          <i class="fa-solid fa-hand-holding-droplet w-5 text-center"></i>
+          <span>রক্তের অনুরোধ</span>
+        </a>
+
+        <a href="/admin/users" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition <%= currentPath.startsWith('/admin/users') ? 'bg-rb-600 text-white font-bold shadow-md shadow-rb-600/20' : 'hover:bg-rb-50 text-gray-700 hover:text-rb-600' %>">
+          <i class="fa-solid fa-users w-5 text-center"></i>
+          <span>ব্যবহারকারী ও রক্তদাতা</span>
+        </a>
+
+        <a href="/admin/stories" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition <%= currentPath.startsWith('/admin/stories') ? 'bg-rb-600 text-white font-bold shadow-md shadow-rb-600/20' : 'hover:bg-rb-50 text-gray-700 hover:text-rb-600' %>">
+          <i class="fa-solid fa-feather-pointed w-5 text-center"></i>
+          <span>রক্তের গল্প অনুমোদন</span>
+        </a>
+
+        <!-- ব্লগ সেকশন -->
+        <div class="pt-3 pb-1">
+          <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider px-3.5 mb-1">ব্লগ ও কনটেন্ট (SEO)</p>
+          <a href="/admin/posts" class="flex items-center gap-3 px-3.5 py-2 rounded-xl transition <%= currentPath === '/admin/posts' ? 'bg-rb-600 text-white font-bold shadow-md shadow-rb-600/20' : 'hover:bg-rb-50 text-gray-700 hover:text-rb-600' %>">
+            <i class="fa-solid fa-newspaper w-5 text-center"></i>
+            <span>সকল ব্লগ পোস্ট</span>
+          </a>
+          <a href="/admin/posts/new" class="flex items-center gap-3 px-3.5 py-2 rounded-xl transition <%= currentPath === '/admin/posts/new' ? 'bg-rb-600 text-white font-bold shadow-md shadow-rb-600/20' : 'hover:bg-rb-50 text-gray-700 hover:text-rb-600' %>">
+            <i class="fa-solid fa-pen-to-square w-5 text-center"></i>
+            <span>নতুন ব্লগ আপলোড (SEO)</span>
+          </a>
+        </div>
+
+        <a href="/admin/contacts" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition <%= currentPath.startsWith('/admin/contacts') ? 'bg-rb-600 text-white font-bold shadow-md shadow-rb-600/20' : 'hover:bg-rb-50 text-gray-700 hover:text-rb-600' %>">
+          <i class="fa-solid fa-inbox w-5 text-center"></i>
+          <span>যোগাযোগ ইনবক্স</span>
+        </a>
+
+        <div class="pt-3 pb-1">
+          <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider px-3.5 mb-1">ডেটা এক্সপোর্ট (CSV)</p>
+          <a href="/admin/export/donors" class="flex items-center gap-3 px-3.5 py-2 rounded-xl hover:bg-rb-50 text-gray-700 hover:text-rb-600 transition">
+            <i class="fa-solid fa-file-csv w-5 text-center text-green-600"></i>
+            <span>রক্তদাতাদের তালিকা (CSV)</span>
+          </a>
+          <a href="/admin/export/requests" class="flex items-center gap-3 px-3.5 py-2 rounded-xl hover:bg-rb-50 text-gray-700 hover:text-rb-600 transition">
+            <i class="fa-solid fa-file-csv w-5 text-center text-green-600"></i>
+            <span>রক্তের অনুরোধ (CSV)</span>
+          </a>
+        </div>
+      </nav>
+
+      <!-- ফুটার লিংকসমূহ -->
+      <div class="pt-4 border-t border-rb-100 space-y-1 text-sm">
+        <a href="/" target="_blank" class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-gray-600 hover:text-rb-600 hover:bg-rb-50 transition">
+          <i class="fa-solid fa-arrow-up-right-from-square w-5 text-center"></i>
+          <span>ওয়েবসাইট দেখুন</span>
+        </a>
+        <a href="/logout" class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-red-600 hover:bg-red-50 transition">
+          <i class="fa-solid fa-right-from-bracket w-5 text-center"></i>
+          <span>লগআউট</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- মূল কন্টেন্ট এরিয়া -->
+    <div class="flex-1 flex flex-col min-w-0">
+      <!-- টপবার -->
+      <header class="glass sticky top-0 z-30 px-4 sm:px-8 py-3.5 border-b border-rb-100 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <button id="adminMobileBtn" class="lg:hidden w-9 h-9 rounded-xl glass flex items-center justify-center text-rb-600">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <h1 class="font-head text-lg sm:text-xl font-bold text-rb-900 hidden sm:block">
+            <%= typeof pageTitle !== 'undefined' ? pageTitle : 'অ্যাডমিন ড্যাশবোর্ড' %>
+          </h1>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a href="/" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold glass hover:bg-rb-50 text-gray-700 transition">
+            <i class="fa-solid fa-globe text-rb-600"></i>ওয়েবসাইট
+          </a>
+
+          <div class="flex items-center gap-2 pl-3 border-l border-rb-100">
+            <span class="w-8 h-8 rounded-full bg-rb-600 text-white flex items-center justify-center font-bold text-xs shadow-sm">
+              <i class="fa-solid fa-user-shield"></i>
+            </span>
+            <div class="text-left hidden sm:block">
+              <p class="text-xs font-bold text-gray-800 leading-tight"><%= currentUser ? currentUser.name : 'অ্যাডমিনিস্ট্রেটর' %></p>
+              <p class="text-[10px] text-gray-500">সুপার অ্যাডমিন</p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- মোবাইল সাইডবার ড্রয়ার -->
+      <div id="adminMobileDrawer" class="hidden lg:hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-sm">
+        <div class="w-72 bg-white h-full p-5 flex flex-col justify-between shadow-2xl overflow-y-auto">
+          <div>
+            <div class="flex items-center justify-between pb-4 border-b border-rb-100 mb-4">
+              <img src="/images/logo.png" alt="রক্তবার্তা" class="h-8 w-auto">
+              <button id="adminMobileClose" class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            <nav class="space-y-1 text-sm font-medium">
+              <a href="/admin" class="block px-3 py-2 rounded-lg hover:bg-rb-50">ড্যাশবোর্ড</a>
+              <a href="/admin/requests" class="block px-3 py-2 rounded-lg hover:bg-rb-50">রক্তের অনুরোধ</a>
+              <a href="/admin/users" class="block px-3 py-2 rounded-lg hover:bg-rb-50">ব্যবহারকারী ও রক্তদাতা</a>
+              <a href="/admin/stories" class="block px-3 py-2 rounded-lg hover:bg-rb-50">রক্তের গল্প অনুমোদন</a>
+              <a href="/admin/posts" class="block px-3 py-2 rounded-lg hover:bg-rb-50">ব্লগ পোস্টসমূহ</a>
+              <a href="/admin/posts/new" class="block px-3 py-2 rounded-lg hover:bg-rb-50">নতুন ব্লগ লিখুন</a>
+              <a href="/admin/contacts" class="block px-3 py-2 rounded-lg hover:bg-rb-50">যোগাযোগ ইনবক্স</a>
+              <a href="/" target="_blank" class="block px-3 py-2 rounded-lg hover:bg-rb-50 text-rb-600">ওয়েবসাইট দেখুন</a>
+              <a href="/logout" class="block px-3 py-2 rounded-lg hover:bg-red-50 text-red-600">লগআউট</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <!-- ফ্ল্যাশ মেসেজ -->
+      <div class="px-4 sm:px-8 pt-4">
+        <%- include('../partials/flash') %>
+      </div>
+
+      <!-- পেজ বডি -->
+      <main class="flex-1 px-4 sm:px-8 py-6">
+        <%- body %>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // Mobile Drawer Toggle
+    const mobileBtn = document.getElementById('adminMobileBtn');
+    const mobileDrawer = document.getElementById('adminMobileDrawer');
+    const mobileClose = document.getElementById('adminMobileClose');
+
+    if (mobileBtn && mobileDrawer) {
+      mobileBtn.addEventListener('click', () => mobileDrawer.classList.remove('hidden'));
+    }
+    if (mobileClose && mobileDrawer) {
+      mobileClose.addEventListener('click', () => mobileDrawer.classList.add('hidden'));
+      mobileDrawer.addEventListener('click', (e) => {
+        if (e.target === mobileDrawer) mobileDrawer.classList.add('hidden');
+      });
+    }
+  </script>
+</body>
+</html>

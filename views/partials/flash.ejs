@@ -1,0 +1,39 @@
+<% if ((flashSuccess && flashSuccess.length > 0) || (flashError && flashError.length > 0) || (flashInfo && flashInfo.length > 0)) { %>
+  <div id="flashContainer" class="fixed top-20 right-4 z-50 flex flex-col gap-3 max-w-md w-full px-4 pointer-events-none">
+    <% if (flashSuccess && flashSuccess.length > 0) { %>
+      <% flashSuccess.forEach(function(msg) { %>
+        <div class="glass pointer-events-auto border-l-4 border-emerald-500 rounded-2xl p-4 shadow-xl flex items-start gap-3 transform transition-all duration-300">
+          <i class="fa-solid fa-circle-check text-emerald-600 text-xl mt-0.5"></i>
+          <div class="flex-1 text-sm font-medium text-gray-800"><%= msg %></div>
+          <button type="button" onclick="this.parentElement.remove()" class="text-gray-400 hover:text-gray-600">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      <% }); %>
+    <% } %>
+
+    <% if (flashError && flashError.length > 0) { %>
+      <% flashError.forEach(function(msg) { %>
+        <div class="glass pointer-events-auto border-l-4 border-rb-600 rounded-2xl p-4 shadow-xl flex items-start gap-3 transform transition-all duration-300">
+          <i class="fa-solid fa-circle-exclamation text-rb-600 text-xl mt-0.5"></i>
+          <div class="flex-1 text-sm font-medium text-gray-800"><%= msg %></div>
+          <button type="button" onclick="this.parentElement.remove()" class="text-gray-400 hover:text-gray-600">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      <% }); %>
+    <% } %>
+
+    <% if (flashInfo && flashInfo.length > 0) { %>
+      <% flashInfo.forEach(function(msg) { %>
+        <div class="glass pointer-events-auto border-l-4 border-blue-500 rounded-2xl p-4 shadow-xl flex items-start gap-3 transform transition-all duration-300">
+          <i class="fa-solid fa-circle-info text-blue-600 text-xl mt-0.5"></i>
+          <div class="flex-1 text-sm font-medium text-gray-800"><%= msg %></div>
+          <button type="button" onclick="this.parentElement.remove()" class="text-gray-400 hover:text-gray-600">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      <% }); %>
+    <% } %>
+  </div>
+<% } %>

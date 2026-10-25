@@ -1,0 +1,539 @@
+<section class="max-w-7xl mx-auto px-4 py-8">
+  <!-- প্রোফাইল হেড ও স্ট্যাটাস কার্ড -->
+  <div class="glass rounded-3xl p-6 sm:p-8 mb-8 relative overflow-hidden">
+    <div class="blob w-72 h-72 bg-rb-500 -top-20 -right-20"></div>
+
+    <div class="grid lg:grid-cols-3 gap-6 items-center relative z-10">
+      <!-- ব্যবহারকারীর সংক্ষিপ্ত তথ্য -->
+      <div class="flex items-center gap-5 lg:col-span-2">
+        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-gradient-to-br from-rb-500 to-rb-700 text-white flex items-center justify-center font-bold text-2xl sm:text-3xl shrink-0 shadow-lg shadow-rb-500/25">
+          <i class="fa-solid fa-droplet"></i>
+        </div>
+
+        <div class="min-w-0">
+          <div class="flex flex-wrap items-center gap-2 mb-1">
+            <h1 class="font-head text-2xl sm:text-3xl font-bold text-rb-900 truncate"><%= user.name %></h1>
+            <span class="px-3 py-0.5 rounded-full text-xs font-bold bg-rb-600 text-white">
+              <%= toBnGroup(user.bloodGroup) %>
+            </span>
+            <% if (user.isVerified) { %>
+              <span class="text-emerald-600 text-sm" title="যাচাইকৃত ব্যবহারকারী"><i class="fa-solid fa-circle-check"></i></span>
+            <% } %>
+          </div>
+          <p class="text-sm text-gray-600 flex items-center gap-2">
+            <i class="fa-solid fa-location-dot text-rb-600"></i>
+            <span><%= user.upazila %>, <%= user.district %></span>
+            <span>·</span>
+            <i class="fa-solid fa-phone text-rb-600"></i>
+            <span><%= user.phone %></span>
+          </p>
+          <div class="flex flex-wrap gap-2 mt-3">
+            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold <%= user.isDonor ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-700' %>">
+              <%= user.isDonor ? 'স্বেচ্ছাসেবী রক্তদাতা' : 'রক্তপ্রত্যাশী / সদস্য' %>
+            </span>
+            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold <%= user.isAvailable ? 'bg-rb-100 text-rb-700' : 'bg-amber-100 text-amber-800' %>">
+              <%= user.isAvailable ? 'রক্তদানে প্রস্তুত (Available)' : 'বর্তমানে অনুপলব্ধ' %>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- দ্রুত অ্যাকশন বোতাম -->
+      <div class="flex flex-col sm:flex-row lg:flex-col gap-2.5 lg:items-end justify-center">
+        <form action="/dashboard/toggle-availability" method="POST" class="w-full sm:w-auto">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button type="submit" class="w-full sm:w-auto px-4 py-2 text-xs rounded-full font-semibold transition <%= user.isAvailable ? 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-md' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' %>">
+            <i class="fa-solid <%= user.isAvailable ? 'fa-toggle-on' : 'fa-toggle-off' %> mr-1.5"></i>
+            <%= user.isAvailable ? 'প্রাপ্যতা: প্রস্তুত (ক্লিক করে বন্ধ করুন)' : 'প্রাপ্যতা: বন্ধ (চালু করুন)' %>
+          </button>
+        </form>
+
+        <form action="/dashboard/toggle-phone-public" method="POST" class="w-full sm:w-auto">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button type="submit" class="w-full sm:w-auto px-4 py-2 text-xs rounded-full font-semibold transition border border-rb-200 <%= user.showPhonePublic ? 'bg-rb-50 text-rb-700' : 'bg-white text-gray-600' %>">
+            <i class="fa-solid <%= user.showPhonePublic ? 'fa-eye' : 'fa-eye-slash' %> mr-1.5"></i>
+            <%= user.showPhonePublic ? 'ফোন নম্বর উন্মুক্ত রয়েছে' : 'ফোন নম্বর আড়াল করা আছে' %>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- পরিসংখ্যান কার্ডসমূহ -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8 pt-6 border-t border-rb-100/80">
+      <div class="glass-card rounded-2xl p-4 text-center">
+        <p class="text-xs text-gray-500 mb-1">মোট রক্তদান করেছেন</p>
+        <p class="text-2xl sm:text-3xl font-bold text-rb-600"><%= toBn(stats.totalDonationsCount) %> <span class="text-sm font-normal text-gray-600">বার</span></p>
+      </div>
+      <div class="glass-card rounded-2xl p-4 text-center">
+        <p class="text-xs text-gray-500 mb-1">পরবর্তী রক্তদানের তারিখ</p>
+        <p class="text-sm sm:text-base font-bold text-gray-800 mt-1.5">
+          <%= user.nextEligibleDate ? formatBnDate(user.nextEligibleDate) : 'যেকোনো সময়' %>
+        </p>
+      </div>
+      <div class="glass-card rounded-2xl p-4 text-center">
+        <p class="text-xs text-gray-500 mb-1">সক্রিয় রক্তের অনুরোধ</p>
+        <p class="text-2xl sm:text-3xl font-bold text-rb-600"><%= toBn(stats.activeRequestsCount) %> <span class="text-sm font-normal text-gray-600">টি</span></p>
+      </div>
+      <div class="glass-card rounded-2xl p-4 text-center">
+        <p class="text-xs text-gray-500 mb-1">জমা দেওয়া গল্প</p>
+        <p class="text-2xl sm:text-3xl font-bold text-rb-600"><%= toBn(stats.totalStoriesCount) %> <span class="text-sm font-normal text-gray-600">টি</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ড্যাশবোর্ড নেভিগেশন ও কন্টেন্ট গ্রিড -->
+  <div class="grid lg:grid-cols-4 gap-8 items-start">
+    <!-- বাম সাইডবার ট্যাব বাটন -->
+    <div class="glass rounded-2xl p-3 space-y-1 text-sm font-semibold sticky top-24">
+      <button type="button" onclick="switchTab('overview')" id="tabBtn-overview" class="tab-btn w-full text-left px-4 py-2.5 rounded-xl transition flex items-center justify-between bg-rb-600 text-white">
+        <span><i class="fa-solid fa-clock-rotate-left mr-2"></i>রক্তদানের ইতিহাস</span>
+        <span class="text-xs bg-white/20 px-2 py-0.5 rounded-full"><%= toBn(myDonations.length) %></span>
+      </button>
+      <button type="button" onclick="switchTab('requests')" id="tabBtn-requests" class="tab-btn w-full text-left px-4 py-2.5 rounded-xl transition flex items-center justify-between text-gray-700 hover:bg-rb-50">
+        <span><i class="fa-solid fa-droplet mr-2 text-rb-600"></i>আমার অনুরোধসমূহ</span>
+        <span class="text-xs bg-rb-100 text-rb-700 px-2 py-0.5 rounded-full"><%= toBn(myRequests.length) %></span>
+      </button>
+      <button type="button" onclick="switchTab('stories')" id="tabBtn-stories" class="tab-btn w-full text-left px-4 py-2.5 rounded-xl transition flex items-center justify-between text-gray-700 hover:bg-rb-50">
+        <span><i class="fa-solid fa-feather-pointed mr-2 text-rb-600"></i>আমার গল্প</span>
+        <span class="text-xs bg-rb-100 text-rb-700 px-2 py-0.5 rounded-full"><%= toBn(myStories.length) %></span>
+      </button>
+      <button type="button" onclick="switchTab('notifications')" id="tabBtn-notifications" class="tab-btn w-full text-left px-4 py-2.5 rounded-xl transition flex items-center justify-between text-gray-700 hover:bg-rb-50">
+        <span><i class="fa-solid fa-bell mr-2 text-rb-600"></i>নোটিফিকেশন</span>
+        <% if (stats.unreadNotificationsCount > 0) { %>
+          <span class="text-xs bg-red-600 text-white px-2 py-0.5 rounded-full"><%= toBn(stats.unreadNotificationsCount) %></span>
+        <% } %>
+      </button>
+      <button type="button" onclick="switchTab('profile')" id="tabBtn-profile" class="tab-btn w-full text-left px-4 py-2.5 rounded-xl transition flex items-center gap-2 text-gray-700 hover:bg-rb-50">
+        <i class="fa-solid fa-user-pen mr-2 text-rb-600"></i>প্রোফাইল সম্পাদনা
+      </button>
+      <button type="button" onclick="switchTab('security')" id="tabBtn-security" class="tab-btn w-full text-left px-4 py-2.5 rounded-xl transition flex items-center gap-2 text-gray-700 hover:bg-rb-50">
+        <i class="fa-solid fa-shield-halved mr-2 text-rb-600"></i>নিরাপত্তা ও পাসওয়ার্ড
+      </button>
+    </div>
+
+    <!-- ডান দিকের ট্যাব কন্টেন্ট -->
+    <div class="lg:col-span-3">
+
+      <!-- ট্যাব ১: রক্তদানের ইতিহাস (Overview) -->
+      <div id="tab-overview" class="tab-panel space-y-6">
+        <div class="glass rounded-3xl p-6 sm:p-7">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+            <div>
+              <h2 class="font-head text-xl font-bold text-rb-900">আমার রক্তদানের ইতিহাস</h2>
+              <p class="text-xs text-gray-500 mt-0.5">আপনার প্রতিটি রক্তদানের স্মৃতি ও তারিখ সংরক্ষণ করুন</p>
+            </div>
+            <button type="button" onclick="document.getElementById('addDonationModal').classList.remove('hidden')" class="btn px-4 py-2 text-xs">
+              <i class="fa-solid fa-plus mr-1.5"></i>নতুন রক্তদান যুক্ত করুন
+            </button>
+          </div>
+
+          <% if (myDonations && myDonations.length > 0) { %>
+            <div class="space-y-3">
+              <% myDonations.forEach(function(don) { %>
+                <div class="glass-card rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div class="flex items-start gap-3.5">
+                    <div class="w-10 h-10 rounded-xl bg-rb-50 flex items-center justify-center text-rb-600 shrink-0 mt-1">
+                      <i class="fa-solid fa-hand-holding-droplet text-lg"></i>
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-gray-800 text-sm"><%= don.location %></h4>
+                      <p class="text-xs text-gray-500 mt-0.5">
+                        <i class="fa-regular fa-calendar-check mr-1 text-rb-600"></i>
+                        <%= formatBnDate(don.date) %>
+                        <% if (don.recipientName) { %>
+                          · গ্রহীতা: <%= don.recipientName %>
+                        <% } %>
+                      </p>
+                      <% if (don.note) { %>
+                        <p class="text-xs text-gray-600 mt-1.5 italic bg-white/50 p-2 rounded-lg">"<%= don.note %>"</p>
+                      <% } %>
+                    </div>
+                  </div>
+                  <span class="text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full font-semibold self-start sm:self-center">
+                    সফল রক্তদান
+                  </span>
+                </div>
+              <% }); %>
+            </div>
+          <% } else { %>
+            <div class="text-center py-12 text-gray-500">
+              <i class="fa-solid fa-droplet text-4xl text-rb-200 mb-3 block"></i>
+              <p class="text-sm font-medium">এখনও কোনো রক্তদানের রেকর্ড যোগ করা হয়নি।</p>
+              <button type="button" onclick="document.getElementById('addDonationModal').classList.remove('hidden')" class="btn-ghost px-5 py-2 text-xs mt-3">
+                প্রথম রক্তদান যুক্ত করুন
+              </button>
+            </div>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- ট্যাব ২: আমার রক্তের অনুরোধসমূহ (Requests) -->
+      <div id="tab-requests" class="tab-panel hidden space-y-4">
+        <div class="glass rounded-3xl p-6 sm:p-7">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+            <div>
+              <h2 class="font-head text-xl font-bold text-rb-900">আমার রক্তের অনুরোধসমূহ</h2>
+              <p class="text-xs text-gray-500 mt-0.5">আপনার তৈরি করা রক্তের পোস্ট ও তাদের বর্তমান অবস্থা</p>
+            </div>
+            <a href="/requests/new" class="btn px-4 py-2 text-xs">
+              <i class="fa-solid fa-plus mr-1.5"></i>নতুন অনুরোধ করুন
+            </a>
+          </div>
+
+          <% if (myRequests && myRequests.length > 0) { %>
+            <div class="space-y-4">
+              <% myRequests.forEach(function(req) { %>
+                <div class="glass-card rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div>
+                    <div class="flex items-center gap-2 mb-1.5">
+                      <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rb-600 text-white">
+                        <%= toBnGroup(req.bloodGroup) %>
+                      </span>
+                      <span class="text-xs font-bold px-2.5 py-0.5 rounded-full <%= req.status === 'open' ? 'bg-amber-100 text-amber-800' : (req.status === 'fulfilled' ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-700') %>">
+                        <%= req.status === 'open' ? 'প্রয়োজন চলছে' : (req.status === 'fulfilled' ? 'রক্ত পাওয়া গেছে' : 'বন্ধ') %>
+                      </span>
+                      <span class="text-xs text-gray-500">
+                        <%= timeAgoBn(req.createdAt) %>
+                      </span>
+                    </div>
+                    <h3 class="font-bold text-gray-900 text-base"><%= req.patientName %> (<%= req.reason %>)</h3>
+                    <p class="text-xs text-gray-600 mt-1">
+                      <i class="fa-solid fa-hospital text-rb-600 mr-1"></i><%= req.hospitalName %> (<%= req.upazila %>, <%= req.district %>)
+                    </p>
+                    <p class="text-xs text-gray-500 mt-1">
+                      প্রয়োজন: <strong><%= toBn(req.bagsNeeded) %></strong> ব্যাগ · তারিখ: <strong><%= formatBnDate(req.neededDate) %></strong>
+                    </p>
+                  </div>
+
+                  <div class="flex items-center gap-2 self-start md:self-center">
+                    <a href="/requests/<%= req._id %>" class="btn-ghost px-4 py-2 text-xs">
+                      বিস্তারিত
+                    </a>
+                  </div>
+                </div>
+              <% }); %>
+            </div>
+          <% } else { %>
+            <div class="text-center py-12 text-gray-500">
+              <i class="fa-solid fa-hand-holding-heart text-4xl text-rb-200 mb-3 block"></i>
+              <p class="text-sm font-medium">আপনি এখনও কোনো রক্তের অনুরোধ করেননি।</p>
+            </div>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- ট্যাব ৩: আমার গল্প (Stories) -->
+      <div id="tab-stories" class="tab-panel hidden space-y-4">
+        <div class="glass rounded-3xl p-6 sm:p-7">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+            <div>
+              <h2 class="font-head text-xl font-bold text-rb-900">আমার রক্তের গল্প</h2>
+              <p class="text-xs text-gray-500 mt-0.5">আপনার শেয়ার করা মানবিক অনুভূতি ও অভিজ্ঞতা</p>
+            </div>
+            <button type="button" id="openStoryModalBtn" class="btn px-4 py-2 text-xs">
+              <i class="fa-solid fa-pen-nib mr-1.5"></i>নতুন গল্প লিখুন
+            </button>
+          </div>
+
+          <% if (myStories && myStories.length > 0) { %>
+            <div class="space-y-4">
+              <% myStories.forEach(function(s) { %>
+                <div class="glass-card rounded-2xl p-5">
+                  <div class="flex items-center justify-between gap-2 mb-2">
+                    <span class="text-xs font-bold px-2.5 py-0.5 rounded-full <%= s.status === 'approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800' %>">
+                      <%= s.status === 'approved' ? 'প্রকাশিত' : 'অ্যাডমিন অনুমোদনের অপেক্ষায়' %>
+                    </span>
+                    <span class="text-xs text-gray-500"><%= formatBnDate(s.createdAt) %></span>
+                  </div>
+                  <h3 class="font-bold text-base text-gray-900"><%= s.title %></h3>
+                  <p class="text-xs text-gray-600 mt-2 line-clamp-3 leading-relaxed"><%= s.body %></p>
+                  <div class="flex items-center justify-between mt-4 pt-3 border-t border-rb-50 text-xs text-gray-500">
+                    <span><i class="fa-solid fa-heart text-rb-600 mr-1"></i><%= toBn(s.likes ? s.likes.length : 0) %> টি ভালোবাসা</span>
+                    <% if (s.status === 'approved') { %>
+                      <a href="/stories/<%= s.slug %>" class="text-rb-600 font-bold hover:underline">ওয়েবসাইটে দেখুন →</a>
+                    <% } %>
+                  </div>
+                </div>
+              <% }); %>
+            </div>
+          <% } else { %>
+            <div class="text-center py-12 text-gray-500">
+              <i class="fa-solid fa-feather text-4xl text-rb-200 mb-3 block"></i>
+              <p class="text-sm font-medium">আপনি এখনও কোনো গল্প জমা দেননি।</p>
+            </div>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- ট্যাব ৪: নোটিফিকেশনসমূহ (Notifications) -->
+      <div id="tab-notifications" class="tab-panel hidden space-y-4">
+        <div class="glass rounded-3xl p-6 sm:p-7">
+          <h2 class="font-head text-xl font-bold text-rb-900 mb-4">নোটিফিকেশন তালিকা</h2>
+          <% if (notifications && notifications.length > 0) { %>
+            <div class="space-y-2.5">
+              <% notifications.forEach(function(n) { %>
+                <div class="p-4 rounded-2xl transition flex items-start gap-3.5 border <%= n.isRead ? 'bg-white/40 border-rb-50' : 'bg-white/90 border-rb-200 shadow-sm' %>">
+                  <div class="w-8 h-8 rounded-full bg-rb-50 flex items-center justify-center text-rb-600 shrink-0 mt-0.5">
+                    <i class="fa-solid fa-bell text-sm"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-gray-800 leading-snug"><%= n.message %></p>
+                    <span class="text-xs text-gray-500 mt-1 inline-block"><%= timeAgoBn(n.createdAt) %></span>
+                  </div>
+                  <% if (!n.isRead) { %>
+                    <form action="/dashboard/notifications/<%= n._id %>/read" method="POST">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                      <button type="submit" class="text-xs text-rb-600 hover:underline shrink-0">পড়া হয়েছে</button>
+                    </form>
+                  <% } %>
+                </div>
+              <% }); %>
+            </div>
+          <% } else { %>
+            <div class="text-center py-12 text-gray-500">
+              <i class="fa-regular fa-bell-slash text-4xl text-rb-200 mb-3 block"></i>
+              <p class="text-sm font-medium">কোনো নোটিফিকেশন নেই।</p>
+            </div>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- ট্যাব ৫: প্রোফাইল সম্পাদনা (Profile) -->
+      <div id="tab-profile" class="tab-panel hidden space-y-4">
+        <div class="glass rounded-3xl p-6 sm:p-8">
+          <h2 class="font-head text-xl font-bold text-rb-900 mb-6">প্রোফাইল তথ্য হালনাগাদ</h2>
+
+          <form action="/dashboard/profile" method="POST" class="space-y-4">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">পূর্ণ নাম <span class="text-red-600">*</span></label>
+                <input type="text" name="name" value="<%= user.name %>" required>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">রক্তের গ্রুপ</label>
+                <select name="bloodGroup" required>
+                  <option value="A+" <%= user.bloodGroup === 'A+' ? 'selected' : '' %>>এ+ (A+)</option>
+                  <option value="A-" <%= user.bloodGroup === 'A-' ? 'selected' : '' %>>এ- (A-)</option>
+                  <option value="B+" <%= user.bloodGroup === 'B+' ? 'selected' : '' %>>বি+ (B+)</option>
+                  <option value="B-" <%= user.bloodGroup === 'B-' ? 'selected' : '' %>>বি- (B-)</option>
+                  <option value="O+" <%= user.bloodGroup === 'O+' ? 'selected' : '' %>>ও+ (O+)</option>
+                  <option value="O-" <%= user.bloodGroup === 'O-' ? 'selected' : '' %>>ও- (O-)</option>
+                  <option value="AB+" <%= user.bloodGroup === 'AB+' ? 'selected' : '' %>>এবি+ (AB+)</option>
+                  <option value="AB-" <%= user.bloodGroup === 'AB-' ? 'selected' : '' %>>এবি- (AB-)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div class="relative">
+                <label class="block text-xs font-semibold text-gray-700 mb-1">জেলা <span class="text-red-600">*</span></label>
+                <input type="text" id="dashDistrict" name="district" value="<%= user.district %>" placeholder="বাংলা বা ইংরেজিতে লিখুন, যেমন: ঢাকা / Dhaka" autocomplete="off" required>
+                <div class="ac-box"></div>
+              </div>
+              <div class="relative">
+                <label class="block text-xs font-semibold text-gray-700 mb-1">উপজেলা / থানা <span class="text-red-600">*</span></label>
+                <input type="text" id="dashUpazila" name="upazila" value="<%= user.upazila %>" placeholder="বাংলা বা ইংরেজিতে লিখুন, যেমন: মিরপুর / Mirpur" autocomplete="off" required>
+                <div class="ac-box"></div>
+              </div>
+            </div>
+
+            <div class="grid sm:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">নির্দিষ্ট এলাকা / গ্রাম</label>
+                <input type="text" name="area" value="<%= user.area || '' %>">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">লিঙ্গ</label>
+                <select name="gender">
+                  <option value="পুরুষ" <%= user.gender === 'পুরুষ' ? 'selected' : '' %>>পুরুষ</option>
+                  <option value="মহিলা" <%= user.gender === 'মহিলা' ? 'selected' : '' %>>মহিলা</option>
+                  <option value="অন্যান্য" <%= user.gender === 'অন্যান্য' ? 'selected' : '' %>>অন্যান্য</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">ওজন (কেজি)</label>
+                <input type="number" name="weight" value="<%= user.weight || '' %>">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">সর্বশেষ কবে রক্ত দিয়েছেন?</label>
+              <select name="lastDonationPeriod" class="w-full text-xs">
+                <option value="keep" selected>বর্তমান তথ্য অপরিবর্তিত রাখুন (<%= formatLastDonationBn(user.lastDonationDate) %>)</option>
+                <option value="never">কখনো রক্ত দেইনি</option>
+                <option value="1_month">১ মাস আগে (৩ মাস পূর্ণ হয়নি – বর্তমানে রক্তদানে অনুপলব্ধ)</option>
+                <option value="2_months">২ মাস আগে (৩ মাস পূর্ণ হয়নি – বর্তমানে রক্তদানে অনুপলব্ধ)</option>
+                <option value="3_months">৩ মাস আগে (রক্তদানে প্রস্তুত)</option>
+                <option value="over_3_months">৩ মাসের বেশি আগে (রক্তদানে প্রস্তুত)</option>
+              </select>
+              <small class="text-[11px] text-gray-500 mt-0.5 block">রক্তদানের পর এটি আপডেট করলে ৩ মাস পূর্ণ না হওয়া পর্যন্ত সিস্টেম স্বয়ংক্রিয়ভাবে আপনাকে অনুপলব্ধ রাখবে।</small>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">সংক্ষিপ্ত বায়ো / নিজের সম্পর্কে</label>
+              <textarea name="bio" rows="3" maxlength="300"><%= user.bio || '' %></textarea>
+            </div>
+
+            <div class="pt-3">
+              <button type="submit" class="btn px-8 py-3 text-sm">
+                <i class="fa-solid fa-floppy-disk mr-1.5"></i>সংরক্ষণ করুন
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ট্যাব ৬: নিরাপত্তা ও পাসওয়ার্ড (Security) -->
+      <div id="tab-security" class="tab-panel hidden space-y-6">
+        <!-- পাসওয়ার্ড পরিবর্তন -->
+        <div class="glass rounded-3xl p-6 sm:p-8">
+          <h2 class="font-head text-xl font-bold text-rb-900 mb-4">পাসওয়ার্ড পরিবর্তন</h2>
+          <form action="/dashboard/change-password" method="POST" class="space-y-4 max-w-lg">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">বর্তমান পাসওয়ার্ড</label>
+              <input type="password" name="currentPassword" required>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">নতুন পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)</label>
+              <input type="password" name="newPassword" required minlength="6">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">কনফার্ম নতুন পাসওয়ার্ড</label>
+              <input type="password" name="confirmNewPassword" required minlength="6">
+            </div>
+
+            <div class="pt-2">
+              <button type="submit" class="btn px-6 py-2.5 text-xs">
+                <i class="fa-solid fa-key mr-1.5"></i>পাসওয়ার্ড আপডেট করুন
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- অ্যাকাউন্ট ডিলিট জোন -->
+        <div class="glass rounded-3xl p-6 sm:p-8 border border-red-200">
+          <h3 class="font-bold text-base text-red-600 mb-1 flex items-center gap-2">
+            <i class="fa-solid fa-triangle-exclamation"></i>অ্যাকাউন্ট মুছে ফেলুন (Danger Zone)
+          </h3>
+          <p class="text-xs text-gray-600 mb-4">
+            একবার অ্যাকাউন্ট মুছে ফেললে আপনার সমস্ত তথ্য, রক্তদানের রেকর্ড ও অনুরোধ স্থায়ীভাবে মুছে যাবে।
+          </p>
+
+          <form action="/dashboard/delete-account" method="POST" onsubmit="return confirm('আপনি কি নিশ্চিত যে আপনার রক্তবার্তা অ্যাকাউন্টটি স্থায়ীভাবে মুছে ফেলতে চান?')" class="max-w-md space-y-3">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <div>
+              <label class="block text-xs font-semibold text-gray-700 mb-1">অ্যাকাউন্টের বর্তমান পাসওয়ার্ড দিয়ে নিশ্চিত করুন</label>
+              <input type="password" name="confirmPassword" placeholder="পাসওয়ার্ড প্রদান করুন" required>
+            </div>
+            <button type="submit" class="px-5 py-2.5 rounded-full bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition">
+              স্থায়ীভাবে অ্যাকাউন্ট মুছুন
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- নতুন রক্তদান লগ যুক্ত করার পপআপ মোডাল -->
+<div id="addDonationModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+  <div class="glass bg-white/95 rounded-3xl p-6 sm:p-8 max-w-md w-full relative">
+    <button type="button" onclick="document.getElementById('addDonationModal').classList.add('hidden')" class="absolute right-5 top-5 text-gray-400 hover:text-gray-700">
+      <i class="fa-solid fa-xmark text-lg"></i>
+    </button>
+    <h3 class="font-head text-xl font-bold text-rb-900 mb-1">নতুন রক্তদান রেকর্ড যুক্ত করুন</h3>
+    <p class="text-xs text-gray-500 mb-4">রক্তদানের সঠিক তথ্য দিয়ে আপনার প্রোফাইল সমৃদ্ধ রাখুন।</p>
+
+    <form action="/dashboard/donations" method="POST" class="space-y-3">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <div>
+        <label class="block text-xs font-semibold text-gray-700 mb-1">রক্তদানের তারিখ <span class="text-red-600">*</span></label>
+        <input type="date" name="date" required value="<%= new Date().toISOString().split('T')[0] %>">
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-gray-700 mb-1">স্থান বা হাসপাতালের নাম <span class="text-red-600">*</span></label>
+        <input type="text" name="location" placeholder="যেমন: ঢাকা মেডিকেল কলেজ হাসপাতাল" required>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-gray-700 mb-1">রক্তগ্রহীতার নাম (ঐচ্ছিক)</label>
+        <input type="text" name="recipientName" placeholder="যেমন: সাজ্জাদ হোসেন">
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-gray-700 mb-1">সংক্ষিপ্ত নোট / অনুভূতি (ঐচ্ছিক)</label>
+        <textarea name="note" rows="2" placeholder="কেমন ছিল এই অভিজ্ঞতা..."></textarea>
+      </div>
+
+      <div class="pt-2">
+        <button type="submit" class="btn w-full py-3 text-sm">
+          <i class="fa-solid fa-check mr-1.5"></i>রেকর্ড সংরক্ষণ করুন
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ড্যাশবোর্ড ট্যাব সুইচিং ও অটোকমপ্লিট স্ক্রিপ্ট -->
+<script>
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('bg-rb-600', 'text-white');
+    b.classList.add('text-gray-700');
+  });
+
+  const targetPanel = document.getElementById('tab-' + tabId);
+  const targetBtn = document.getElementById('tabBtn-' + tabId);
+
+  if (targetPanel) targetPanel.classList.remove('hidden');
+  if (targetBtn) {
+    targetBtn.classList.add('bg-rb-600', 'text-white');
+    targetBtn.classList.remove('text-gray-700');
+  }
+
+  window.location.hash = tabId;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Check URL hash for direct tab navigation
+  const hash = window.location.hash.replace('#', '');
+  if (hash && document.getElementById('tab-' + hash)) {
+    switchTab(hash);
+  }
+
+  // Autocomplete for Dashboard Profile Edit
+  const dInput = document.getElementById('dashDistrict');
+  const uInput = document.getElementById('dashUpazila');
+
+  if (dInput && window.initAutocomplete) {
+    window.initAutocomplete(dInput, async (q) => {
+      const res = await fetch(`/api/locations/districts?query=${encodeURIComponent(q)}`);
+      const json = await res.json();
+      return json.data || [];
+    }, () => {
+      if (uInput) {
+        uInput.value = '';
+        uInput.focus();
+      }
+    });
+  }
+
+  if (uInput && window.initAutocomplete) {
+    window.initAutocomplete(uInput, async (q) => {
+      const dist = dInput ? dInput.value.trim() : '';
+      const url = `/api/locations/upazilas?district=${encodeURIComponent(dist)}&query=${encodeURIComponent(q)}`;
+      const res = await fetch(url);
+      const json = await res.json();
+      return json.data || [];
+    });
+  }
+});
+</script>

@@ -1,0 +1,250 @@
+<section class="max-w-7xl mx-auto px-4 py-10">
+  <!-- হেডলাইন -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+    <div>
+      <span class="glass inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs text-rb-700 font-semibold mb-2">
+        <span class="w-2 h-2 rounded-full bg-rb-500 ring-pulse"></span> স্বেচ্ছাসেবী নেটওয়ার্ক
+      </span>
+      <h1 class="font-head text-3xl sm:text-4xl font-bold text-rb-900">
+        রক্তদাতা <span class="text-rb-600">খুঁজুন</span>
+      </h1>
+      <p class="text-sm text-gray-600 mt-1">
+        বাংলাদেশ ও কলকাতার জেলা ও উপজেলা ভিত্তিক নিবন্ধিত রক্তদাতাদের সরাসরি খুঁজে নিন। মোট <strong class="text-rb-600"><%= toBn(totalCount) %></strong> জন রক্তদাতা তালিকাভুক্ত রয়েছেন।
+      </p>
+    </div>
+    <div>
+      <a href="/register" class="btn px-6 py-3 text-base shadow-lg">
+        <i class="fa-solid fa-user-plus mr-2"></i>রক্তদাতা হতে চান?
+      </a>
+    </div>
+  </div>
+
+  <!-- ফিল্টার ও সার্চ ফর্ম -->
+  <div class="glass rounded-3xl p-5 sm:p-6 mb-10">
+    <form action="/donors" method="GET" autocomplete="off" class="space-y-4">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3.5 items-end">
+        <!-- রক্তের গ্রুপ -->
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">রক্তের গ্রুপ</label>
+          <select name="group">
+            <option value="">সব রক্তের গ্রুপ</option>
+            <option value="A+" <%= filters.group === 'A+' ? 'selected' : '' %>>এ+ (A+)</option>
+            <option value="A-" <%= filters.group === 'A-' ? 'selected' : '' %>>এ- (A-)</option>
+            <option value="B+" <%= filters.group === 'B+' ? 'selected' : '' %>>বি+ (B+)</option>
+            <option value="B-" <%= filters.group === 'B-' ? 'selected' : '' %>>বি- (B-)</option>
+            <option value="O+" <%= filters.group === 'O+' ? 'selected' : '' %>>ও+ (O+)</option>
+            <option value="O-" <%= filters.group === 'O-' ? 'selected' : '' %>>ও- (O-)</option>
+            <option value="AB+" <%= filters.group === 'AB+' ? 'selected' : '' %>>এবি+ (AB+)</option>
+            <option value="AB-" <%= filters.group === 'AB-' ? 'selected' : '' %>>এবি- (AB-)</option>
+          </select>
+        </div>
+
+        <!-- জেলা -->
+        <div class="relative">
+          <label class="block text-xs font-semibold text-gray-700 mb-1">জেলা</label>
+          <input type="text" id="donorFilterDistrict" name="district" value="<%= filters.district %>" placeholder="বাংলা বা ইংরেজিতে লিখুন, যেমন: ঢাকা / Dhaka" autocomplete="off">
+          <div class="ac-box"></div>
+        </div>
+
+        <!-- উপজেলা -->
+        <div class="relative">
+          <label class="block text-xs font-semibold text-gray-700 mb-1">উপজেলা / থানা</label>
+          <input type="text" id="donorFilterUpazila" name="upazila" value="<%= filters.upazila %>" placeholder="বাংলা বা ইংরেজিতে লিখুন, যেমন: মিরপুর / Mirpur" autocomplete="off">
+          <div class="ac-box"></div>
+        </div>
+
+        <!-- সার্চ বোতাম -->
+        <div class="flex gap-2">
+          <button type="submit" class="btn flex-1 py-3 text-sm">
+            <i class="fa-solid fa-magnifying-glass mr-1.5"></i>অনুসন্ধান
+          </button>
+          <a href="/donors" class="btn-ghost px-4 py-3 text-sm" title="রিসেট">
+            <i class="fa-solid fa-rotate-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- অতিরিক্ত ফিল্টার অপশন: সামঞ্জস্যপূর্ণ গ্রুপ ও প্রাপ্যতা -->
+      <div class="pt-3 border-t border-rb-50 flex flex-wrap items-center justify-between gap-4 text-xs text-gray-700">
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" name="compatible" <%= filters.compatible ? 'checked' : '' %> class="w-4 h-4 text-rb-600 rounded">
+          <span class="font-semibold text-rb-800">সামঞ্জস্যপূর্ণ রক্তদাতাদেরও অন্তর্ভুক্ত করুন (যেমন: O- সবার জন্য)</span>
+        </label>
+
+        <div class="flex items-center gap-3">
+          <label class="flex items-center gap-1.5 cursor-pointer">
+            <input type="radio" name="available" value="available" <%= filters.available === 'available' ? 'checked' : '' %> class="text-rb-600">
+            <span>কেবল প্রস্তুত (Available) দাতা</span>
+          </label>
+          <label class="flex items-center gap-1.5 cursor-pointer">
+            <input type="radio" name="available" value="all" <%= filters.available === 'all' ? 'checked' : '' %> class="text-rb-600">
+            <span>সকল দাতা</span>
+          </label>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- রক্তদাতাদের তালিকা গ্রিড -->
+  <% if (donors && donors.length > 0) { %>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <% donors.forEach(function(donor) { %>
+        <article class="glass card-hover rounded-3xl p-5 flex flex-col justify-between border border-white/80 relative">
+          <div>
+            <!-- টপ হেডার: রক্তদাতা ব্যাজ, নাম ও গ্রুপ -->
+            <div class="flex items-start justify-between gap-3 mb-3">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-rb-500 to-rb-700 text-white flex items-center justify-center font-bold text-base shrink-0 shadow-sm shadow-rb-500/20">
+                  <i class="fa-solid fa-hand-holding-droplet"></i>
+                </div>
+                <div class="min-w-0">
+                  <h3 class="font-bold text-base text-rb-900 leading-tight truncate">
+                    <%= donor.name %>
+                  </h3>
+                  <p class="text-xs text-gray-500 mt-0.5 truncate">
+                    <i class="fa-solid fa-location-dot text-rb-600 mr-1"></i>
+                    <%= donor.upazila %>, <%= donor.district %>
+                  </p>
+                </div>
+              </div>
+
+              <span class="px-3 py-1 rounded-full text-xs font-bold bg-rb-600 text-white shrink-0 shadow-sm">
+                <%= toBnGroup(donor.bloodGroup) %>
+              </span>
+            </div>
+
+            <!-- স্ট্যাটাস ও রক্তদান রেকর্ড -->
+            <div class="space-y-1.5 my-3 bg-white/50 p-3 rounded-2xl border border-rb-50 text-xs">
+              <div class="flex items-center justify-between">
+                <span class="text-gray-500">মোট রক্তদান:</span>
+                <strong class="text-rb-600"><%= toBn(donor.totalDonations || 0) %> বার</strong>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-gray-500">সর্বশেষ রক্তদান:</span>
+                <span class="text-gray-800 font-semibold">
+                  <%= formatLastDonationBn(donor.lastDonationDate) %>
+                </span>
+              </div>
+              <div class="flex items-center justify-between pt-1 border-t border-rb-50/60">
+                <span class="text-gray-500">প্রাপ্যতা:</span>
+                <% const eligible = isDonationEligible(donor.lastDonationDate) && donor.isAvailable; %>
+                <% if (eligible) { %>
+                  <span class="font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                    <i class="fa-solid fa-circle-check mr-1 text-[10px]"></i>রক্তদানে প্রস্তুত
+                  </span>
+                <% } else { %>
+                  <span class="font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200" title="রক্তদানের পর অন্তত ৩ মাস বিশ্রাম নেওয়া আবশ্যক">
+                    <i class="fa-solid fa-clock mr-1 text-[10px]"></i>অনুপলব্ধ (৩ মাস হয়নি)
+                  </span>
+                <% } %>
+              </div>
+            </div>
+
+            <% if (donor.bio) { %>
+              <p class="text-xs text-gray-600 italic line-clamp-2 mb-3">"<%= donor.bio %>"</p>
+            <% } %>
+          </div>
+
+          <!-- যোগাযোগ বাটন -->
+          <div class="pt-3 border-t border-rb-100 mt-auto">
+            <% const canDonate = isDonationEligible(donor.lastDonationDate) && donor.isAvailable; %>
+            <% if (!canDonate) { %>
+              <div class="text-center py-2 px-3 rounded-xl bg-amber-50/90 border border-amber-200 text-amber-800 text-xs font-semibold">
+                <i class="fa-solid fa-clock mr-1.5 text-amber-600"></i>৩ মাস পূর্ণ না হওয়ায় বর্তমানে রক্তদানে অনুপলব্ধ
+              </div>
+            <% } else if (currentUser) { %>
+              <% if (donor.showPhonePublic || currentUser.role === 'admin') { %>
+                <a href="tel:<%= donor.phone %>" class="btn w-full py-2.5 text-xs font-semibold">
+                  <i class="fa-solid fa-phone mr-1.5"></i>কল করুন (<%= donor.phone %>)
+                </a>
+              <% } else { %>
+                <button type="button" onclick="alert('এই রক্তদাতার ফোন নম্বর সরাসরি উন্মুক্ত নয়। জরুরি রক্তের প্রয়োজন হলে ওয়েবসাইটে রক্তের অনুরোধ পোস্ট করুন, রক্তদাতার কাছে তাৎক্ষণিক নোটিফিকেশন পৌঁছে যাবে।')" class="btn-ghost w-full py-2.5 text-xs font-semibold">
+                  <i class="fa-solid fa-envelope mr-1.5"></i>যোগাযোগের অনুরোধ
+                </button>
+              <% } %>
+            <% } else { %>
+              <a href="/login" class="btn-ghost w-full py-2.5 text-xs text-center font-semibold block">
+                <i class="fa-solid fa-lock mr-1.5"></i>নম্বর দেখতে লগইন করুন
+              </a>
+            <% } %>
+          </div>
+        </article>
+      <% }); %>
+    </div>
+
+    <!-- পেজিনেশন -->
+    <% if (totalPages > 1) { %>
+      <div class="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-12">
+        <% if (currentPage > 1) { %>
+          <a href="/donors?page=<%= currentPage - 1 %>&group=<%= filters.group %>&district=<%= filters.district %>&upazila=<%= filters.upazila %>&available=<%= filters.available %>&compatible=<%= filters.compatible %>" class="glass px-3 sm:px-4 py-2 rounded-xl text-xs font-bold text-gray-700 hover:bg-rb-50 transition">
+            ← পূর্ববর্তী
+          </a>
+        <% } %>
+
+        <% const pageItems = getPagination(currentPage, totalPages); %>
+        <% pageItems.forEach(function(item) { %>
+          <% if (item === '...') { %>
+            <span class="px-2 py-2 text-xs font-bold text-gray-400 select-none">...</span>
+          <% } else { %>
+            <a href="/donors?page=<%= item %>&group=<%= filters.group %>&district=<%= filters.district %>&upazila=<%= filters.upazila %>&available=<%= filters.available %>&compatible=<%= filters.compatible %>" class="px-3 sm:px-3.5 py-2 rounded-xl text-xs font-bold transition <%= item === currentPage ? 'bg-rb-600 text-white shadow-md' : 'glass text-gray-700 hover:bg-rb-50' %>">
+              <%= toBn(item) %>
+            </a>
+          <% } %>
+        <% }); %>
+
+        <% if (currentPage < totalPages) { %>
+          <a href="/donors?page=<%= currentPage + 1 %>&group=<%= filters.group %>&district=<%= filters.district %>&upazila=<%= filters.upazila %>&available=<%= filters.available %>&compatible=<%= filters.compatible %>" class="glass px-3 sm:px-4 py-2 rounded-xl text-xs font-bold text-gray-700 hover:bg-rb-50 transition">
+            পরবর্তী →
+          </a>
+        <% } %>
+      </div>
+    <% } %>
+
+  <% } else { %>
+    <!-- এম্পটি স্টেট -->
+    <div class="glass rounded-3xl p-12 text-center max-w-xl mx-auto my-12">
+      <div class="w-20 h-20 rounded-full bg-rb-50 flex items-center justify-center text-rb-400 text-4xl mx-auto mb-4">
+        <i class="fa-solid fa-user-xmark"></i>
+      </div>
+      <h3 class="font-head text-2xl font-bold text-rb-900 mb-2">কোনো রক্তদাতা খুঁজে পাওয়া যায়নি</h3>
+      <p class="text-sm text-gray-600 mb-6">
+        আপনার নির্বাচিত রক্ত বা অবস্থানে এই মুহূর্তে কোনো রক্তদাতা পাওয়া যায়নি। "সামঞ্জস্যপূর্ণ রক্তদাতাও খুঁজুন" অপশনটি চালু করে দেখতে পারেন অথবা একটি জরুরি রক্তের অনুরোধ পোস্ট করুন।
+      </p>
+      <div class="flex justify-center gap-3">
+        <a href="/donors" class="btn-ghost px-6 py-2.5 text-sm">সকল রক্তদাতা দেখুন</a>
+        <a href="/requests/new" class="btn px-6 py-2.5 text-sm">রক্তের অনুরোধ পোস্ট করুন</a>
+      </div>
+    </div>
+  <% } %>
+</section>
+
+<!-- অটোকমপ্লিট স্ক্রিপ্ট -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const dInput = document.getElementById('donorFilterDistrict');
+  const uInput = document.getElementById('donorFilterUpazila');
+
+  if (dInput && window.initAutocomplete) {
+    window.initAutocomplete(dInput, async (q) => {
+      const res = await fetch(`/api/locations/districts?query=${encodeURIComponent(q)}`);
+      const json = await res.json();
+      return json.data || [];
+    }, () => {
+      if (uInput) {
+        uInput.value = '';
+        uInput.focus();
+      }
+    });
+  }
+
+  if (uInput && window.initAutocomplete) {
+    window.initAutocomplete(uInput, async (q) => {
+      const dist = dInput ? dInput.value.trim() : '';
+      const url = `/api/locations/upazilas?district=${encodeURIComponent(dist)}&query=${encodeURIComponent(q)}`;
+      const res = await fetch(url);
+      const json = await res.json();
+      return json.data || [];
+    });
+  }
+});
+</script>

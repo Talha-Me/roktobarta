@@ -1,0 +1,496 @@
+<!-- হিরো সেকশন -->
+<section class="hero-bg relative overflow-hidden -mt-20 pt-32 pb-24">
+  <div class="blob w-72 h-72 bg-rb-500 -top-10 -left-10"></div>
+  <div class="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-8 items-center relative">
+    <div class="reveal relative z-10">
+      <span class="glass inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm text-rb-700 font-medium">
+        <span class="w-2.5 h-2.5 rounded-full bg-rb-500 ring-pulse"></span> বাংলাদেশ ও কলকাতার জন্য বিনামূল্যে সেবা
+      </span>
+      <h1 class="font-head text-4xl sm:text-5xl lg:text-6xl leading-tight mt-5 text-rb-900">
+        একটি বার্তা, <span class="text-rb-600">একটি প্রাণ</span> বাঁচাতে পারে
+      </h1>
+      <p class="mt-5 text-lg text-gray-700 leading-relaxed max-w-xl">
+        অপারেশন, সিজার, থ্যালাসেমিয়া কিংবা দুর্ঘটনা – যেকোনো জরুরি মুহূর্তে আপনার জেলা ও উপজেলার রক্তদাতাদের সাথে সরাসরি যুক্ত হোন। রক্ত খুঁজুন, রক্ত দিন, জীবন বাঁচান।
+      </p>
+      <div class="flex flex-wrap gap-4 mt-8">
+        <a href="/requests/new" class="btn px-8 py-3.5 text-lg">
+          <i class="fa-solid fa-droplet mr-2"></i>রক্তের অনুরোধ করুন
+        </a>
+        <a href="/register" class="btn-ghost px-8 py-3.5 text-lg">
+          রক্তদাতা হোন
+        </a>
+      </div>
+      <div class="flex flex-wrap items-center gap-x-6 gap-y-2 mt-9 text-sm text-gray-600">
+        <span><i class="fa-solid fa-circle-check text-rb-600 mr-1"></i>যাচাইকৃত প্রোফাইল</span>
+        <span><i class="fa-solid fa-bolt text-rb-600 mr-1"></i>দ্রুত যোগাযোগ</span>
+        <span><i class="fa-solid fa-lock text-rb-600 mr-1"></i>নিরাপদ তথ্য</span>
+      </div>
+    </div>
+
+    <!-- ডান দিকের হিরো ছবি (আগের মতো নিখুঁত বৃত্তাকার ডিজাইন) -->
+    <div class="reveal relative flex items-center justify-center h-[380px] sm:h-[480px] lg:h-[540px]" style="transition-delay: .2s">
+      <!-- পেছনের ডেকোরেটিভ রিং ও বর্ডার -->
+      <div class="absolute right-0 sm:right-4 top-1/2 -translate-y-1/2 w-[94%] sm:w-[90%] aspect-square rounded-full border border-dashed border-rb-400/40"></div>
+      <div class="absolute right-0 sm:right-4 top-1/2 -translate-y-1/2 w-[88%] sm:w-[84%] aspect-square rounded-full border-2 border-rb-400/30"></div>
+
+      <!-- মূল গোল ছবি ফ্রেম (জুম সহ) -->
+      <div class="relative right-0 sm:right-4 w-[84%] sm:w-[80%] aspect-square rounded-full overflow-hidden shadow-2xl border-4 border-white bg-gradient-to-br from-rb-500 via-rb-700 to-rb-900 flex items-center justify-center">
+        <img src="/images/hero-section.png" alt="রক্তবার্তা - রক্তদান" class="w-full h-full object-cover scale-125 object-center">
+      </div>
+
+      <!-- আজকের অনুরোধ স্ট্যাট ব্যাজ -->
+      <div class="glass absolute left-0 bottom-8 rounded-2xl px-5 py-3 bob z-20 shadow-lg border border-white/80">
+        <p class="text-xs text-gray-500">আজকের অনুরোধ</p>
+        <p class="text-3xl font-bold text-rb-600" data-count="<%= stats.todayRequests %>">০</p>
+      </div>
+
+      <!-- সক্রিয় রক্তদাতা স্ট্যাট ব্যাজ -->
+      <div class="glass absolute right-0 top-4 rounded-2xl px-5 py-3 bob z-20 shadow-lg border border-white/80" style="animation-delay: 1.5s">
+        <p class="text-xs text-gray-500">সক্রিয় দাতা</p>
+        <p class="text-3xl font-bold text-rb-600" data-count="<%= stats.donors %>">০</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- দ্রুত সার্চ ফর্ম (অটোকমপ্লিট সহ) -->
+<section class="max-w-6xl mx-auto px-4 -mt-12 relative z-20">
+  <form id="searchForm" action="/donors" method="GET" autocomplete="off" class="glass reveal rounded-3xl p-5 sm:p-7 grid sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+    <div>
+      <label class="text-sm font-medium block mb-1">রক্তের গ্রুপ</label>
+      <select name="group">
+        <option value="">সব গ্রুপ</option>
+        <option value="A+">এ+</option>
+        <option value="A-">এ-</option>
+        <option value="B+">বি+</option>
+        <option value="B-">বি-</option>
+        <option value="O+">ও+</option>
+        <option value="O-">ও-</option>
+        <option value="AB+">এবি+</option>
+        <option value="AB-">এবি-</option>
+      </select>
+    </div>
+    <div class="relative">
+      <label class="text-sm font-medium block mb-1">জেলা</label>
+      <input id="homeDistrict" name="district" placeholder="বাংলা বা ইংরেজিতে লিখুন, যেমন: ঢাকা / Dhaka" autocomplete="off">
+      <div class="ac-box"></div>
+    </div>
+    <div class="relative">
+      <label class="text-sm font-medium block mb-1">উপজেলা / থানা</label>
+      <input id="homeUpazila" name="upazila" placeholder="বাংলা বা ইংরেজিতে লিখুন, যেমন: মিরপুর / Mirpur" autocomplete="off">
+      <div class="ac-box"></div>
+    </div>
+    <button type="submit" class="btn py-3.5 text-lg">
+      <i class="fa-solid fa-magnifying-glass mr-2"></i>খুঁজুন
+    </button>
+  </form>
+</section>
+
+<!-- পরিসংখ্যান সেকশন -->
+<section class="max-w-7xl mx-auto px-4 py-20">
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+    <div class="glass reveal rounded-3xl p-6 card-hover">
+      <p class="text-4xl sm:text-5xl font-bold text-rb-600" data-count="<%= stats.donors %>">০</p>
+      <p class="text-sm sm:text-base text-gray-700 font-medium mt-2">নিবন্ধিত রক্তদাতা</p>
+    </div>
+    <div class="glass reveal rounded-3xl p-6 card-hover" style="transition-delay: .1s">
+      <p class="text-4xl sm:text-5xl font-bold text-rb-600" data-count="<%= stats.donations %>">০</p>
+      <p class="text-sm sm:text-base text-gray-700 font-medium mt-2">সফল রক্তদান</p>
+    </div>
+    <div class="glass reveal rounded-3xl p-6 card-hover" style="transition-delay: .2s">
+      <p class="text-4xl sm:text-5xl font-bold text-rb-600" data-count="<%= stats.districts %>">০</p>
+      <p class="text-sm sm:text-base text-gray-700 font-medium mt-2">সেবা প্রদানকারী জেলা</p>
+    </div>
+    <div class="glass reveal rounded-3xl p-6 card-hover" style="transition-delay: .3s">
+      <p class="text-4xl sm:text-5xl font-bold text-rb-600">১০০%</p>
+      <p class="text-sm sm:text-base text-gray-700 font-medium mt-2">বিনামূল্যে সেবা</p>
+    </div>
+  </div>
+</section>
+
+<!-- কীভাবে কাজ করে -->
+<section class="max-w-7xl mx-auto px-4 py-12">
+  <div class="text-center max-w-2xl mx-auto mb-14 reveal">
+    <span class="glass px-4 py-1.5 rounded-full text-xs font-semibold text-rb-700 uppercase">সহজ ৩টি ধাপ</span>
+    <h2 class="font-head text-3xl sm:text-4xl font-bold mt-3 text-rb-900">কীভাবে রক্তবার্তা কাজ করে?</h2>
+    <p class="text-gray-600 mt-2 text-sm sm:text-base">জরুরি প্রয়োজনে রক্ত পেতে বা রক্ত দিতে কয়েক মিনিটের মধ্যেই যুক্ত হোন।</p>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-8">
+    <div class="glass reveal rounded-3xl p-8 text-center card-hover">
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-rb-500 to-rb-700 text-white flex items-center justify-center text-2xl mx-auto mb-6 shadow-md">
+        <i class="fa-solid fa-bullhorn"></i>
+      </div>
+      <h3 class="font-bold text-xl text-rb-900 mb-2">১. রক্তের অনুরোধ করুন</h3>
+      <p class="text-sm text-gray-600 leading-relaxed">হাসপাতাল, রক্তের গ্রুপ ও রোগীর তথ্য দিয়ে একটি অনুরোধ তৈরি করুন। সঙ্গে সঙ্গে তা স্থানীয় রক্তদাতাদের কাছে পৌঁছাবে।</p>
+    </div>
+
+    <div class="glass reveal rounded-3xl p-8 text-center card-hover" style="transition-delay: .15s">
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-rb-500 to-rb-700 text-white flex items-center justify-center text-2xl mx-auto mb-6 shadow-md">
+        <i class="fa-solid fa-bell"></i>
+      </div>
+      <h3 class="font-bold text-xl text-rb-900 mb-2">২. দাতা খুঁজে পান ও জানান</h3>
+      <p class="text-sm text-gray-600 leading-relaxed">জেলা ও উপজেলা ভিত্তিক নিবন্ধিত রক্তদাতারা স্বয়ংক্রিয় নোটিফিকেশন পান এবং দ্রুত যোগাযোগের জন্য সাড়া দেন।</p>
+    </div>
+
+    <div class="glass reveal rounded-3xl p-8 text-center card-hover" style="transition-delay: .3s">
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-rb-500 to-rb-700 text-white flex items-center justify-center text-2xl mx-auto mb-6 shadow-md">
+        <i class="fa-solid fa-heart-pulse"></i>
+      </div>
+      <h3 class="font-bold text-xl text-rb-900 mb-2">৩. রক্তদান ও জীবন বাঁচানো</h3>
+      <p class="text-sm text-gray-600 leading-relaxed">হাসপাতালে উপস্থিত হয়ে স্বেচ্ছায় রক্তদান সম্পন্ন করুন এবং আমাদের প্ল্যাটফর্মে আপনার রক্তদানের স্মৃতি যুক্ত রাখুন।</p>
+    </div>
+  </div>
+</section>
+
+<!-- অতি জরুরি রক্তের অনুরোধসমূহ (ডায়নামিক ৩টি কার্ড) -->
+<% if (urgentRequests && urgentRequests.length > 0) { %>
+<section class="max-w-7xl mx-auto px-4 py-16">
+  <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 reveal">
+    <div>
+      <span class="glass px-4 py-1.5 rounded-full text-xs font-semibold text-rb-700 uppercase">তাৎক্ষণিক সহায়তা</span>
+      <h2 class="font-head text-3xl sm:text-4xl font-bold mt-3 text-rb-900">জরুরি রক্তের অনুরোধ</h2>
+      <p class="text-gray-600 mt-1 text-sm">এই মুহূর্তে যাদের রক্ত সবচেয়ে বেশি প্রয়োজন:</p>
+    </div>
+    <a href="/requests" class="btn-ghost px-6 py-2.5 text-sm font-semibold self-start sm:self-auto">
+      সকল অনুরোধ দেখুন →
+    </a>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-6">
+    <% urgentRequests.forEach(function(item, idx) { %>
+      <article class="glass reveal card-hover rounded-3xl p-6 flex flex-col justify-between border border-white/80 relative" style="transition-delay: <%= idx * 0.1 %>s">
+        <% if (item.urgency === 'অতি জরুরি') { %>
+          <div class="absolute top-0 right-0 bg-red-600 text-white text-[11px] font-bold px-3.5 py-1 rounded-bl-2xl shadow-sm flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-white ring-pulse"></span> অতি জরুরি
+          </div>
+        <% } %>
+
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-14 h-14 rounded-2xl bg-gradient-to-br from-rb-500 to-rb-700 text-white flex flex-col items-center justify-center font-bold shadow-md shrink-0">
+              <span class="text-xl leading-none"><%= toBnGroup(item.bloodGroup) %></span>
+              <span class="text-[10px] opacity-80 mt-0.5"><%= toBn(item.bagsNeeded) %> ব্যাগ</span>
+            </span>
+            <div class="min-w-0">
+              <h3 class="font-bold text-base text-rb-900 leading-tight truncate"><%= item.patientName %></h3>
+              <p class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                <i class="fa-solid fa-notes-medical text-rb-600"></i>
+                <%= item.reason %> · <%= timeAgoBn(item.createdAt) %>
+              </p>
+            </div>
+          </div>
+
+          <div class="space-y-1.5 text-xs text-gray-600 my-4 bg-white/50 p-3 rounded-2xl border border-rb-50">
+            <p class="truncate"><i class="fa-solid fa-hospital text-rb-600 mr-1.5"></i><strong><%= item.hospitalName %></strong></p>
+            <p><i class="fa-solid fa-location-dot text-rb-600 mr-1.5"></i><%= item.upazila %>, <%= item.district %></p>
+            <p><i class="fa-regular fa-clock text-rb-600 mr-1.5"></i>তারিখ: <strong><%= formatBnDate(item.neededDate) %></strong></p>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-rb-100 flex items-center justify-between mt-auto">
+          <span class="text-xs text-gray-500">সাড়া: <strong><%= toBn(item.responses ? item.responses.length : 0) %></strong> জন</span>
+          <a href="/requests/<%= item._id %>" class="btn px-4 py-2 text-xs font-semibold">
+            বিস্তারিত ও রক্ত দিন
+          </a>
+        </div>
+      </article>
+    <% }); %>
+  </div>
+</section>
+<% } %>
+
+<!-- রক্তের গল্প সেকশন (ট্যাব ও ডায়নামিক কার্ড সহ) -->
+<section id="stories" class="max-w-7xl mx-auto px-4 py-16">
+  <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 reveal">
+    <div>
+      <span class="glass px-4 py-1.5 rounded-full text-xs font-semibold text-rb-700 uppercase">বাস্তব অভিজ্ঞতা</span>
+      <h2 class="font-head text-3xl sm:text-4xl font-bold mt-3 text-rb-900">রক্তের গল্প</h2>
+      <p class="text-gray-600 mt-1 text-sm">রক্তদাতা ও রক্তগ্রহীতাদের বাস্তব অনুভূতির সংকলন।</p>
+    </div>
+    <div class="flex flex-wrap gap-2.5 items-center">
+      <div id="tabs" class="glass rounded-full p-1 inline-flex gap-1">
+        <button type="button" data-f="all" class="tab active px-4 py-1.5 rounded-full text-xs font-semibold transition">সব গল্প</button>
+        <button type="button" data-f="donor" class="tab px-4 py-1.5 rounded-full text-xs font-semibold transition">রক্তদাতা</button>
+        <button type="button" data-f="receiver" class="tab px-4 py-1.5 rounded-full text-xs font-semibold transition">রক্তগ্রহীতা</button>
+      </div>
+      <button type="button" id="openStoryModalBtn" class="btn px-5 py-2 text-xs font-semibold">
+        <i class="fa-solid fa-pen-nib mr-1.5"></i>আপনার গল্প লিখুন
+      </button>
+    </div>
+  </div>
+
+  <div id="storyGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% if (latestStories && latestStories.length > 0) { %>
+      <% latestStories.forEach(function(s, idx) { %>
+        <article data-role="<%= s.role %>" class="story-item glass reveal card-hover rounded-3xl p-6 flex flex-col justify-between" style="transition-delay: <%= (idx % 3) * 0.1 %>s">
+          <div>
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-11 h-11 rounded-2xl bg-rb-50 text-rb-600 flex items-center justify-center font-bold text-sm shrink-0 border border-rb-200">
+                <i class="fa-solid fa-quote-left"></i>
+              </div>
+              <div class="min-w-0 flex-1">
+                <p class="font-semibold text-sm leading-tight text-gray-900 truncate"><%= s.author ? s.author.name : 'বেনামী' %></p>
+                <p class="text-xs text-gray-500 mt-0.5"><%= s.location %> · <%= formatBnDate(s.createdAt) %></p>
+              </div>
+              <span class="text-xs px-3 py-1 rounded-full font-semibold <%= s.role === 'donor' ? 'bg-rb-600 text-white' : 'bg-rb-100 text-rb-700' %>">
+                <%= s.role === 'donor' ? 'রক্তদাতা' : 'গ্রহীতা' %> · <%= toBnGroup(s.bloodGroup) %>
+              </span>
+            </div>
+
+            <h3 class="font-bold text-lg text-rb-900 mt-2 line-clamp-2"><%= s.title %></h3>
+            <p class="text-gray-600 text-sm mt-2 leading-relaxed line-clamp-3"><%= s.body %></p>
+          </div>
+
+          <div class="flex items-center justify-between mt-5 pt-4 border-t border-rb-100">
+            <span class="text-rb-600 text-sm font-medium flex items-center gap-1.5">
+              <i class="fa-solid fa-heart"></i>
+              <span><%= toBn(s.likes ? s.likes.length : 0) %></span>
+            </span>
+            <a href="/stories/<%= s.slug %>" class="text-sm font-semibold text-rb-600 hover:underline">
+              পুরোটা পড়ুন →
+            </a>
+          </div>
+        </article>
+      <% }); %>
+    <% } %>
+  </div>
+
+  <div class="text-center mt-10">
+    <a href="/stories" class="btn-ghost px-8 py-3 text-sm font-bold">
+      সকল রক্তের গল্প পড়ুন →
+    </a>
+  </div>
+</section>
+
+<!-- রক্তের গ্রুপ সামঞ্জস্যতা গাইড (৮টি কার্ড) -->
+<section class="max-w-7xl mx-auto px-4 py-16">
+  <div class="glass-red rounded-3xl p-8 sm:p-12 text-white relative overflow-hidden shadow-2xl">
+    <div class="text-center max-w-2xl mx-auto mb-10 reveal">
+      <span class="bg-white/20 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider">রক্তের গ্রুপের সামঞ্জস্যতা</span>
+      <h2 class="font-head text-3xl sm:text-4xl font-bold mt-3">কে কাকে রক্ত দিতে ও নিতে পারে?</h2>
+      <p class="text-white/80 mt-2 text-sm sm:text-base">জরুরি প্রয়োজনে রক্তের গ্রুপের সামঞ্জস্য জানা থাকা জরুরি।</p>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <% groupGuide.forEach(function(g, i) { %>
+        <div class="reveal rounded-3xl p-5 text-center card-hover" style="transition-delay: <%= (i % 4) * 0.08 %>s; background: rgba(255,255,255,.14); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.3);">
+          <p class="text-3xl sm:text-4xl font-bold font-head"><%= g.group %></p>
+          <p class="text-xs sm:text-sm mt-3 text-white/90 leading-relaxed">
+            <%= g.donate %><br>
+            <span class="text-white/70"><%= g.receive %></span>
+          </p>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<!-- কেন রক্তবার্তা ব্যবহার করবেন? -->
+<section class="max-w-7xl mx-auto px-4 py-16">
+  <div class="text-center max-w-2xl mx-auto mb-12 reveal">
+    <span class="glass px-4 py-1.5 rounded-full text-xs font-semibold text-rb-700 uppercase">আমাদের বৈশিষ্ট্য</span>
+    <h2 class="font-head text-3xl sm:text-4xl font-bold mt-3 text-rb-900">কেন রক্তবার্তা নির্ভরযোগ্য?</h2>
+  </div>
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="glass reveal rounded-3xl p-6 text-center card-hover">
+      <div class="w-12 h-12 rounded-xl bg-rb-50 text-rb-600 flex items-center justify-center text-xl mx-auto mb-4">
+        <i class="fa-solid fa-map-location-dot"></i>
+      </div>
+      <h3 class="font-bold text-base text-rb-900 mb-1">জেলা-উপজেলা ভিত্তিক</h3>
+      <p class="text-xs text-gray-600 leading-relaxed">আপনার নিজ উপজেলার রক্তদাতাদের সাথে দ্রুত যোগাযোগ করার সুবিধা।</p>
+    </div>
+
+    <div class="glass reveal rounded-3xl p-6 text-center card-hover" style="transition-delay: .1s">
+      <div class="w-12 h-12 rounded-xl bg-rb-50 text-rb-600 flex items-center justify-center text-xl mx-auto mb-4">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <h3 class="font-bold text-base text-rb-900 mb-1">তথ্য গোপনীয়তা</h3>
+      <p class="text-xs text-gray-600 leading-relaxed">সাধারণ দর্শকদের কাছে ফোন নম্বর আড়াল থাকে, ফলে অযাচিত কল থেকে নিরাপদ।</p>
+    </div>
+
+    <div class="glass reveal rounded-3xl p-6 text-center card-hover" style="transition-delay: .2s">
+      <div class="w-12 h-12 rounded-xl bg-rb-50 text-rb-600 flex items-center justify-center text-xl mx-auto mb-4">
+        <i class="fa-solid fa-bolt-lightning"></i>
+      </div>
+      <h3 class="font-bold text-base text-rb-900 mb-1">তাৎক্ষণিক অ্যালার্ট</h3>
+      <p class="text-xs text-gray-600 leading-relaxed">নতুন রক্তের অনুরোধ তৈরি হলে ম্যাচিং রক্তদাতাদের ইন-সাইট ও ইমেইল অ্যালার্ট পাঠানো হয়।</p>
+    </div>
+
+    <div class="glass reveal rounded-3xl p-6 text-center card-hover" style="transition-delay: .3s">
+      <div class="w-12 h-12 rounded-xl bg-rb-50 text-rb-600 flex items-center justify-center text-xl mx-auto mb-4">
+        <i class="fa-solid fa-hand-holding-heart"></i>
+      </div>
+      <h3 class="font-bold text-base text-rb-900 mb-1">১০০% অলাভজনক</h3>
+      <p class="text-xs text-gray-600 leading-relaxed">সম্পূর্ণ স্বেচ্ছাসেবী ও মানবিক উদ্যোগ। রক্তের কোনো বাণিজ্যিক রূপ নেই।</p>
+    </div>
+  </div>
+</section>
+
+<!-- স্বাস্থ্য ব্লগ প্রিভিউ (সর্বশেষ ৩টি ব্লগ) -->
+<% if (latestPosts && latestPosts.length > 0) { %>
+<section class="max-w-7xl mx-auto px-4 py-16">
+  <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 reveal">
+    <div>
+      <span class="glass px-4 py-1.5 rounded-full text-xs font-semibold text-rb-700 uppercase">স্বাস্থ্য সচেতনতা</span>
+      <h2 class="font-head text-3xl sm:text-4xl font-bold mt-3 text-rb-900">স্বাস্থ্য ও রক্তদান ব্লগ</h2>
+      <p class="text-gray-600 mt-1 text-sm">চিকিৎসাবিজ্ঞান ভিত্তিক তথ্য, পরামর্শ ও নির্দেশিকা।</p>
+    </div>
+    <a href="/blog" class="btn-ghost px-6 py-2.5 text-sm font-semibold self-start sm:self-auto">
+      সকল ব্লগ দেখুন →
+    </a>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-6">
+    <% latestPosts.forEach(function(post, i) { %>
+      <article class="glass reveal card-hover rounded-3xl p-6 flex flex-col justify-between border border-white/80" style="transition-delay: <%= i * 0.1 %>s">
+        <div>
+          <span class="text-xs px-3 py-1 rounded-full font-bold bg-rb-100 text-rb-700 mb-3 inline-block">
+            <%= post.category %>
+          </span>
+          <h3 class="font-bold text-lg text-rb-900 line-clamp-2 leading-snug">
+            <a href="/blog/<%= post.slug %>" class="hover:text-rb-600 transition"><%= post.title %></a>
+          </h3>
+          <p class="text-xs text-gray-600 mt-2 line-clamp-3 leading-relaxed">
+            <%= post.excerpt %>
+          </p>
+        </div>
+
+        <div class="pt-4 mt-4 border-t border-rb-50 flex items-center justify-between text-xs text-gray-500">
+          <span><%= formatBnDate(post.createdAt) %></span>
+          <a href="/blog/<%= post.slug %>" class="text-rb-600 font-bold hover:underline">
+            পড়ুন →
+          </a>
+        </div>
+      </article>
+    <% }); %>
+  </div>
+</section>
+<% } %>
+
+<!-- সচরাচর জিজ্ঞাসা (FAQ Accordion) -->
+<section class="max-w-4xl mx-auto px-4 py-16">
+  <div class="text-center mb-10 reveal">
+    <span class="glass px-4 py-1.5 rounded-full text-xs font-semibold text-rb-700 uppercase">সাধারণ প্রশ্নাবলী</span>
+    <h2 class="font-head text-3xl sm:text-4xl font-bold mt-3 text-rb-900">সচরাচর জিজ্ঞাসা (FAQ)</h2>
+  </div>
+
+  <div class="space-y-3.5">
+    <details class="glass rounded-2xl p-5 reveal">
+      <summary class="font-bold text-base text-rb-900 flex items-center justify-between">
+        <span>কে বা কারা রক্ত দিতে পারেন?</span>
+        <i class="fa-solid fa-plus text-rb-600 plus"></i>
+      </summary>
+      <p class="text-sm text-gray-600 mt-3 leading-relaxed">
+        ১৮ থেকে ৬০ বছর বয়সী যেকোনো সুস্থ ব্যক্তি যার ওজন কমপক্ষে ৪৫-৫০ কেজি এবং হিমোগ্লোবিনের মাত্রা স্বাভাবিক, তিনি রক্ত দিতে পারেন। পুরুষরা প্রতি ৩ মাস এবং নারীরা প্রতি ৪ মাস পর পর রক্তদান করতে পারেন।
+      </p>
+    </details>
+
+    <details class="glass rounded-2xl p-5 reveal" style="transition-delay: .05s">
+      <summary class="font-bold text-base text-rb-900 flex items-center justify-between">
+        <span>রক্ত দিলে কি শরীর দুর্বল বা অসুস্থ হয়ে পড়ে?</span>
+        <i class="fa-solid fa-plus text-rb-600 plus"></i>
+      </summary>
+      <p class="text-sm text-gray-600 mt-3 leading-relaxed">
+        না, এটি একটি সম্পূর্ণ ভুল ধারণা। মানবদেহে গড়ে ৫-৬ লিটার রক্ত থাকে। এক ব্যাগ রক্তে মাত্র ৩৫০-৪৫০ মিলিলিটার রক্ত নেওয়া হয়, যা শরীর মাত্র ৪৮ ঘণ্টার মধ্যে পূরণ করে ফেলে এবং কয়েক সপ্তাহের মধ্যে নতুন রক্তকণিকা তৈরি হয়।
+      </p>
+    </details>
+
+    <details class="glass rounded-2xl p-5 reveal" style="transition-delay: .1s">
+      <summary class="font-bold text-base text-rb-900 flex items-center justify-between">
+        <span>রক্তবার্তা ব্যবহারের জন্য কি কোনো ফি দিতে হয়?</span>
+        <i class="fa-solid fa-plus text-rb-600 plus"></i>
+      </summary>
+      <p class="text-sm text-gray-600 mt-3 leading-relaxed">
+        না। রক্তবার্তা সম্পূর্ণ নিঃস্বার্থ এবং বিনামূল্যে পরিচালিত একটি মানবিক প্ল্যাটফর্ম। রক্তদাতা খোঁজা বা অনুরোধ করার জন্য কাউকে কোনো টাকা দিতে হয় না।
+      </p>
+    </details>
+
+    <details class="glass rounded-2xl p-5 reveal" style="transition-delay: .15s">
+      <summary class="font-bold text-base text-rb-900 flex items-center justify-between">
+        <span>আমার ফোন নম্বর কি সবাই দেখতে পারবে?</span>
+        <i class="fa-solid fa-plus text-rb-600 plus"></i>
+      </summary>
+      <p class="text-sm text-gray-600 mt-3 leading-relaxed">
+        না। কোনো সাধারণ ভিজিটর আপনার ফোন নম্বর দেখতে পারবেন না। আপনি চাইলে ড্যাশবোর্ড থেকে নম্বর সম্পূর্ণরূপে আড়াল রাখতে পারেন, সেক্ষেত্রে রক্তের জরুরি প্রয়োজন হলেই কেবল যোগাযোগ সম্পন্ন হবে।
+      </p>
+    </details>
+  </div>
+</section>
+
+<!-- কল টু অ্যাকশন (CTA) -->
+<section class="max-w-6xl mx-auto px-4 py-12">
+  <div class="glass-card rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden border border-rb-200">
+    <div class="blob w-64 h-64 bg-rb-500 -top-16 -left-16"></div>
+    <div class="relative z-10 max-w-2xl mx-auto">
+      <h2 class="font-head text-3xl sm:text-4xl font-bold text-rb-900">
+        আজই রক্তদাতা হিসেবে যুক্ত হোন
+      </h2>
+      <p class="text-sm sm:text-base text-gray-600 mt-3 leading-relaxed">
+        আপনার দেওয়া এক ব্যাগ রক্ত মুমূর্ষু কোনো রোগীর জীবন বাঁচাতে পারে, একটি পরিবারের মুখে হাসি ফোটাতে পারে। মানবকল্যাণে নিজেকে যুক্ত করুন।
+      </p>
+      <div class="flex flex-wrap justify-center gap-4 mt-7">
+        <a href="/register" class="btn px-8 py-3.5 text-base shadow-lg">
+          <i class="fa-solid fa-user-plus mr-2"></i>রক্তদাতা হিসেবে নিবন্ধন করুন
+        </a>
+        <a href="/requests/new" class="btn-ghost px-8 py-3.5 text-base">
+          রক্তের অনুরোধ পোস্ট করুন
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- হোম পেজ অটোকমপ্লিট ও স্টোরিজ ট্যাব স্ক্রিপ্ট -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Autocomplete for Home Search Form
+  const dInput = document.getElementById('homeDistrict');
+  const uInput = document.getElementById('homeUpazila');
+
+  if (dInput && window.initAutocomplete) {
+    window.initAutocomplete(dInput, async (q) => {
+      const res = await fetch(`/api/locations/districts?query=${encodeURIComponent(q)}`);
+      const json = await res.json();
+      return json.data || [];
+    }, () => {
+      if (uInput) {
+        uInput.value = '';
+        uInput.focus();
+      }
+    });
+  }
+
+  if (uInput && window.initAutocomplete) {
+    window.initAutocomplete(uInput, async (q) => {
+      const dist = dInput ? dInput.value.trim() : '';
+      const url = `/api/locations/upazilas?district=${encodeURIComponent(dist)}&query=${encodeURIComponent(q)}`;
+      const res = await fetch(url);
+      const json = await res.json();
+      return json.data || [];
+    });
+  }
+
+  // Stories tabs filtering on Home Page
+  const tabs = document.getElementById('tabs');
+  if (tabs) {
+    tabs.addEventListener('click', (e) => {
+      const btn = e.target.closest('.tab');
+      if (!btn) return;
+
+      document.querySelectorAll('#tabs .tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+
+      const filterRole = btn.dataset.f;
+      document.querySelectorAll('.story-item').forEach(card => {
+        if (filterRole === 'all' || card.dataset.role === filterRole) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  }
+});
+</script>
