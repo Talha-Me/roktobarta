@@ -66,16 +66,16 @@ const seedData = async () => {
     });
 
     const founderUser = await User.create({
-      name: 'মুহাম্মদ আবু তালহা আকাশ',
-      email: 'abutalhaakash26@gmail.com',
-      phone: '01516579760',
+      name: process.env.FOUNDER_NAME || 'মুহাম্মদ আবু তালহা আকাশ',
+      email: process.env.FOUNDER_EMAIL || 'founder@roktobarta.com',
+      phone: process.env.FOUNDER_PHONE || '01700000000',
       passwordHash: adminPasswordHash,
       role: 'admin',
       country: 'বাংলাদেশ',
       division: 'ঢাকা',
       district: 'ঢাকা',
       upazila: 'বাড্ডা',
-      area: 'House 12, Road Avenue-8, Block M, Banasree',
+      area: process.env.FOUNDER_AREA || 'বনশ্রী, ঢাকা',
       bloodGroup: 'A+',
       gender: 'পুরুষ',
       dateOfBirth: new Date('1998-01-01'),
@@ -84,7 +84,7 @@ const seedData = async () => {
       isAvailable: true,
       totalDonations: 4,
       showPhonePublic: true,
-      bio: 'Owner, Founder & CEO at TalhaByteIT | রক্তবার্তা প্রতিষ্ঠাতা',
+      bio: 'রক্তবার্তা প্রতিষ্ঠাতা ও রক্তদাতা',
       isVerified: true
     });
     });

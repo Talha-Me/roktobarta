@@ -92,7 +92,7 @@ npm install
 ```
 
 ### ২. এনভায়রনমেন্ট কনফিগারেশন (`.env`)
-প্রজেক্ট রুটে `.env` ফাইলটি তৈরি করুন বা সম্পাদনা করুন:
+প্রজেক্ট রুটে `.env` ফাইলটি তৈরি করে প্রয়োজনীয় ভ্যারিয়েবলসমূহ কনফিগার করুন:
 ```env
 PORT=5000
 NODE_ENV=development
@@ -102,8 +102,8 @@ SITE_NAME=রক্তবার্তা
 # MongoDB Atlas বা লোকাল মঙ্গোডিবি সংযোগ
 MONGO_URI=mongodb+srv://<USER>:<PASS>@<CLUSTER>.mongodb.net/roktobarta?retryWrites=true&w=majority
 
-# সেশন সিক্রেট
-SESSION_SECRET=roktobarta_super_secret_session_key_2026_xyz
+# সেশন সিক্রেট (একটি শক্তিশালী র‍্যান্ডম সিক্রেট কি ব্যবহার করুন)
+SESSION_SECRET=your_super_secret_session_key_here
 
 # ইমেইল (SMTP - ঐচ্ছিক)
 SMTP_HOST=smtp.gmail.com
@@ -111,35 +111,21 @@ SMTP_PORT=587
 SMTP_USER=your_email@gmail.com
 SMTP_PASS=your_app_password
 SMTP_FROM="রক্তবার্তা" <noreply@roktobarta.com>
-
-# গুগল অ্যাডসেন্স ও অ্যানালিটিক্স (ঐচ্ছিক)
-ADSENSE_CLIENT=ca-pub-XXXXXXXXXXXXXXXX
-GA_ID=G-XXXXXXXXXX
 ```
 
-### ৩. ডেমো ডেটাবেস প্রস্তুত করা (Database Seed)
-অ্যাডমিন, ৩৩ জন রক্তদাতা, ১০টি রক্তের অনুরোধ, ৬টি রক্তের গল্প ও ৫টি স্বাস্থ্য ব্লগ তৈরি করতে:
-```bash
-npm run seed
-```
-
-> **অ্যাডমিন লগইন তথ্য:**  
-> - **ইমেইল:** `admin@roktobarta.com`  
-> - **পাসওয়ার্ড:** `Admin@123456`
-
-### ৪. সিএসএস কম্পাইল করা (Tailwind CSS)
+### ৩. সিএসএস কম্পাইল করা (Tailwind CSS)
 ```bash
 npm run build:css
 ```
 *(ডেভেলপমেন্টে স্টাইল পরিবর্তনের সাথে সাথে অটো-বিল্ড করতে: `npm run watch:css`)*
 
-### ৫. সার্ভার চালু করা (Run Server)
+### ৪. সার্ভার চালু করা (Run Server)
 ```bash
 npm run dev
 ```
 *(অথবা প্রোডাকশন মোডে: `npm start`)*
 
-এরপর আপনার পছন্দের ব্রাউজারে প্রবেশ করুন: **`http://localhost:5000`**
+এরপর ব্রাউজারে প্রবেশ করুন: **`http://localhost:5000`**
 
 ---
 
